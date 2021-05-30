@@ -35,7 +35,7 @@
 * Download And Install ImageMagick [`Click Here`](https://imagemagick.org/script/download.php) (if nulis want work,  checklist columns 1,2,3,5,6) 
 ```bash
 > git clone https://github.com/botstylee/bsbt
-> cd games-wabot
+> cd bsbt
 > npm install
 ```
 ###### Run
