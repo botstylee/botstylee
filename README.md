@@ -34,7 +34,7 @@
 * Download And Install FFMPEG [`Click Here`](https://ffmpeg.org/download.html) (don't forget to path) 
 * Download And Install ImageMagick [`Click Here`](https://imagemagick.org/script/download.php) (if nulis want work,  checklist columns 1,2,3,5,6) 
 ```bash
-> git clone https://github.com/BochilGaming/games-wabot
+> git clone https://github.com/botstylee/bsbt
 > cd games-wabot
 > npm install
 ```
