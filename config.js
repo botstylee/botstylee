@@ -6,15 +6,17 @@ global.prems = [] // Premium user has unlimited limit
 global.APIs = { // API Prefix
   // name: 'https://website'
   nrtm: 'https://nurutomo.herokuapp.com',
-  xteam: 'https://api.xteam.xyz'
+  xteam: 'https://api.xteam.xyz',
+  bsbt: 'https://bsbt-api-rest.herokuapp.com/docs'
 }
 global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
-  'https://api.xteam.xyz': 'd90a9e986e18778b'
+  'https://api.xteam.xyz': 'd90a9e986e18778b',
+  'https://bsbt-api-rest.herokuapp.com/docs': 'benniismael'
 }
 
 // Sticker WM
-global.packname = 'I hope you\'re fine'
+global.packname = 'Benniganteng\'benniismael'
 global.author = 'Benniismael'
 
 global.multiplier = 69 // The higher, The harder levelup
