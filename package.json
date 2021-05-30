@@ -22,16 +22,16 @@
     "Games-wabot",
     "wabot-aq"
   ],
-  "homepage": "https://github.com/BochilGaming/games-wabot",
+  "homepage": "https://github.com/botstylee/bsbt",
   "author": {
-    "name": "BochilGaming"
+    "name": "botstylee"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nurutomo/wabot-aq.git"
   },
   "bugs": {
-    "url": "https://github.com/BochilGaming/games-wabot/issues"
+    "url": "https://github.com/botstylee/bsbt/issues"
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
