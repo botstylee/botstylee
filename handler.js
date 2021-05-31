@@ -3,9 +3,22 @@ let simple = require('./lib/simple')
 
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 module.exports = {
-  async handler(m) {
+  async handler(chatUpdate) {
+    // console.log(chatUpdate)
+    if (!chatUpdate.hasNewMessage) return
+    if (!chatUpdate.messages && !chatUpdate.count) return
+    let m = chatUpdate.messages.all()[0]
     try {
-    	simple.smsg(this, m)
+      simple.smsg(this, m)
+      switch (m.mtype) {
+        case MessageType.image:
+        case MessageType.video:
+        case MessageType.audio:
+        case MessageType.document:
+        case MessageType.sticker:
+          if (!m.msg.url) await this.updateMediaMessage(m)
+          break
+      }
       m.exp = 0
       m.limit = false
       try {
