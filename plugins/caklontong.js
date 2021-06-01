@@ -15,7 +15,7 @@ let handler  = async (m, { conn, usedPrefix }) => {
       await conn.reply(m.chat, `Soal: *${json.result.soal}*\nTimeout: *${(timeout / 1000).toFixed(2)} detik*\nKetik *${usedPrefix}hint caklontong* untuk hint\nBonus: ${poin} XP`, m),
       json, poin,
       setTimeout(() => {
-        if (conn.caklontong[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.deskripsi}*`, conn.caklontong[id][0])
+        if (conn.caklontong[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.desc}*`, conn.caklontong[id][0])
         delete conn.caklontong[id]
       }, timeout)
     ]
