@@ -9,13 +9,13 @@ let handler  = async (m, { conn, usedPrefix }) => {
         conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.tebakbendera[id][0])
         throw false
     }
-    let res = await fetch('https://zahirr-web.herokuapp.com/api/kuis/tebakgambar?apikey=zahirgans')
+    let res = await fetch('https://bsbt-api-rest.herokuapp.com/api/kuis/tebakbendera?apikey=benniismael')
     let json = await res.json()
     conn.tebakbendera[id] = [
-      await conn.reply(m.chat, `Soal: *${json.result.soal}*\nTimeout: *${(timeout / 1000).toFixed(2)} detik*\nKetik *${usedPrefix}hint tebakbendera* untuk hint\nBonus: ${poin} XP`, m),
+      await conn.reply(m.chat, `Bendera: *${json.result.bendera}*\nTimeout: *${(timeout / 1000).toFixed(2)} detik*\nKetik *${usedPrefix}hint tebakbendera* untuk hint\nBonus: ${poin} XP`, m),
       json, poin,
       setTimeout(() => {
-        if (conn.tebakbendera[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.deskripsi}*`, conn.tebakbendera[id][0])
+        if (conn.tebakbendera[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.jawaban}*`, conn.tebakbendera[id][0])
         delete conn.tebakbendera[id]
       }, timeout)
     ]
