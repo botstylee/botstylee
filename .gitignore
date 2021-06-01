@@ -1,27 +1,23 @@
-# Node.js Modules
-node_modules
+# Compiled class file
+*.class
 
-# important session
-*.data.json
+# Log file
+*.log
 
-# vim state
-.*.swp
+# BlueJ files
+*.ctxt
 
-# Databases
-database.json
-*_database.json
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
-tmp
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-# Okay
-config.js
-
-# Google Drive Credentials?
-credentials.json
-token.json
-
-
-# source code inspecting purposes
-waweb
-# planned
-web-client
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
