@@ -18,10 +18,10 @@ Ketik ${usedPrefix}hint untuk hint
 Bonus: ${poin} XP
     `.trim()
     conn.tebakgambar[id] = [
-      await conn.sendFile(m.chat, json.result.images, 'tebakgambar.jpg', caption, m),
+      await conn.sendFile(m.chat, json.result.result.images, 'tebakgambar.jpg', caption, m),
       json, poin,
       setTimeout(() => {
-        if (conn.tebakgambar[id]) conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.result.jawaban.clue}*`, conn.tebakgambar[id][0])
+        if (conn.tebakgambar[id]) conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.result.result.jawaban.clue}*`, conn.tebakgambar[id][0])
         delete conn.tebakgambar[id]
       }, timeout)
     ]
