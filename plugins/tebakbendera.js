@@ -1,6 +1,6 @@
 let fetch = require('node-fetch')
 
-let timeout = 120000
+let timeout = 10000
 let poin = 4999
 let handler  = async (m, { conn, usedPrefix }) => {
     conn.tebakbendera = conn.tebakbendera ? conn.tebakbendera : {}
@@ -15,7 +15,7 @@ let handler  = async (m, { conn, usedPrefix }) => {
       await conn.reply(m.chat, `Bendera: *${json.result.result.bendera}*\nTimeout: *${(timeout / 1000).toFixed(2)} detik*\nKetik *${usedPrefix}hint tebakbendera* untuk hint\nBonus: ${poin} XP`, m),
       json, poin,
       setTimeout(() => {
-        if (conn.tebakbendera[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.jawaban}*`, conn.tebakbendera[id][0])
+        if (conn.tebakbendera[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.result.jawaban}*`, conn.tebakbendera[id][0])
         delete conn.tebakbendera[id]
       }, timeout)
     ]
