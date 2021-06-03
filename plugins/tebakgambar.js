@@ -21,7 +21,7 @@ Bonus: ${poin} XP
       await conn.sendFile(m.chat, json.result.result.images, 'tebakgambar.jpg', caption, m),
       json, poin,
       setTimeout(() => {
-        if (conn.tebakgambar[id]) conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.result.clue}*`, conn.tebakgambar[id][0])
+        if (conn.tebakgambar[id]) conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.result.result.jawaban}*`, conn.tebakgambar[id][0])
         delete conn.tebakgambar[id]
       }, timeout)
     ]
