@@ -3,7 +3,7 @@ let fetch = require('node-fetch')
 
 let handler  = async (m, { conn, text }) => {
 //let text = args.join` `
-if (!text) return conn.reply(m.chat, 'No hay texto para crear logo', m)
+if (!text) return conn.reply(m.chat, 'Tidak ada teks untuk membuat logo', m)
 let url = 'https://bsbt-api-rest.herokuapp.com/api/photooxy/coffe-cup?apikey=benniismael&text=' + encodeURIComponent(text)
 
 conn.sendFile(m.chat, url, m)
