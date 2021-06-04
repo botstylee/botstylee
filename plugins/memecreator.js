@@ -12,7 +12,7 @@ try {
   let img = await q.download()
   let url = await uploadImage(img)
   let meme = `https://docs-jojo.herokuapp.com/api/meme-gen?top=${text1}&bottom=${text2}&img=${url}`
-  conn.sendFile(m.chat, meme, 'meme.jpg', '©Kuriyama-bot', m)
+  conn.sendFile(m.chat, meme, 'meme.jpg', '©BOT_STYLE', m)
 } catch (e) {
   m.reply('Conversion Failed')
   }
