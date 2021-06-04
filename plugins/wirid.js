@@ -22,9 +22,6 @@ ${tnc}
 handler.help = ['wirid']
 handler.tags = ['islam']
 handler.command = /^(wirid)$/i
-handler.register = true
 
-handler.fail = null
-handler.limit = false
 
 module.exports = handler
