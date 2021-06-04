@@ -12,6 +12,5 @@ handler.help = ['kusonime <judul>']
 handler.tags = ['anime']
 handler.command = /^kusonime$/i
 handler.group = false
-handler.register = true
 
 module.exports = handler
