@@ -10,7 +10,7 @@ let handler = async(m, { conn, text }) => {
 	})
 }
 handler.help = ['jsholat'].map(v => v + ' <daerah>')
-handler.tags = ['tools']
+handler.tags = ['islam']
 handler.command = /^(jsholat)$/i
 handler.owner = false
 handler.mods = false
