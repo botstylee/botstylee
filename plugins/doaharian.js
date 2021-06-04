@@ -24,9 +24,5 @@ _"${translation}"_
 handler.help = ['doaharian']
 handler.tags = ['islam']
 handler.command = /^(doaharian)$/i
-handler.register = true
-
-handler.fail = null
-handler.limit = false
 
 module.exports = handler
