@@ -14,7 +14,7 @@ handler.tags = ['premium']
 
 handler.command = /^join$/i
 
-handler.owner = true
+handler.rowner = true
 
 handler.prems = true
 
