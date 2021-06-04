@@ -38,6 +38,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'nulis': 'Mager Nulis',
       'islam': 'Islam',
       'image': 'Image',
+      'anime': 'Anime',
       'internet': 'Internet',
       'downloader': 'Downloader',
       'tools': 'Tools',
@@ -75,9 +76,9 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
     let before = conn.menu.before || ` ┌──「 ${conn.user.name} 」
 │============================
 ├ Nama : %name!
-├ Limit :  *%limit Limit*
-├ Total user: *%totalreg user*
-├ Exp : *%exp XP*
+├ *Limit:* %limit
+├ *Total user:* %totalreg user
+├ *EXP:* %totalexp XP
 ├ Tanggal: *%week %weton, %date*
 ├ Waktu: *%time*
 ├ Uptime: *%uptime (%muptime)*
