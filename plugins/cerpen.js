@@ -12,7 +12,7 @@ let handler = async(m, { conn, text, usedPrefix }) => {
         .catch()
 }
 handler.help = ['cerpen']
-handler.tags = ['quetes']
+handler.tags = ['quotes']
 handler.command = /^(cerpen)$/i
 handler.owner = false
 handler.mods = false
