@@ -1,31 +1,51 @@
-let axios = require("axios");
-let handler = async(m, { conn, text }) => {
-	let [nama, lahir] = text.split `|`
+let handler = (m, { usedPrefix, command, text }) => {
+    if (!text) throw `contoh:\n${usedPrefix + command} 2002 02 25`
 
-    if (!nama) return conn.reply(m.chat, 'Silahkan masukan namamu', m)
-    if (!lahir) return conn.reply(m.chat, 'Masukan Ultahmu dengan benar!\n\nContoh : !zodiak ilham|11-5-04', m)
+    const date = new Date(text)
+    if (date == 'Invalid Date') throw date
+    const d = new Date()
+    const [tahun, bulan, tanggal] = [d.getFullYear(), d.getMonth() + 1, d.getDate()]
+    const birth = [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+    
+    const zodiac = getZodiac(birth[1], birth[2])
+    const ageD = new Date(d - date)
+    const age = ageD.getFullYear() - new Date(1970, 0, 1).getFullYear()
 
-  await m.reply('Searching...')
-	axios.get(`https://arugaz.herokuapp.com/api/getzodiak?nama=${nama}&tgl-bln-thn=${lahir}`).then ((res) => {
-	 	let hasil = `*INFO ZODIAK*\n\nLahir : ${res.data.lahir}*\nUltah : ${res.data.ultah}\nUsia : ${res.data.usia}\nZodiak : ${res.data.zodiak}️`
+    const birthday = [tahun + (birth[1] < bulan), ...birth.slice(1)]
+    const cekusia = bulan === birth[1] && tanggal === birth[2] ? `Selamat ulang tahun yang ke-${age} 🥳` : age
 
-    conn.reply(m.chat, hasil, m)
-	})
+    const teks = `
+Lahir : ${birth.join('-')}
+Ultah Mendatang : ${birthday.join('-')}
+Usia : ${cekusia}
+Zodiak : ${zodiac}
+`.trim()
+    m.reply(teks)
 }
-handler.help = ['zodiak'].map(v => v + ' <nama|tgl-bln-thn>')
+handler.help = ['zodiac *2002 02 25*']
 handler.tags = ['primbon']
-handler.command = /^(zodiak)$/i
-handler.owner = false
-handler.mods = false
-handler.premium = false
-handler.group = false
-handler.private = false
 
-handler.admin = false
-handler.botAdmin = false
-
-handler.fail = null
-handler.exp = 0
-handler.limit = false
+handler.command = /^zodia[kc]$/i
 
 module.exports = handler
+
+const zodiak = [
+    ["Capricorn", new Date(1970, 0, 1)],
+    ["Aquarius", new Date(1970, 0, 20)],
+    ["Pisces", new Date(1970, 1, 19)],
+    ["Aries", new Date(1970, 2, 21)],
+    ["Taurus", new Date(1970, 3, 21)],
+    ["Gemini", new Date(1970, 4, 21)],
+    ["Cancer", new Date(1970, 5, 22)],
+    ["Leo", new Date(1970, 6, 23)],
+    ["Virgo", new Date(1970, 7, 23)],
+    ["Libra", new Date(1970, 8, 23)],
+    ["Scorpio", new Date(1970, 9, 23)],
+    ["Sagittarius", new Date(1970, 10, 22)],
+    ["Capricorn", new Date(1970, 11, 22)]
+].reverse()
+
+function getZodiac(month, day) {
+    let d = new Date(1970, month - 1, day)
+    return zodiak.find(([_,_d]) => d >= _d)[0]
+}
