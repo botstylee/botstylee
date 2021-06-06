@@ -43,6 +43,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'downloader': 'Downloader',
       'tools': 'Tools',
       'apk': 'MOD APK',
+      'expression': 'Expression',
       'spammer': 'Spammer',
       'jadibot': 'Jadi Bot',
       'admin': 'Admin',
