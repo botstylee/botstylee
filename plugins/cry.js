@@ -19,6 +19,5 @@ let stiker = await sticker(null, result, 'Cry', '@Kokoronationz')
 handler.help = ['cry']
 handler.tags = ['expression']
 handler.command = /^cry/i
-handler.register = true
 
 module.exports = handler
