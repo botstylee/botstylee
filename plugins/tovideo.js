@@ -52,7 +52,6 @@ handler.help = ['tovideo (reply sticker)']
 handler.tags = ['sticker']
 handler.command = /^(tovid(eo)?)$/i
 handler.group = false
-handler.limit = true
 module.exports = handler
 
 module.exports = handler
