@@ -15,7 +15,6 @@ handler.before = async function (m) {
     } else if (m.text.toLowerCase().endsWith(json.jawaban.split` `[1])) m.reply(`*Dikit Lagi!*`)
     else m.reply(`*Salah!*`)
   }
-  return !0
 }
 handler.exp = 0
 
