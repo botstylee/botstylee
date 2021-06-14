@@ -7,6 +7,7 @@ global.APIs = { // API Prefix
   // name: 'https://website'
   nrtm: 'https://nurutomo.herokuapp.com',
   xteam: 'https://api.xteam.xyz',
+  bg: 'http://bochil.ddns.net',
   bsbt: 'https://bsbt-api-rest.herokuapp.com'
 }
 global.APIKeys = { // APIKey Here
