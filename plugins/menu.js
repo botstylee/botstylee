@@ -110,23 +110,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
-    conn.sendFile(m.chat, BOTSTYLE, 'BOTSTYLE.jpg', text.trim(), { 
-      key: { 
-        remoteJid: 'status@broadcast', 
-        participant: '0@s.whatsapp.net', 
-        fromMe: false 
-      }, 
-      message: { 
-        "imageMessage": { 
-          "mimetype": "image/jpeg", 
-          "caption": `${conn.user.name} Verified Bot`, 
-          "jpegThumbnail": tnbot
-        } 
-      }
-    }, m, { 
-      //thumbnail: tnbot, 
-      contextInfo: { 
-        mentionedJid: [m.sender]} } )
+    conn.sendFile(m.chat, BOTSTYLE, 'BOTSTYLE.jpg', text.trim(), { key: { remoteJid: 'status@broadcast', participant: '0@s.whatsapp.net', fromMe: false }, message: { "imageMessage": { "mimetype": "image/jpeg", "caption": `${conn.user.name} Verified Bot`, "jpegThumbnail": fs.readFileSync(`./src/BOTSTYLE.jpg`)} } })
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
