@@ -4,7 +4,7 @@ let { MessageType } = require('@adiwajshing/baileys')
 let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
   try {
     let package = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')))
-    let botstyle = '.src/botstyle.jpg'
+    let botstyle = '.src/botstyle.png'
     let name = conn.getName(m.sender)
     let d = new Date
     let locale = 'id'
@@ -115,7 +115,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
     key: {remoteJid: 'status @broadcast ', 
     participant:' 0@s.whatsapp.net ', 
     fromMe: false}, 
-    message: {"imageMessage": {"mimetype": "image / jpeg", "caption ${conn.user.name} Benniismael":, "jpegThumbnail": fs. readFileSync ( ./src/botstyle.jpg)}}}, m)
+    message: {"imageMessage": {"mimetype": "image / jpeg", "caption ${conn.user.name} Benniismael":, "jpegThumbnail": fs. readFileSync ( ./src/botstyle.png)}}}, m)
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
