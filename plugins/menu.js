@@ -4,6 +4,7 @@ let { MessageType } = require('@adiwajshing/baileys')
 let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
   try {
     let package = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')))
+    let BOTSTYLE = '.src/BOTSTYLE.jpg'
     let name = conn.getName(m.sender)
     let d = new Date
     let locale = 'id'
@@ -110,7 +111,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
-    conn.sendFile(m.chat, BOTSTYLE, 'BOTSTYLE.jpg', text.trim(), { key: { remoteJid: 'status@broadcast', participant: '0@s.whatsapp.net', fromMe: false }, message: { "imageMessage": { "mimetype": "image/jpeg", "caption": `${conn.user.name} Verified Bot`, "jpegThumbnail": fs.readFileSync(`./src/BOTSTYLE.jpg`)} } })
+    conn.sendFile (m.chat, BOTSTYLE, 'BOTSTYLE.jpg name', text.trim (), {key: {remoteJid: 'status @broadcast ', participant:' 0@s.whatsapp.net ', fromMe: false}, message: {"imageMessage": {"mimetype": "image / jpeg", "caption ${conn.user.name} Verified Bot":, "jpegThumbnail": fs. readFileSync ( ./src/BOTSTYLE.jpg)}}}, m)
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
