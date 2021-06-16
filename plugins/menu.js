@@ -4,7 +4,6 @@ let { MessageType } = require('@adiwajshing/baileys')
 let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
   try {
     let package = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')))
-    let botstyle = '.src/botstyle.png'
     let name = conn.getName(m.sender)
     let d = new Date
     let locale = 'id'
