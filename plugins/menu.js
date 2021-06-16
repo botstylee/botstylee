@@ -79,9 +79,6 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
     let before = conn.menu.before || ` ┌──「 ${conn.user.name} 」
 │============================
 ├ Nama : %name!
-├ *Limit:* %limit
-├ *Total user:* %totalreg user
-├ *EXP:* %totalexp XP
 ├ Tanggal: *%week %weton, %date*
 ├ Waktu: *%time*
 ├ Uptime: *%uptime (%muptime)*
@@ -121,7 +118,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       message: { 
         "imageMessage": { 
           "mimetype": "image/jpeg", 
-          "caption": `${conn.user.name} Verified Bot`, 
+          "caption": `${conn.user.name} Benniismael`, 
           "jpegThumbnail": tnbot
         } 
       }
