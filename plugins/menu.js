@@ -4,6 +4,8 @@ let { MessageType } = require('@adiwajshing/baileys')
 let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
   try {
     let package = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')))
+    let botstyle = './src/botstyle.png'
+    let tnbot = (await conn.getFile(await conn.getProfilePicture(m.fromMe))).data.toString('base64')
     let name = conn.getName(m.sender)
     let d = new Date
     let locale = 'id'
@@ -110,15 +112,23 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
-    conn.sendFile(m.chat, botstyle, 'botstyle.jpg', text.trim(), {
-    key: {remoteJid: 'status @broadcast ', 
-    participant:' 0@s.whatsapp.net ', 
-    fromMe: false}, 
-    message: {
-      "imageMessage": {
-        "mimetype": "image/jpeg", 
-        "caption": `${conn.user.name} Benniismael`, 
-        "jpegThumbnail": fs.readFileSync('./src/botstyle.png')}}}, m)
+    conn.sendFile(m.chat, botstyle, 'botstyle.jpg', text.trim(), { 
+      key: { 
+        remoteJid: 'status@broadcast', 
+        participant: '0@s.whatsapp.net', 
+        fromMe: false 
+      }, 
+      message: { 
+        "imageMessage": { 
+          "mimetype": "image/jpeg", 
+          "caption": `${conn.user.name} Verified Bot`, 
+          "jpegThumbnail": tnbot
+        } 
+      }
+    }, m, { 
+      //thumbnail: tnbot, 
+      contextInfo: { 
+        mentionedJid: [m.sender]} } )
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
