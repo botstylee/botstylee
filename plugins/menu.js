@@ -38,6 +38,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'kerang': 'Kerang Ajaib',
       'quotes': 'Quotes',
       'nulis': 'Mager Nulis',
+      'database': 'Database',
       'islam': 'Islam',
       'image': 'Image',
       'anime': 'Anime',
