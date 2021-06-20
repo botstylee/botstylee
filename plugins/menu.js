@@ -39,6 +39,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'quotes': 'Quotes',
       'nulis': 'Mager Nulis',
       'database': 'Database',
+      'vote': 'Voting',
       'islam': 'Islam',
       'image': 'Image',
       'anime': 'Anime',
