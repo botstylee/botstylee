@@ -427,6 +427,7 @@ module.exports = {
       case 'add':
       case 'remove':
         if (chat.welcome) {
+         let groupMetadata = await this.groupMetadata(jid)
           for (let user of participants) {
             let pp = './src/avatar_contact.png'
             try {
