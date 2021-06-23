@@ -5,7 +5,7 @@ handler.all = async function (m) {
         m.reply('Bug Troli Detected\n\n' + require('util').format(m.key))
         this.reply('6282114499086@s.whatsapp.net', `Pelaku pengirim bug troli @${m.sender.split`@`[0]}`, null, { contextInfo: { mentionedJid: [m.sender] } })
         // await this.clearMessage(m.chat, m.key)
-        await this.modifyChat(m.chat, 'delete', {
+        await this.modifyChat(m.chat, 'clear', {
             includeStarred: false
         }).catch(console.log)
     }
