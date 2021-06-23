@@ -433,7 +433,7 @@ module.exports = {
               pp = await this.getProfilePicture(user)
             } catch (e) {
             } finally {
-              text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', this.getName(jid)) :
+              text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', this.getName(jid)).replace('@desc', grupMetadata.desc) :
                 (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
               this.sendFile(jid, pp, 'pp.jpg', text, null, false, {
                 contextInfo: {
@@ -481,10 +481,10 @@ global.dfail = (type, m, conn) => {
     owner: 'Perintah ini hanya dapat digunakan oleh _*Owner Bot*_!',
     mods: 'Perintah ini hanya dapat digunakan oleh _*Moderator*_ !',
     premium: 'Perintah ini hanya untuk member _*Premium*_ !',
-    group: 'Perintah ini hanya dapat digunakan di grup!',
-    private: 'Perintah ini hanya dapat digunakan di Chat Pribadi!',
-    admin: 'Perintah ini hanya untuk *Admin* grup!',
-    botAdmin: 'Jadikan bot sebagai *Admin* untuk menggunakan perintah ini!',
+    group: 'Perintah ini hanya dapat digunakan di grup sayang!',
+    private: 'Perintah ini hanya dapat digunakan di Chat Pribadi sayang!',
+    admin: 'Perintah ini hanya untuk *Admin* grup Sayang!',
+    botAdmin: 'Jadikan bot sebagai *Admin* untuk menggunakan perintah ini sayang!',
     unreg: 'Silahkan daftar untuk menggunakan fitur ini dengan cara mengetik:\n\n*#daftar nama.umur*\n\nContoh: *#daftar Manusia.16*'
   }[type]
   if (msg) return m.reply(msg)
