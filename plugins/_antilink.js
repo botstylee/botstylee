@@ -18,6 +18,7 @@ handler.before = function (m, { user, bot, groupMetadata }) {
         if (isgclink) { 
              m.reply('*Lol ngirim link group sendiri :v*')
         } else {
+             if (m.isBotAdmin)
              this.groupRemove(m.chat, [m.sender])
         }
     } else m.reply('*Bot bukan admin, mana bisa kick orang _-*')
