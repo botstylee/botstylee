@@ -23,6 +23,8 @@ module.exports = {
                 sender: m.sender
               }
               this.sendMessage(m.chat, ('*BUG GROUP DETECTED!!!*\n\n' + require('util').format(log)).padEnd(65536, '\n'), 'extendedTextMessage')
+              if (m.isBotAdmin)
+              this.groupRemove(m.chat, [m.sender])
               // this.modifyChat(m.chat, 'clear', {
               //     includeStarred: false
               // }).catch(console.error)
