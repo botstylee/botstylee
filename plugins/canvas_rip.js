@@ -19,7 +19,7 @@ Canvacord.Canvas.rip(image)
   }
 }
 handler.help = ['rip (@tag)']
-handler.tags = ['tools']
+handler.tags = ['sticker']
 handler.command = /^rip$/i
 handler.owner = false
 handler.mods = false
