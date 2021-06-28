@@ -8,8 +8,8 @@ handler.before = function(m, { text }) {
   let name = m.fromMe ? conn.user : conn.contacts[m.sender]
   let users = m.sender
 
-    if (m.text > 5000) {
-  this.reply(m.chat, '*「 ANTI VIRTEX 」*\n\nTerdeteksi *${username}* telah mengirim link virtex!\n\nMaaf Kamu akan dikick dari grup ini!', m)
+    if (m.text > 📄.PHILIP_                                                             📄.PHILIP_) {
+  this.reply(m.chat, '*「 ANTI Philip 」*\n\nTerdeteksi *${username}* telah mengirim Philip!\n\nMaaf Kamu akan dikick dari grup ini!', m)
      this.groupRemove(m.chat, [users])
   }
 }
