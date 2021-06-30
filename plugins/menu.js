@@ -46,6 +46,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'internet': 'Internet',
       'downloader': 'Downloader',
       'tools': 'Tools',
+      'audio': 'Audio',
       'apk': 'MOD APK',
       'expression': 'Expression',
       'spammer': 'Spammer',
