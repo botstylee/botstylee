@@ -89,6 +89,15 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.antiLink = isEnable
       break
+    case 'antitoxic':
+      if (m.isGroup) {
+        if (!isAdmin || !isOwner) {
+          global.dfail('admin', m, conn)
+          throw false
+        }
+      }
+      chat.antiToxic = isEnable
+      break
     case 'autolevelup':
       isUser = true
       user.autolevelup = isEnable
