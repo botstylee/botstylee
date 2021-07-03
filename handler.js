@@ -462,8 +462,8 @@ module.exports = {
     }
   },
   async delete(m) {
-    if (m.key.fromMe) return
     if (m.key.remoteJid == 'status@broadcast') return
+    if (m.key.fromMe) return
     let chat = global.DATABASE._data.chats[m.key.remoteJid]
     if (chat.delete) return
     await this.reply(m.key.remoteJid, `
@@ -477,7 +477,21 @@ Untuk mematikan fitur ini, ketik
       }
     })
     this.copyNForward(m.key.remoteJid, m.message).catch(e => console.log(e, m))
-  }
+  },
+    async onCall(json) {
+        let { from } = json[2][0][1]
+        let users = global.DATABASE.data.users
+        let user = users[from] || {}
+        if (user.whitelist) return
+        switch (this.callWhitelistMode) {
+            case 'mycontact':
+                if (from in this.contacts && 'short' in this.contacts[from])
+                    return
+                break
+        }
+        await this.sendMessage(from, 'Maaf, Tolong jangan telfon BOT AJG!!', MessageType.extendedText)
+        //await this.blockUser(from, 'add')
+    }
 }
 
 global.dfail = (type, m, conn) => {
