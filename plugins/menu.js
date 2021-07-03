@@ -126,7 +126,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
         } 
       }
     }, m, { 
-     thumbnail: Buffer.alloc(0), 
+     //thumbnail: Buffer.alloc(0), 
       contextInfo: { 
         mentionedJid: [m.sender]} } )
   } catch (e) {
