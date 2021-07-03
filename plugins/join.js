@@ -1,21 +1,20 @@
 let linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i
 
-let handler = async (m, { conn, text }) => {
-    let [_, code] = text.match(linkRegex) || []
+let handler = async (m, { conn, text, isMods, isOwner }) => {
+    let link = (m.quoted ? m.quoted.text ? m.quoted.text : text : text) || text
+    let [_, code] = link.match(linkRegex) || []
     if (!code) throw 'Link invalid'
-    let res = await conn.query({
-        json: ["action", "invite", code]
-    })
-    if (res.status !== 200) throw res
-    m.reply(`Berhasil join grup ${res.gid}`)
+    if (isMods || isOwner || m.fromMe) {
+        let res = await conn.acceptInvite(code)
+        m.reply(`Berhasil join grup ${res.gid}`)
+    } else {
+        for (let jid in global.owner.map(v => v + '@s.whatsapp.net').filter(u => u !== conn.user.jid)) m.reply('*dari:* ' + m.sender.split('@')[0] + '\n*Link:* ' + text, jid)
+        m.reply('Sedang di process Owner')
+    }
 }
-handler.help = ['join <chat.whatsapp.com>']
+handler.help = ['join [chat.whatsapp.com]']
 handler.tags = ['premium']
 
 handler.command = /^join$/i
-
-handler.rowner = true
-
-handler.prems = true
 
 module.exports = handler
