@@ -9,7 +9,7 @@
 <a href="https://github.com/botstylee/bsbt/pulls?q=is%3Apr+is%3Aclosed"><img title="Pull Request" src="https://img.shields.io/github/issues-pr-closed/BochilGaming/games-wabot?label=PullRequest&color=red&style=flat-square"></a>
 
 ## Join Group Bot
-[`Group Whatsapp`](https://chat.whatsapp.com/DmYC7VwLxpVIPHrysJFIC7)
+[`Group Whatsapp`](https://chat.whatsapp.com/JMEkZREiG4O8T9NQGViUtx)
 ### FOR TERMUX USER
 ```bash
 > pkg update && pkg upgrade
@@ -45,9 +45,11 @@
 --------------
 
 ### Thanks To 
-[`@Nurutomo`](https://github.com/Nurutomo)
-[`@BENNIISMAEL`](https://github.com/botstylee)
-[`@BochilGaming`](https://github.com/BochilGaming)
+[`Nurutomo`](https://github.com/Nurutomo)
+
+[`BENNIISMAEL`](https://github.com/botstylee)
+
+[`BochilGaming`](https://github.com/BochilGaming)
 
 
 [`xteam`](https://api.xteam.xyz)
