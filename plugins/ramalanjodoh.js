@@ -28,7 +28,7 @@ _${res.data.result.negatif}_
   	m.reply('```Error```')
   }
 }
-handler.help = ['ramalanjodoh <nama1|nama2>']
+handler.help = ['ramalanjodoh '].map(v => v + ' <nama>|<nama doi>')
 handler.tags = ['primbon']
 handler.command = /^(ramalanjodoh)$/i
 handler.owner = false
