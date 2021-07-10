@@ -40,7 +40,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'nulis': 'Mager Nulis',
       'database': 'Database',
       'absen': 'Absen',
-      'vote': 'Votin',
+      'vote': 'Voting',
       'islam': 'Islam',
       'image': 'Image',
       'anime': 'Anime',
