@@ -10,12 +10,15 @@ global.APIs = { // API Prefix
   nzcha: 'http://nzcha-apii.herokuapp.com',
   bg: 'http://bochil.ddns.net',
   fdci: 'https://api.fdci.se',
-  bsbt: 'https://bsbt-api-rest.herokuapp.com'
+  bsbt: 'https://bsbt-api-rest.herokuapp.com',
+  zeks: 'https://api.zeks.xyz'
+  
 }
 global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
   'https://api.xteam.xyz': 'd90a9e986e18778b',
-  'https://bsbt-api-rest.herokuapp.com': 'benniismael'
+  'https://bsbt-api-rest.herokuapp.com': 'benniismael',
+  'https://api.zeks.xyz': 'apivinz'
 }
 
 // Sticker WM
