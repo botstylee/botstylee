@@ -39,6 +39,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'quotes': 'Quotes',
       'nulis': 'Mager Nulis',
       'database': 'Database',
+      'absen': 'Absen',
       'vote': 'Voting',
       'islam': 'Islam',
       'image': 'Image',
@@ -82,7 +83,8 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
     let before = conn.menu.before || ` ┌──「 ${conn.user.name} 」
 │============================
 ├ Nama : %name!
-├ Tanggal: *%week %weton, %date*
+├ Hari: *%week %weton*
+├ Tanggal: *%date*
 ├ Waktu: *%time*
 ├ Uptime: *%uptime (%muptime)*
 │============================`
@@ -126,7 +128,8 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
         } 
       }
     }, m, { 
-     thumbnail: Buffer.alloc(0), 
+     //thumbnail: Buffer.alloc(0), 
+      thumbnail: tnbot,
       contextInfo: { 
         mentionedJid: [m.sender]} } )
   } catch (e) {
