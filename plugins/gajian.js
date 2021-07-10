@@ -16,7 +16,6 @@ handler.tags = ['rpg']
 handler.command = /^(gaji|gajian)$/i
 handler.owner = false
 handler.mods = false
-handler.premium = true
 handler.group = true
 handler.private = false
 handler.register = true
