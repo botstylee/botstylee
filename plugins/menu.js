@@ -52,6 +52,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'expression': 'Expression',
       'spammer': 'Spammer',
       'jadibot': 'Jadi Bot',
+      'premium': 'Premium',
       'admin': 'Admin',
       'group': 'Group',
       'owner': 'Owner',
