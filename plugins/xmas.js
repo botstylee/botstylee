@@ -1,28 +1,18 @@
-let util = require('util')
-let path = require('path')
-let { spawn } = require('child_process')
-
-// Xmas Xteam
-let handler  = async (m, { conn, text }) => {
-  let d = new Date
-  let tgl = d.toLocaleDateString('id-Id')
-  let hari = d.toLocaleDateString('id-Id', { weekday: 'long' })
- text,
-await conn.sendFile(m.chat, global.API('xteam', '/xmas', { text, }, 'APIKEY'), 'xmas.png', 'Nih udah jadi hasilnya sayang...\n *_Tetap Support:_* *BOTSTYLE*', m)
+let limit = 10
+let handler = async(m, { conn, text }) => {
+if (!text) return conn.reply(m.chat, 'Masukkan text yang Anda inginkan', m)
+if (text > 10) return conn.reply(m.chat, '*Text terlalu panjang sayang!*\n_Maksimal 10 huruf!_', m)
+let link = 'https://bsbt-api-rest.herokuapp.com/api/textpro/xmas?text=' + text + '&apikey=benniismael'
+conn.sendFile(m.chat, link, 'BOTSTYLE.png', '_BOTSTYLE_', m)
 }
-handler.help = ['xmas'].map(v => v + '<teks>')
+handler.help = ['xmas <text>']
 handler.tags = ['creator']
-handler.command = /^xmas$/i
+handler.command = /^(3d)$/i
 handler.owner = false
 handler.mods = false
 handler.premium = false
-handler.group = true
-handler.private = false
-
-handler.admin = false
-handler.botAdmin = false
-
-handler.fail = null
 handler.register = true
+handler.fail = null
 
+handler.limit = true
 module.exports = handler
