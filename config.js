@@ -11,14 +11,16 @@ global.APIs = { // API Prefix
   bg: 'http://bochil.ddns.net',
   fdci: 'https://api.fdci.se',
   bsbt: 'https://bsbt-api-rest.herokuapp.com',
-  zeks: 'https://api.zeks.xyz'
+  zeks: 'https://api.zeks.xyz',
+  hardianto: 'https://hardianto-chan.herokuapp.com'
   
 }
 global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
   'https://api.xteam.xyz': 'belilah',
   'https://bsbt-api-rest.herokuapp.com': 'benniismael',
-  'https://api.zeks.xyz': 'apivinz'
+  'https://api.zeks.xyz': 'apivinz',
+  'https://hardianto-chan.herokuapp.com': 'hardianto'
 }
 
 // Sticker WM
