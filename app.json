@@ -1,0 +1,11 @@
+{
+  "name": "botstylee",
+  "description": "Lightweight WhatsApp Bot",
+  "repository": "https://github.com/botstylee/botstylee",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": [
+    "bot",
+    "whatsapp",
+    "whatsapp-bot"
+  ]
+}
