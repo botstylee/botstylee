@@ -13,7 +13,8 @@ handler.all = async function (m, { isBlocked }) {
 │ 7 Hari / Rp 
 │ 30 Hari / Rp 
 └────
-`.trim(), m)
+Hubungi @${global.owner[0]}
+`.trim(), m, { contextIfo: { mentionedJid: [global.owner[0] + '@s.whatsapp.net'] } })
     }
 
     // salam
@@ -38,6 +39,7 @@ handler.all = async function (m, { isBlocked }) {
             setting.backupDATABASE = new Date() * 1
         }
     }
+
 }
 
 module.exports = handler
