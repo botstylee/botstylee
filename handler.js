@@ -28,6 +28,7 @@ module.exports = {
         if (user) {
             if (!isNumber(user.healt)) user.healt = 0
             if (!isNumber(user.level)) user.level = 0
+            if (!user.role) user.role = 'Beginner'
             if (!isNumber(user.exp)) user.exp = 0
             if (!isNumber(user.limit)) user.limit = 100
             if (!isNumber(user.lastclaim)) user.lastclaim = 0
@@ -99,6 +100,7 @@ module.exports = {
         } else global.DATABASE._data.users[m.sender] = {
             healt: 100,
             level: 0,
+            role: 'Beginner',
             exp: 0,
             limit: 10,
             lastclaim: 0,
@@ -171,6 +173,7 @@ module.exports = {
           if (!('antiLink' in chat)) chat.antiLink = false
           if (!('antiVirtext' in chat)) chat.antiVirtext = false
           if (!'antiToxic' in chat) chat.antiToxic = false
+          if (!isNumber(chat.expired)) chat.expired = 0
         } else global.DATABASE._data.chats[m.chat] = {
           isBanned: false,
           welcome: false,
@@ -183,6 +186,24 @@ module.exports = {
           antiLink: false,
           antiVirtext: false,
           antiToxic: false,
+          expired: 0,
+        }
+       let settings = global.DATABASE.data.settings
+        if (typeof settings !== 'object') global.db.data.settings = {}
+        if (settings) {
+          if (!'antispam' in settings) settings.antispam = true
+          if (!'antitroli' in settings) settings.antitroli = true
+          if (!'backup' in settings) settings.backup = false
+          if (!isNumber(settings.backupDATABASE)) settings.backupDATABASE = 0
+          if (!'groupOnly' in settings) settings.groupOnly = false
+          if (!'nsfw' in settings) settings.nsfw = true
+        } else global.DATABASE.data.settings = {
+          antispam: true,
+          antitroli: true,
+          backup: false,
+          backupDB: 0,
+          groupOnly: false,
+          nsfw: true
         }
       } catch (e) {
         console.error(e)
@@ -504,7 +525,8 @@ global.dfail = (type, m, conn) => {
     private: 'Perintah ini hanya dapat digunakan di Chat Pribadi sayang!',
     admin: 'Perintah ini hanya untuk *Admin* grup Sayang!',
     botAdmin: 'Jadikan bot sebagai *Admin* untuk menggunakan perintah ini sayang!',
-    unreg: 'Silahkan daftar untuk menggunakan fitur ini dengan cara mengetik:\n\n*#daftar nama.umur*\n\nContoh: *#daftar Manusia.16*'
+    unreg: 'Silahkan daftar untuk menggunakan fitur ini dengan cara mengetik:\n\n*#daftar nama.umur*\n\nContoh: *#daftar BenniGanteng.16*'
+    nsfw: 'Mode NSFW tidak aktif. Hanya pemilik bot yang bisa mengaktifkannya'
   }[type]
   if (msg) return m.reply(msg)
 }
