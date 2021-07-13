@@ -114,9 +114,16 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       conn.callWhitelistMode = isEnable
       break
+    case 'nsfw':
+      if (!isOwner) {
+        global.dfail('owner', m, conn)
+        throw false
+      }
+      setting.nsfw = isEnable
+      break
     default:
       if (!/[01]/.test(command)) throw `
-List option: welcome | delete | public | antilink | autolevelup | detect | document | whitelistmycontacts
+List option: welcome | delete | public | antilink | autolevelup | detect | document | whitelistmycontacts | nsfw
 Contoh:
 ${usedPrefix}enable welcome
 ${usedPrefix}disable welcome
