@@ -1,33 +1,31 @@
-let fetch = require('node-fetch')
-let handler = async (m, { conn, args, isPrems, isOwner, usedPrefix, command }) => {
-	if (!args || !args[0]) return conn.reply(m.chat, `⺀ Format salah!\n\n*contoh* : _${usedPrefix + command} xd_`, m)
-	let text = args.join` `
-	let name = conn.getName(m.sender)
-	fetch('https://mnazria.herokuapp.com/api/jooxnich?search=' + encodeURIComponent(text))
-    	.then(res => res.json())
-    	.then(joox => {
-    fetch('http://crop.us.to/api.php?url=' + joox.result.mp3Url)
-    	.then(res => res.json())
-    	.then(json => {
-	if(json.error == false) {
-    		conn.reply(m.chat, `_Tunggu sebentar . . ._`, m)
-    		conn.sendFile(m.chat, joox.result.imgSrc, 'thumbnail.jpg', `⺀ JOOX PLAY ⺀\n\n	○ ${joox.result.msinger + ' - ' + joox.result.msong}\n\n*Mengirim audio . . .*\n\n▌│█║▌║▌║║▌║▌║█│▌▌│`, m)
-    		conn.sendFile(m.chat, joox.result.mp3Url, joox.result.msinger + ' - ' + joox.result.msong + '.mp3', '', m, false, { asDocument: true })
-			}
-		})
-	}) .catch(() => { conn.reply(m.chat, `_Error!_`, m) })
+const { joox } = require('../lib/scrape')
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+    if (!text) throw `*Perintah ini untuk mencari lagu joox berdasarkan pencarian*\n\ncontoh:\n${usedPrefix + command} akad`
+    if (isUrl(text)) throw `*Perintah ini untuk mencari lagu joox berdasarkan pencarian bukan link*\n\ncontoh:\n${usedPrefix + command} akad`
+
+    joox(text).then(res => {
+        let joox = JSON.stringify(res)
+        let jjson = JSON.parse(joox)
+        let random = Math.floor(Math.random() * jjson.data.length)
+        let hasil = jjson.data[random]
+        let json = hasil
+        let pesan = `
+*Penyanyi:* ${json.penyanyi}
+*Judul:* ${json.lagu}
+*Album:* ${json.album}
+*Diterbitkan:* ${json.publish}
+*Link:* ${json.mp3}
+*BOTSTYLE*`.trim()
+        conn.sendFile(m.chat, json.img, 'error.jpg', pesan, m, false, { thumbnail: Buffer.alloc(0) })
+        conn.sendFile(m.chat, json.mp3, 'error.mp3', '', m, false, { mimetype: 'audio/mp4' })
+    })
 }
-handler.help = ['joox'].map(v => v + ' *title*')
+handler.help = ['joox'].map(v => v + ' <judul>')
 handler.tags = ['downloader']
-handler.command = /^(joox)$/i
-handler.owner = false
-handler.mods = false
-handler.premium = false
-handler.group = false
-handler.private = false
-handler.admin = false
-handler.botAdmin = false
-handler.fail = null
+handler.command = /^joox$/i
 handler.limit = true
-handler.exp = 500
 module.exports = handler
+
+const isUrl = (text) => {
+    return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi'))
+}
