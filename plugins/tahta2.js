@@ -36,7 +36,7 @@ let handler = async (m, { text, usedPrefix, command }) => {
     }
   } else throw `contoh:\n${usedPrefix + command} saya`
 }
-handler.help = ['harta2'].map(v => v + ' <teks>')
+handler.help = ['tahta2'].map(v => v + ' <teks>')
 handler.tags = ['creator']
 handler.command = /^(harta|ht|tahta)2$/i
 handler.limit = true
