@@ -89,6 +89,15 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.antiLink = isEnable
       break
+    case 'stiker':
+      if (m.isGroup) {
+        if (!(isAdmin || isOwner)) {
+          global.dfail('admin', m, conn)
+          throw false
+        }
+      }
+      chat.stiker = isEnable
+      break
     case 'antitoxic':
       if (m.isGroup) {
         if (!isAdmin || !isOwner) {
@@ -123,8 +132,27 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       break
     default:
       if (!/[01]/.test(command)) throw `
-List option: welcome | delete | public | antilink | autolevelup | detect | document | whitelistmycontacts | nsfw
-Contoh:
+┌〔 Daftar Opsi 〕
+│ 
+├ anon
+├ antilink
+├ antispam
+├ antitroli
+├ autolevelup
+├ backup
+├ delete
+├ detect
+├ document
+├ grouponly
+├ jadibot
+├ nsfw
+├ public
+├ stiker
+├ whitelistmycontacts
+├ welcome
+│ 
+└────
+contoh:
 ${usedPrefix}enable welcome
 ${usedPrefix}disable welcome
 `.trim()
