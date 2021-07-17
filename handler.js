@@ -169,6 +169,7 @@ module.exports = {
           if (!('sBye' in chat)) chat.sBye = ''
           if (!('sPromote' in chat)) chat.sPromote = ''
           if (!('sDemote' in chat)) chat.sDemote = ''
+          if (!('stiker' in chat)) chat.stiker = false
           if (!('delete' in chat)) chat.delete = false
           if (!('antiLink' in chat)) chat.antiLink = false
           if (!('antiVirtext' in chat)) chat.antiVirtext = false
@@ -182,6 +183,7 @@ module.exports = {
           sBye: '',
           sPromote: '',
           sDemote: '',
+          stiker: false,
           delete: false,
           antiLink: false,
           antiVirtext: false,
