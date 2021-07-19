@@ -113,7 +113,21 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
-    conn.reply(m.chat, text.trim(), m)
+    conn.reply(m.chat, ``, m, {
+            contextInfo: {
+                mentionedJid: []
+            }, quoted: {
+                key: {
+                    fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? {
+                        remoteJid: "status@broadcast"
+                    } : {})
+                }, message: {
+                    "imageMessage": {
+                        "mimetype": "image/jpeg", "jpegThumbnail": fs.readFileSync('./src/botstyle.png'), "caption": ""
+                    }
+                }
+            }
+        })
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
