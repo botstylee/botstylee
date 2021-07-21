@@ -173,6 +173,7 @@ module.exports = {
           if (!('delete' in chat)) chat.delete = false
           if (!('antiLink' in chat)) chat.antiLink = false
           if (!('antiVirtext' in chat)) chat.antiVirtext = false
+          if (!('antiPhilip' in chat)) chat.antiPhilip = false
           if (!'antiToxic' in chat) chat.antiToxic = false
           if (!isNumber(chat.expired)) chat.expired = 0
         } else global.DATABASE._data.chats[m.chat] = {
@@ -187,6 +188,7 @@ module.exports = {
           delete: false,
           antiLink: false,
           antiVirtext: false,
+          antiPhilip: false,
           antiToxic: false,
           expired: 0,
         }
