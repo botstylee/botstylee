@@ -7,7 +7,7 @@ await conn.sendFile(m.chat, global.API('https://api.zeks.xyz', '/api/phlogo', {
  text2: kanan,
  theme: 'phlogo',
  apikey: 'apivinz'
-}), 'Error', '_Aqui tienes mi rey_', m)
+}), 'Error', '_ini hasil dari phlogo nya sayang love you😘_', m)
 }
 handler.help = ['phlogo <text>']
 handler.tags = ['creator']
