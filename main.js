@@ -119,6 +119,7 @@ global.reloadHandler = function () {
     conn.off('message-delete', conn.onDelete)
     conn.off('group-participants-update', conn.onParticipantsUpdate)
     conn.off('CB:action,,call', conn.onCall)
+    conn.off('buttons-response-handler', conn.onButtonsResponse)
   }
   conn.welcome = 'Hai, @user!\nSelamat datang di grup @subject\n\n@desc'
   conn.bye = 'Selamat tinggal @user jangan lupa untuk sholat!'
@@ -128,10 +129,12 @@ global.reloadHandler = function () {
   conn.onDelete = handler.delete
   conn.onParticipantsUpdate = handler.participantsUpdate
   conn.onCall = handler.onCall
+  conn.onButtonsResponse = handler.buttonsResponse
   conn.on('chat-update', conn.handler)
   conn.on('message-delete', conn.onDelete)
   conn.on('group-participants-update', conn.onParticipantsUpdate)
   conn.on('CB:action,,call', conn.onCall)
+  conn.on('buttons-response-handler', conn.onButtonsResponse)
   if (isInit) {
     conn.on('error', conn.logger.error)
     conn.on('close', () => {
