@@ -6,7 +6,7 @@ let { webp2png } = require('../lib/webp2mp4')
 let handler = m => m
 
 handler.before = async function (m) {
-    let chat = global.db.data.chats[m.chat]
+    let chat = global.DATABASE.data.chats[m.chat]
     if (chat.stiker && !chat.isBanned && !m.fromMe && !m.isBaileys) {
         // try {
         let q = m
