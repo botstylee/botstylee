@@ -142,6 +142,17 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       setting.nsfw = isEnable
       break
+    case 'simi':
+      if (m.isGroup) {
+        global.dfail('private', m, conn)
+        throw false
+
+      } else if (!(isAdmin || isOwner)) {
+        global.dfail('admin', m, conn)
+        throw false
+      }
+      chat.simi = isEnable
+      break
     default:
       if (!/[01]/.test(command)) throw `
 ┌〔 Daftar Opsi 〕
@@ -160,13 +171,14 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 ├ nsfw
 ├ public
 ├ stiker
+├ simi
 ├ whitelistmycontacts
 ├ welcome
 │ 
 └────
 contoh:
-${usedPrefix}enable welcome
-${usedPrefix}disable welcome
+${usedPrefix}on welcome
+${usedPrefix}off welcome
 `.trim()
       throw false
   }
@@ -174,7 +186,7 @@ ${usedPrefix}disable welcome
 *${type}* berhasil di *${isEnable ? 'nyala' : 'mati'}kan* ${isAll ? 'untuk bot ini' : isUser ? '' : 'untuk chat ini'}
 `.trim())
 }
-handler.help = ['en', 'dis'].map(v => v + 'able <option>')
+handler.help = ['on', 'off'].map(v => v + ' <opsi>')
 handler.tags = ['group', 'owner']
 handler.command = /^((en|dis)able|(tru|fals)e|(turn)?o(n|ff)|[01])$/i
 
