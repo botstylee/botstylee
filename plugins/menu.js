@@ -114,8 +114,8 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
     const buttons = [
-  {buttonId: '#command', buttonText: {displayText: 'Button 1'}, type: 1},
-  {buttonId: '#command', buttonText: {displayText: 'Button 2'}, type: 1}
+  {buttonId: '#owner', buttonText: {displayText: 'OWNER'}, type: 1},
+  {buttonId: '#donasi', buttonText: {displayText: 'DONASI'}, type: 1}
 ]
 
 const buttonMessage = {
