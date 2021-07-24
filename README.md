@@ -52,8 +52,6 @@
 [`BochilGaming`](https://github.com/BochilGaming)
 
 
-[`RR018|RIZKI`](https://github.com/rizkiramadhan4617)
-
 [`xteam`](https://api.xteam.xyz)
 
 
