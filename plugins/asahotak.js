@@ -1,36 +1,35 @@
+let { asahotak } = require('../lib/game')
 let fetch = require('node-fetch')
-
-let timeout = 20000
-let poin = 2500
-let handler  = async (m, { conn, usedPrefix }) => {
+let timeout = 120000
+let poin = 500
+let handler = async (m, { conn, usedPrefix }) => {
     conn.asahotak = conn.asahotak ? conn.asahotak : {}
     let id = m.chat
     if (id in conn.asahotak) {
         conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.asahotak[id][0])
         throw false
     }
-    let res = await fetch(global.API('xteam', '/game/asahotak', {}, 'APIKEY'))
-    if (res.status !== 200) throw await res.text()
-    let json = await res.json()
-    if (!json.status) throw json
+    let res = JSON.parse(JSON.stringify(await asahotak()))
+    let random = Math.floor(Math.random() * res.length)
+    let json = res[random]
     let caption = `
-*「 Asah Otak 」*
-${json.result.level}
-Soal: "${json.result.soal}"
+    ${json.pertanyaan}
 Timeout *${(timeout / 1000).toFixed(2)} detik*
-Bonus: Rp${poin}
+Ketik ${usedPrefix}ao untuk bantuan
+Bonus: ${poin} XP
     `.trim()
     conn.asahotak[id] = [
-      await conn.reply(m.chat, caption, m),
-      json, poin,
-      setTimeout(() => {
-        if (conn.asahotak[id]) conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.result.jawaban}*`, conn.asahotak[id][0])
-        delete conn.asahotak[id]
-      }, timeout)
+        await conn.send2Button(m.chat, caption.trim(), 'made with ❤️ by BENNIISMAEL', 'BANTUAN', '.ao', 'NYERAH', 'nyerah'),
+        json, poin,
+        setTimeout(async () => {
+            if (conn.asahotak[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, '', 'ASAH OTAK', '.asahotak')
+            // conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, conn.asahotak[id][0])
+            delete conn.asahotak[id]
+        }, timeout)
     ]
-  }
-  handler.help = ['asahotak']
-  handler.tags = ['game']
-  handler.command = /^asahotak/i
-  
-  module.exports = handler
+}
+handler.help = ['asahotak']
+handler.tags = ['game']
+handler.command = /^asahotak/i
+
+module.exports = handler
