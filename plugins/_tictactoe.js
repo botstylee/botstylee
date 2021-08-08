@@ -4,7 +4,7 @@ let debugMode = !1
 let winScore = 500
 let playScore = 50
 
-handler.before = function (m) {
+handler.before = async function (m) {
     let ok
     let isWin = !1
     let isTie = !1
@@ -57,21 +57,21 @@ handler.before = function (m) {
 ${arr.slice(0, 3).join('')}
 ${arr.slice(3, 6).join('')}
 ${arr.slice(6).join('')}
-${isWin ? `@${winner.split('@')[0]} Menang! (+${winScore} XP)` : isTie ? `Game berakhir (+${playScore} XP)` : `Giliran ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}
-❌: @${room.game.playerX.split('@')[0]}
-⭕: @${room.game.playerO.split('@')[0]}
+${isWin ? `@${winner.split`@`[0]} Menang! (+${winScore} XP)` : isTie ? `Game berakhir (+${playScore} XP)` : `Giliran ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split`@`[0]})`}
+❌: @${room.game.playerX.split`@`[0]}
+⭕: @${room.game.playerO.split`@`[0]}
 Ketik *nyerah* untuk nyerah
 Room ID: ${room.id}
 `.trim()
-        let users = global.DATABASE._data.users
+        let users = global.db.data.users
         if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat)
             room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = m.chat
-        if (room.x !== room.o) m.reply(str, room.x, {
+        if (room.x !== room.o) await conn.sendButton(room.x, str, 'BOTSTYLE', 'NYERAH', 'nyerah', {
             contextInfo: {
                 mentionedJid: this.parseMention(str)
             }
         })
-        m.reply(str, room.o, {
+        await conn.sendButton(room.o, str, 'BOTSTYLE', 'NYERAH', 'nyerah', {
             contextInfo: {
                 mentionedJid: this.parseMention(str)
             }
