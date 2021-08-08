@@ -115,7 +115,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
     // conn.reply(m.chat, text.trim(), m)
-    await conn.send2Button(m.chat, text.trim(), 'made with ❤️ by BENNIISMAEL', 'REST API BSBT', 'https://bsbt-api-rest.herokuapp.com', 'DONASI', '#donasi')
+    await conn.send2Button(m.chat, text.trim(), 'made with ❤️ by BENNIISMAEL', 'OWNER', '#owner', 'DONASI', '#donasi')
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
