@@ -11,7 +11,7 @@ await conn.sendFile(m.chat, uh,'p.jpg', 'wuis', m,false, { thumbnail: Buffer.all
 
 handler.help = ['bohlam']
 handler.tags = ['ephoto360']
-handler.command = /^bohlam$/i
+handler.command = /^(bohlam)$/i
 handler.group = false
 handler.private = false
 
