@@ -5,7 +5,7 @@ const { sticker } = require('../lib/sticker.js')
 
 let handler  = async (m, { conn, text }) => {
   if (text) {
-    let res = await fetch('https://bsbt-api-rest.herokuapp.com/api/maker/ttp?apikey=benniismael&text=' + text)
+    let res = await fetch('https://bsbt-api-rest.herokuapp.com/api/maker/ttp?apikey=benniismaelapikey&text=' + text)
     let json = await res.buffer()
     let stiker = await sticker(json, false, 'image/jpeg')
     conn.sendMessage(m.chat, stiker, MessageType.sticker, {
