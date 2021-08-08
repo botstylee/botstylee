@@ -4,7 +4,7 @@ const { MessageType } = require('@adiwajshing/baileys')
 
 let handler  = async (m, { conn, text }) => {
   await m.reply('Sedang membuat...')
-  if (text) conn.sendFile(m.chat, 'https://bsbt-api-rest.herokuapp.com/api/maker/attp?apikey=benniismael&text=' + encodeURIComponent(text), 'attp.webp', '', m, false, { asSticker: true })
+  if (text) conn.sendFile(m.chat, 'https://bsbt-api-rest.herokuapp.com/api/maker/attp?apikey=benniismaelapikey&text=' + encodeURIComponent(text), 'attp.webp', '', m, false, { asSticker: true })
   else throw 'Uhm...Teksnya?'
 }
 handler.help = ['attp <teks>']
