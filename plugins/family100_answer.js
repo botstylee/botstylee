@@ -9,13 +9,13 @@ module.exports = {
         let text = m.text.toLowerCase().replace(/[^\w\s\-]+/, '')
         let isSurrender = /^((me)?nyerah|surr?ender)$/i.test(m.text)
         if (!isSurrender) {
-            let index = room.jawaban.indexOf(text)
+            let index = room.jawaban.findIndex(v => v.toLowerCase().replace(/[^\w\s\-]+/, '') === text)
             if (index < 0) {
                 if (Math.max(...room.jawaban.filter((_, index) => !room.terjawab[index]).map(jawaban => similarity(jawaban, text))) >= threshold) m.reply('Dikit lagi!')
                 return !0
             }
             if (room.terjawab[index]) return !0
-            let users = global.database.data.users[m.sender]
+            let users = global.DATABASE.data.users[m.sender]
             room.terjawab[index] = m.sender
             users.exp += room.winScore
         }
@@ -31,7 +31,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
         }).filter(v => v).join('\n')}
 ${isSurrender ? '' : `+${room.winScore} XP tiap jawaban benar`}
     `.trim()
-        m.reply(caption, null, {
+        await this.sendButton(m.chat, caption, 'made with ❤️ by BENNIISMAEL', `${isWin ? 'FAMILY100' : isSurrender ? 'FAMILY100' : 'NYERAH'}`, `${isWin ? ',FAMILY100' : isSurrender ? ',FAMILY100' : 'NYERAH'}`, {
             contextInfo: {
                 mentionedJid: this.parseMention(caption)
             }
