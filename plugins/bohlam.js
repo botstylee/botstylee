@@ -1,4 +1,4 @@
-const { ephoto2 } = require('../lib/ephoto2.js')
+const { ephoto } = require('../lib/ephoto.js')
 let handler = async(m, { conn, args, usedPrefix, text}) => {
 
   if (!text) return conn.reply(m.chat, 'masukan teksnya',m)
