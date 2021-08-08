@@ -19,13 +19,13 @@ handler.before = async function (m) {
             if (!img) return
             stiker = await sticker(0, link, global.packname, global.author)
         } else if (/video/.test(mime)) {
-            if ((q.msg || q).seconds > 11) throw 'Maksimal 10 detik!'
+            if ((q.msg || q).seconds > 11) return m.reply('Maksimal 10 detik!')
             let img = await q.download()
             let link = await uploadFile(img)
             if (!img) return
             stiker = await sticker(0, link, global.packname, global.author)
         } else if (m.text) {
-            if (isUrl(m.text)) stiker = await sticker(false, m.text, global.packname, global.author)
+            if (isUrl(m.text)) stiker = await sticker(false, m.text.split` `[0], global.packname, global.author)
             else return
         }
         if (stiker) await this.sendMessage(m.chat, stiker, 'stickerMessage', {
