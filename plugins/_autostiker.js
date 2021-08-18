@@ -4,8 +4,8 @@ const WSF = require('wa-sticker-formatter')
 let handler = m => m
 
 handler.before = async function (m) {
-    let chat = global.db.data.chats[m.chat]
-    let user = global.db.data.users[m.sender]
+    let chat = global.DATABASE.data.chats[m.chat]
+    let user = global.DATABASE.data.users[m.sender]
     if (chat.stiker && !user.banned && !chat.isBanned && !m.fromMe && !m.isBaileys) {
         // try {
         if (/^.*s(tic?ker)?(gif)?$/i.test(m.text)) return
