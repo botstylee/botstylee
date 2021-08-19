@@ -11,9 +11,10 @@ handler.before = function (m, { user, isAdmin, isBotAdmin }) {
 
   if (chat.antiBugfont && isGroupFont) {
  m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi *${name}* bocah telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
-   await this.modifyChat(m.chat, 'clear', {
-            includeStarred: false
-        }) //.catch(console.log)
+  this.groupRemove(m.chat, [m.sender])
+    //await this.modifyChat(m.chat, 'clear', {
+            //includeStarred: false
+        //}).catch(console.log)
   }
 }
 
