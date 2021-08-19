@@ -10,7 +10,7 @@ handler.before = async function (m) {
     let json = JSON.parse(JSON.stringify(this.tebakgambar[id][1]))
     // m.reply(JSON.stringify(json, null, '\t'))
     if (m.text.toLowerCase() == json.result.jawaban.toLowerCase().trim()) {
-      global.db.data.users[m.sender].exp += this.tebakgambar[id][2]
+      global.DATABASE.data.users[m.sender].exp += this.tebakgambar[id][2]
       m.reply(`*Benar!*\n+${this.tebakgambar[id][2]} XP`)
       clearTimeout(this.tebakgambar[id][3])
       delete this.tebakgambar[id]
