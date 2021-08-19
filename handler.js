@@ -174,7 +174,7 @@ module.exports = {
           if (!('antiLink' in chat)) chat.antiLink = false
           if (!('antiVirtext' in chat)) chat.antiVirtext = false
           if (!('antiPhilip' in chat)) chat.antiPhilip = false
-          if (!('antiBugℛ' in chat)) chat.antiBugℛ = false
+          if (!('antiBugfont' in chat)) chat.antiBugfont = false
           if (!('antiToxic' in chat)) chat.antiToxic = false
           if (!isNumber(chat.expired)) chat.expired = 0
         } else global.DATABASE._data.chats[m.chat] = {
@@ -190,7 +190,7 @@ module.exports = {
           antiLink: false,
           antiVirtext: false,
           antiPhilip: false,
-          antiBugℛ: false,
+          antiBugfont: false,
           antiToxic: false,
           expired: 0,
         }
