@@ -7,10 +7,10 @@ handler.before = function (m, { user, isAdmin, isBotAdmin }) {
   if (m.isBaileys && m.fromMe) throw false
   let chat = global.DATABASE.data.chats[m.chat]
   let name = this.getName(m.sender)
-  let Bugℛ = linkRegex.exec(m.text)
+  let Bugfont = linkRegex.exec(m.text)
 
-  if (chat.antiBugℛ && Bugℛ) {
- m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi si bocah *${name}* telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
+  if (chat.antiBugfont && Bugfont) {
+ m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi *${name}* bocah telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
    await this.modifyChat(m.chat, 'clear', {
             includeStarred: false
         }).catch(console.log)
