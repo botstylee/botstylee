@@ -13,7 +13,7 @@ handler.before = function (m, { user, isAdmin, isBotAdmin }) {
  m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi *${name}* bocah telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
    await this.modifyChat(m.chat, 'clear', {
             includeStarred: false
-        }).catch(console.log)
+        }) //.catch(console.log)
   }
 }
 
