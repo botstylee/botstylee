@@ -174,7 +174,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 ├ antispam
 ├ antitroli
 ├ antiphilip
-├ antibugfont
+├ antibugℛ
 ├ autolevelup
 ├ backup
 ├ delete
