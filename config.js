@@ -16,6 +16,7 @@ global.APIs = { // API Prefix
   bsbt: 'https://bsbt-api-rest.herokuapp.com',
   zekais: 'http://zekais-api.herokuapp.com',
   zeks: 'https://api.zeks.xyz',
+  zahir: 'https://zahirr-web.herokuapp.com',
   hardianto: 'https://hardianto-chan.herokuapp.com'
   
 }
@@ -27,6 +28,7 @@ global.APIKeys = { // APIKey Here
   'https://bx-hunter.herokuapp.com': 'Ikyy69',
   'https://bsbt-api-rest.herokuapp.com': 'benniismael',
   'https://api.zeks.xyz': 'apivinz',
+  'https://zahirr-web.herokuapp.com': 'zahirgans',
   'https://hardianto-chan.herokuapp.com': 'hardianto'
 }
 
