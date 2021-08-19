@@ -6,12 +6,14 @@ global.prems = [] // Premium user has unlimited limit
 global.APIs = { // API Prefix
   // name: 'https://website'
   nrtm: 'https://nurutomo.herokuapp.com',
+  pencarikode: 'https://pencarikode.xyz',
   xteam: 'https://api.xteam.xyz',
   bx: 'https://bx-hunter.herokuapp.com',
   nzcha: 'http://nzcha-apii.herokuapp.com',
   bg: 'http://bochil.ddns.net',
   fdci: 'https://api.fdci.se',
   bsbt: 'https://bsbt-api-rest.herokuapp.com',
+  zekais: 'http://zekais-api.herokuapp.com',
   zeks: 'https://api.zeks.xyz',
   hardianto: 'https://hardianto-chan.herokuapp.com'
   
@@ -19,6 +21,7 @@ global.APIs = { // API Prefix
 global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
   'https://api.xteam.xyz': 'benniismaelapikey',
+  'https://pencarikode.xyz': 'pais',
   'https://bx-hunter.herokuapp.com': 'Ikyy69',
   'https://bsbt-api-rest.herokuapp.com': 'benniismael',
   'https://api.zeks.xyz': 'apivinz',
@@ -26,7 +29,7 @@ global.APIKeys = { // APIKey Here
 }
 
 // Sticker WM
-global.packname = 'Benniganteng\'benniismael'
+global.packname = 'Benniganteng\'ig : Beni_230'
 global.author = 'Benniismael'
 
 global.multiplier = 69 // The higher, The harder levelup
