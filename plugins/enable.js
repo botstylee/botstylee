@@ -72,7 +72,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.antiPhilip = isEnable
       break
-    case 'antibugfont':
+    case 'antibugℛ':
       if (!m.isGroup) {
         if (!isOwner) {
           global.dfail('group', m, conn)
@@ -82,7 +82,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
         global.dfail('admin', m, conn)
         throw false
       }
-      chat.antiBugfont = isEnable
+      chat.antiBugℛ = isEnable
       break
     case 'autodelvn':
       if (m.isGroup) {
