@@ -9,6 +9,7 @@ global.APIs = { // API Prefix
   pencarikode: 'https://pencarikode.xyz',
   xteam: 'https://api.xteam.xyz',
   bx: 'https://bx-hunter.herokuapp.com',
+  neoxr: 'https://neoxr-api.herokuapp.com',
   nzcha: 'http://nzcha-apii.herokuapp.com',
   bg: 'http://bochil.ddns.net',
   fdci: 'https://api.fdci.se',
@@ -22,6 +23,7 @@ global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
   'https://api.xteam.xyz': 'benniismaelapikey',
   'https://pencarikode.xyz': 'pais',
+  'https://neoxr-api.herokuapp.com': 'yntkts',
   'https://bx-hunter.herokuapp.com': 'Ikyy69',
   'https://bsbt-api-rest.herokuapp.com': 'benniismael',
   'https://api.zeks.xyz': 'apivinz',
