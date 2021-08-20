@@ -1,6 +1,4 @@
-const fs = require('fs')
-const fetch = require('node-fetch')
-
+let fs = require('fs')
 let timeout = 120000
 let poin = 500
 let handler = async (m, { conn, usedPrefix }) => {
@@ -10,21 +8,19 @@ let handler = async (m, { conn, usedPrefix }) => {
         conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.tebaklirik[id][0])
         throw false
     }
-    let res = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebaklirik.json')
-    if (!res.ok) throw await `${res.status} ${res.statusText}`
-    let data = await res.json()
-    let json = data[Math.floor(Math.random() * data.length)]
+    let tebaklirik = JSON.parse(fs.readFileSync(`./src/tebaklirik.json`))
+    let json = tebaklirik[Math.floor(Math.random() * tebaklirik.length)]
     let caption = `
 ${json.soal}
 Timeout *${(timeout / 1000).toFixed(2)} detik*
 Ketik ${usedPrefix}teli untuk bantuan
 Bonus: ${poin} XP
-    `.trim()
+`.trim()
     conn.tebaklirik[id] = [
-        await conn.reply(m.chat, caption, m),
+        await conn.send2Button(m.chat, caption, 'BOTSTYLE', 'BANTUAN', `.teli`, 'NYERAH', 'nyerah'),
         json, poin,
-        setTimeout(() => {
-            if (conn.tebaklirik[id]) conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, conn.tebaklirik[id][0])
+        setTimeout(async () => {
+            if (conn.tebaklirik[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, 'BOTSTYLE', 'TEBAK LIRIK', `${usedPrefix}tebaklirik`)
             delete conn.tebaklirik[id]
         }, timeout)
     ]
