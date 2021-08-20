@@ -1,27 +1,34 @@
-let fetch = require('node-fetch')
+let fs = require('fs')
 
-let timeout = 100000
-let poin = 4999
-let handler  = async (m, { conn, usedPrefix }) => {
+let timeout = 120000
+let poin = 500
+let handler = async (m, { conn, usedPrefix }) => {
     conn.caklontong = conn.caklontong ? conn.caklontong : {}
     let id = m.chat
     if (id in conn.caklontong) {
         conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.caklontong[id][0])
         throw false
     }
-    let res = await fetch('https://zahirr-web.herokuapp.com/api/kuis/caklontong?apikey=zahirgans')
-    let json = await res.json()
+    let res = JSON.parse(fs.readFileSync('./src/caklontong.json'))
+    let random = Math.floor(Math.random() * res.length)
+    let json = res[random]
+    let caption = `
+${json.soal}
+Timeout *${(timeout / 1000).toFixed(2)} detik*
+Ketik ${usedPrefix}calo untuk bantuan
+Bonus: ${poin} XP
+`.trim()
     conn.caklontong[id] = [
-      await conn.reply(m.chat, `Soal: *${json.result.soal}*\nTimeout: *${(timeout / 1000).toFixed(2)} detik*\nKetik *${usedPrefix}hint caklontong* untuk hint\nBonus: ${poin} XP`, m),
-      json, poin,
-      setTimeout(() => {
-        if (conn.caklontong[id]) conn.reply(m.chat, `Waktu habis!\n*${json.result.deskripsi}*`, conn.caklontong[id][0])
-        delete conn.caklontong[id]
-      }, timeout)
+        await conn.send2Button(m.chat, caption.trim(), 'BOTSTYLE', 'BANTUAN', '.calo', 'NYERAH', 'nyerah'),
+        json, poin,
+        setTimeout(async () => {
+            if (conn.caklontong[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*\n${json.keterangan}`, 'BOTSTYLE', 'CAK LONTONG', '.caklontong')
+            delete conn.caklontong[id]
+        }, timeout)
     ]
-  }
-  handler.help = ['caklontong']
-  handler.tags = ['game']
-  handler.command = /^caklontong/i
-  
-  module.exports = handler
+}
+handler.help = ['caklontong']
+handler.tags = ['game']
+handler.command = /^caklontong/i
+
+module.exports = handler
