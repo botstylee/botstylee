@@ -1,5 +1,4 @@
 let { asahotak } = require('../lib/game')
-let fetch = require('node-fetch')
 let timeout = 120000
 let poin = 500
 let handler = async (m, { conn, usedPrefix }) => {
@@ -19,11 +18,10 @@ Ketik ${usedPrefix}ao untuk bantuan
 Bonus: ${poin} XP
     `.trim()
     conn.asahotak[id] = [
-        await conn.send2Button(m.chat, caption.trim(), 'made with ❤️ by BENNIISMAEL', 'BANTUAN', '.ao', 'NYERAH', 'nyerah'),
+        await conn.send2Button(m.chat, caption.trim(), 'BOTSTYLE', 'BANTUAN', '.ao', 'NYERAH', 'nyerah'),
         json, poin,
         setTimeout(async () => {
-            if (conn.asahotak[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, '', 'ASAH OTAK', '.asahotak')
-            // conn.reply(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, conn.asahotak[id][0])
+            if (conn.asahotak[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, 'BOTSTYLE', 'ASAH OTAK', '.asahotak')
             delete conn.asahotak[id]
         }, timeout)
     ]
