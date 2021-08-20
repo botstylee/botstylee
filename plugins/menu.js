@@ -114,7 +114,8 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
-    conn.reply(m.chat, text.trim(), m)
+    //conn.reply(m.chat, text.trim(), m)
+    await conn.send2Button(m.chat, text.trim(), 'PEMILIK BOT BY ❤️ BENNIISMAEL', 'OWNER', '#owner', 'DONASI', '#donasi', { quoted: m })
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
