@@ -3,22 +3,6 @@ let path = require('path')
 let { MessageType } = require('@adiwajshing/baileys')
 let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
   try {
-const jam = moment.tz('Asia/Jakarta').format('HH')
- var ucapanWaktu = 'Selamat Pagi 🌄'
-
-				if (jam >= '03' && jam <= '10') {
-				ucapanWaktu = 'Selamat Pagi 🌄'
-				} else if (jam >= '10' && jam <= '13') {
-				ucapanWaktu = 'Selamat Siang ☀️'
-				} else if (jam >= '13' && jam <= '18') {
-				ucapanWaktu = 'Selamat Sore 🌅'
-				} else if (jam >= '18' && jam <= '23') {
-				ucapanWaktu = 'Selamat Malam 🌙'
-				} else {
-				ucapanWaktu = 'Selamat Malam 🌙'
-				}
-
-
     let package = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')))
     let name = conn.getName(m.sender)
     let d = new Date
@@ -98,7 +82,6 @@ const jam = moment.tz('Asia/Jakarta').format('HH')
     conn.menu = conn.menu ? conn.menu : {}
     let before = conn.menu.before || ` ┌──「 ${conn.user.name} 」
 │============================
-├ ${ucapanWaktu} %name
 ├ Nama : %name!
 ├ Hari: *%week %weton*
 ├ Tanggal: *%date*
