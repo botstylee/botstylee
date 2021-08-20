@@ -9,8 +9,8 @@ let handler = m => m
 handler.all = async function (m, { isPrems, isOwner }) {
 
     if (m.chat.endsWith('broadcast')) return
-    if (db.data.users[m.sender].banned) return
-    if (db.data.chats[m.chat].isBanned) return
+    if (DATABASE.data.users[m.sender].banned) return
+    if (DATABASE.data.chats[m.chat].isBanned) return
 
     if (/^.*tiktok/i.test(m.text)) {
         let res = await fetch(global.API('hardianto', '/api/download/tiktok', { url: m.text.split(/\n| /i)[0] }, 'apikey'))
