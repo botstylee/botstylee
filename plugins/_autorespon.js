@@ -11,7 +11,7 @@ handler.all = async function (m, { isBlocked }) {
 │ ✅Join 1 grup
 │ 
 │ 7 Hari / Rp 5k
-│ 30 Hari / Rp 20k
+│ 30 Hari / Rp 15k
 └────
 Hubungi @${global.owner[0]}
 `.trim(), m, { contextIfo: { mentionedJid: [global.owner[0] + '@s.whatsapp.net'] } })
