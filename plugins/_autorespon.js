@@ -10,8 +10,8 @@ handler.all = async function (m, { isBlocked }) {
         this.reply(m.chat, `┌ *「 Invite Grup 」*
 │ ✅Join 1 grup
 │ 
-│ 7 Hari / Rp 
-│ 30 Hari / Rp 
+│ 7 Hari / Rp 5k
+│ 30 Hari / Rp 20k
 └────
 Hubungi @${global.owner[0]}
 `.trim(), m, { contextIfo: { mentionedJid: [global.owner[0] + '@s.whatsapp.net'] } })
