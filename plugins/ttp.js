@@ -11,7 +11,7 @@ let handler  = async (m, { conn, text }) => {
     conn.sendMessage(m.chat, stiker, MessageType.sticker, {
       quoted: m
     })
-  } else m.reply('Textnya apa om?')
+  } else m.reply('Textnya apa sayang?')
 }
 handler.help = ['ttp <teks>']
 handler.tags = ['creator']
