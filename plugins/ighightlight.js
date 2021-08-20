@@ -1,9 +1,10 @@
 let fetch = require('node-fetch')
 let handler = async (m, { conn, args, command, usedPrefix }) => {
-  if (!args[0]) throw `uhm.. username nya mana?\n\ncontoh:\n${usedPrefix + command} Beni_230`
+  if (!args[0]) throw `uhm.. username nya mana?\n\ncontoh:\n${usedPrefix + command} stikerinbot`
   let res = await fetch(global.API('xteam', '/dl/ighighlight', {
     nama: args[0]
   }, 'APIKEY'))
+  if (!res.ok) throw await `${res.status} ${res.statusText}`
   let json = await res.json()
   if (json.result.error) throw json.result.message
   let { username, items } = json.result
