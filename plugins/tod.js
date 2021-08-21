@@ -1,7 +1,7 @@
 let fetch = require('node-fetch')
 let handler = async (m, { conn, command }) => {
   if (/^tod$/i.test(command)) {
-    conn.send3Button(m.chat, 'Truth or Dare', 'made with ❤️ by ariffb', 'TRUTH', ',truth', 'DARE', ',dare', 'RANDOM', `${pickRandom([',dare', ',truth'])}`)
+    conn.send3Button(m.chat, 'Truth or Dare', 'made with ❤️ by BOTSTYLE', 'TRUTH', ',truth', 'DARE', ',dare', 'RANDOM', `${pickRandom([',dare', ',truth'])}`)
   }
   if (/^truth$/i.test(command)) {
     let res = await fetch(global.API('pencarikode', '/api/truthid', {}, 'apikey'))
