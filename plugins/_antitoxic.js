@@ -5,8 +5,8 @@ let badwordRegex = /anj(k|g)|ajn?(g|k)|a?njin(g|k)|bajingan|b(a?n)?gsa?t|ko?nto?
 
 handler.before = function (m, { isOwner, isBotAdmin }) {
     if (m.isBaileys && m.fromMe && isOwner) return !0
-    let chat = global.db.data.chats[m.chat]
-    let user = global.db.data.users[m.sender]
+    let chat = global.database.data.chats[m.chat]
+    let user = global.database.data.users[m.sender]
     let isBadword = badwordRegex.exec(m.text)
 
     if (!chat.antiBadword && !chat.isBanned && isBadword) {
