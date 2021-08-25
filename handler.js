@@ -195,7 +195,7 @@ module.exports = {
           expired: 0,
         }
        let settings = global.DATABASE.data.settings
-        if (typeof settings !== 'object') global.db.data.settings = {}
+        if (typeof settings !== 'object') global.DATABASE.data.settings = {}
         if (settings) {
           if (!'antispam' in settings) settings.antispam = true
           if (!'antitroli' in settings) settings.antitroli = true
