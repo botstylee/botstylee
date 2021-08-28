@@ -10,12 +10,12 @@ handler.before = function (m, { user, isAdmin, isBotAdmin }) {
   let isGroupFont = linkRegex.exec(m.text)
 
   if (chat.antiBugfont && isGroupFont) {
- m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi *${name}* bocah telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
-  this.groupRemove(m.chat, [m.sender])
-    //await this.modifyChat(m.chat, 'clear', {
-            //includeStarred: false
-        //}).catch(console.log)
-  }
+ //m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi *${name}* bocah telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
+  //this.groupRemove(m.chat, [m.sender])
+    await this.modifyChat(m.chat, 'clear', {
+            includeStarred: false
+        }).catch(console.log)
+    }
 }
 
 module.exports = handler
