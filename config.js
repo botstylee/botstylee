@@ -8,6 +8,7 @@ global.APIs = { // API Prefix
   nrtm: 'https://nurutomo.herokuapp.com',
   pencarikode: 'https://pencarikode.xyz',
   xteam: 'https://api.xteam.xyz',
+  dhnjing: 'https://dhnjing.xyz',
   bx: 'https://bx-hunter.herokuapp.com',
   neoxr: 'https://neoxr-api.herokuapp.com',
   nzcha: 'http://nzcha-apii.herokuapp.com',
