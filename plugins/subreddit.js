@@ -1,14 +1,15 @@
 let fetch = require("node-fetch")
 
-const defaultSubreddit = 'meme'
 let handler = async (m, { conn, text }) => {
-  let res = await fetch(global.API('https://meme-api.herokuapp.com', '/gimme/' + encodeURI(text || defaultSubreddit), {}))
-  if (!res.ok) throw await res.text()
+  let res = await fetch(API('https://meme-api.herokuapp.com', '/gimme/' + encodeURI(text || ''), {}))
+  if (!res.ok) throw eror
   let json = await res.json()
   if (!json.url) throw 'Media tidak ditemukan!'
-  await conn.sendFile(m.chat, json.url, text, json.title, m)
+  if (json.nsfw && !DATABASE.data.settings.nsfw) throw 'Mode NSFW tidak aktif'
+
+  await conn.sendFile(m.chat, json.url, text, json.title, m, false, { thumbnail: await (await fetch(json.url)).buffer() })
 }
-handler.help = ['subreddit <query>']
+handler.help = ['subreddit <pencarian>']
 handler.tags = ['internet']
 handler.command = /^(sr|subreddit)$/i
 
