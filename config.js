@@ -36,6 +36,11 @@ global.APIKeys = { // APIKey Here
 global.packname = 'Benniganteng\'ig : Beni_230'
 global.author = 'Benniismael'
 
+global.wait = '_*tunggu..*_'
+global.eror = '_*Server Error*_'
+global.fla = 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&fillTextType=1&fillTextPattern=Warning!&text='
+
+
 global.multiplier = 69 // The higher, The harder levelup
 
 let fs = require('fs')
