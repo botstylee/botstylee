@@ -57,9 +57,9 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             .save(ran)
     } else throw gokil
 }
-handler.help = ['stiker2', 'sgif2']
+handler.help = ['stiker2']
 handler.tags = ['sticker']
-handler.command = /^(s(t|k|tic?ker)?2|(s(tic?ker|k|t)?)?gif)?2$/i
+handler.command = /^(s(t|k|tic?ker)?2)$/i
 
 handler.disable = true
 
