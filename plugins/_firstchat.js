@@ -6,13 +6,13 @@ handler.all = async function (m) {
     if (m.chat.endsWith('broadcast')) return
     if (m.fromMe) return
     if (m.isGroup) return
-    if (DATABASE.data.settings.groupOnly) return
+    if (db.data.settings.groupOnly) return
     let user = global.DATABASE.data.users[m.sender]
     if (new Date - user.pc < 86400000) return // setiap 24 jam sekali
     await this.sendButton(m.chat, `
 Hai, ${ucapan()}
 ${user.banned ? 'kamu dibanned' : 'Ada yang bisa saya bantu?'}
-`.trim(), 'BOTSTYLE', user.banned ? 'Pemilik Bot' : 'Menu', user.banned ? ',owner' : ',?')
+`.trim(), 'BOTSTYLE', user.banned ? 'Pemilik Bot' : 'Menu', user.banned ? ',owner' : ',?', m)
     user.pc = new Date * 1
 }
 
