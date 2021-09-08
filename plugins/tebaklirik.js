@@ -17,7 +17,7 @@ Ketik ${usedPrefix}teli untuk bantuan
 Bonus: ${poin} XP
 `.trim()
     conn.tebaklirik[id] = [
-        await conn.sendButton(m.chat, caption, 'BOTSTYLE', 'Bantuan', `.teli`),
+        await conn.sendButton(m.chat, caption, 'BOTSTYLE', 'Bantuan', `.teli`, m),
         json, poin,
         setTimeout(async () => {
             if (conn.tebaklirik[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, 'BOTSTYLE', 'Tebak Lirik', `.tebaklirik`, conn.tebaklirik[id][0])
