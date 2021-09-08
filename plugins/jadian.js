@@ -1,4 +1,4 @@
-let handler = async (m, { conn, participants, command }) => {
+let handler = async (m, { conn, participants, command, usedPrefix }) => {
     let member = participants.map(u => u.jid)
     let orang
     if (/ku/i.test(command)) orang = m.sender
@@ -6,10 +6,11 @@ let handler = async (m, { conn, participants, command }) => {
     let jodoh = member[Math.floor(Math.random() * member.length)]
     let jawab = `@${orang.replace(/@.+/, '')} ❤️ @${jodoh.replace(/@.+/, '')}`.trim()
     let mentionedJid = [orang, jodoh]
-    conn.reply(m.chat, jawab, m, { contextInfo: { mentionedJid } })
+    await conn.sendButton(m.chat, jawab, 'BOTSTYLE', `${command}`, usedPrefix + command, m, { contextInfo: { mentionedJid } })
 }
-handler.help = ['jadian']
+handler.help = ['jodohin', 'jodohku']
 handler.tags = ['kerang']
-handler.command = ['jadian']
+handler.command = /^jodoh(in|ku)|jadian$/i
+handler.group = true
 
 module.exports = handler
