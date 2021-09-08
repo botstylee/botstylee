@@ -1,28 +1,30 @@
 let handler = m => m
 
 handler.all = async function (m) {
-    if (!DATABASE.data.settings[this.user.jid].antispam) return // antispam aktif?
-    if (m.isBaileys && m.fromMe) return
-    if (!m.message) return
-    if (!m.isCommand) return
-    if (DATABASE.data.users[m.sender].banned) return
-    if (DATABASE.data.chats[m.chat].isBanned) return
     this.spam = this.spam ? this.spam : {}
-    if (m.sender in this.spam) {
-        this.spam[m.sender].count++
-        if (m.messageTimestamp.toNumber() - this.spam[m.sender].lastspam > 10) {
-            if (this.spam[m.sender].count > 10) {
-                DATABASE.data.users[m.sender].banned = true
-                await this.sendButton(m.chat, 'kamu dibanned karena spam!', 'BOTSTYLE', 'OWNER', ',owner', m)
-            }
-            this.spam[m.sender].count = 0
-            this.spam[m.sender].lastspam = m.messageTimestamp.toNumber()
-        }
-    }
-    else this.spam[m.sender] = {
-        jid: m.sender,
-        count: 0,
+    if (!(m.sender in this.spam)) {
+        let spaming = {
+        jid: await m.sender, 
+        spam: 0,
         lastspam: 0
+            
+        }
+        this.spam[spaming.jid] = spaming
+    } else try {
+        this.spam[m.sender].spam += 1
+        if (new Date - this.spam[m.sender].lastspam > 4000) {
+            if (this.spam[m.sender].spam > 6) {
+                this.spam[m.sender].spam = 0
+                this.spam[m.sender].lastspam = new Date * 1
+                //global.DATABASE._data.users[m.sender].Banneduser = true
+                m.reply('*Jangan Spam!!*')
+            } else {
+                this.spam[m.sender].spam = 0
+                this.spam[m.sender].lastspam = new Date * 1
+            }
+        }
+    } catch (e) {
+        console.log(e)
     }
 }
 
