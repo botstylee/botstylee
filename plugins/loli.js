@@ -1,21 +1,13 @@
-let fetch = require('node-fetch')
-     let handler  = async (m, { conn, args }) => {
-    heum = await fetch(`https://recoders-area.caliph.repl.co/api/loli`)
-    json = await heum.buffer()
-   conn.sendFile(m.chat, json, 'nulis', 'Lomlinya kak', m, false)
+let handler = async (m, { conn }) => {
+  let who = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
+  conn.sendFile(m.chat, global.API('https://some-random-api.ml', '/canvas/lolice', {
+    avatar: await conn.getProfilePicture(who).catch(_ => 'https://telegra.ph/file/24fa902ead26340f3df2c.png'),
+  }), 'lolice.png', 'liuliuliuliuliu kami dengar disini ada lolicon', m)
 }
-handler.help = ['loli']
+
+handler.help = ['lolice']
 handler.tags = ['anime']
-handler.command = /^loli$/i
-handler.owner = false
-handler.mods = false
-handler.premium = false
-handler.group = false
-handler.private = false
 
-handler.admin = false
-handler.botAdmin = false
-
-handler.fail = null
+handler.command = /^(lolice)$/i
 
 module.exports = handler
