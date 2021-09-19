@@ -12,7 +12,7 @@ handler.before = function (m, { user, isAdmin, isBotAdmin }) {
   if (chat.antiBugfont && isGroupFont) {
  //m.reply(`*「 ANTI BUG ℛ 」*\n\nTerdeteksi *${name}* bocah telah mengirim bug ℛ !\n\nMaaf Bocah Bug ℛ Tidak Berguna Bagi Bot!`)
   //this.groupRemove(m.chat, [m.sender])
-  this.reply('6282114499086@s.whatsapp.net', `PELAKU BUG FONT @${m.sender.split`@`[0]}`, null, { contextInfo: { mentionedJid: [m.sender] } })
+  //this.reply('6282114499086@s.whatsapp.net', `PELAKU BUG FONT @${m.sender.split`@`[0]}`, null, { contextInfo: { mentionedJid: [m.sender] } })
     await this.modifyChat(m.chat, 'clear', {
             includeStarred: false
         }).catch(console.log)
