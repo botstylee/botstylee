@@ -7,8 +7,23 @@ global.Owner = {
     isDev: true, // if true this number will send if bot have bug and developer mode true
     isReport: true, // if true this number will send if user use command /report or /join
     isCreator: true // if true this number will send if user use command /owner or /creator
-  }
-global.mods = [] // Want some help?
+  },
+  '6282114499086': { // put your number here
+    name: 'Benniismael',
+    isDev: false, // if true this number will send if bot have bug and developer mode true
+    isReport: true, // if true this number will send if user use command /report or /join
+    isCreator: false // if true this number will send if user use command /owner or /creator
+  },
+  '6282114499086': {
+    name: 'Benniismael',
+    isReport: true, // if true this number will send if user use command /report or /join
+  },
+  '6282114399086': {
+    isReport: true
+  },
+  '62895368900456': {} // ignore if you don't want anything, like name dll
+}
+global.mods = ['62895368900456']
 global.prems = [] // Premium user has unlimited limit
 global.APIs = { // API Prefix
   // name: 'https://website'
