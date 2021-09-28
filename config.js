@@ -49,7 +49,7 @@ global.APIKeys = { // APIKey Here
   'https://pencarikode.xyz': 'pais',
   'https://neoxr-api.herokuapp.com': 'yntkts',
   'https://bx-hunter.herokuapp.com': 'Ikyy69',
-  'https://bsbt-api-rest.herokuapp.com': 'benniismael',
+  'https://bsbt-api-rest.herokuapp.com': 'benniismaelapikey',
   'https://api.zeks.xyz': 'apivinz',
   'https://zahirr-web.herokuapp.com': 'zahirgans',
   'https://hardianto-chan.herokuapp.com': 'hardianto'
