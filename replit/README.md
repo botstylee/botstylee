@@ -10,7 +10,7 @@
 - Then Open `Repls` Menu, If you can't find Repls menu you can use [this link](replit.com/repls).
 - Click `+ New Repl`
 - Click `Import from github`
-- enter the link `github.com/moo-d/baileys-wabot`
+- enter the link `github.com/botstylee/botstylee`
 - after that click `import from github`
 
 Now this Repo has been uploaded.
