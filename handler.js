@@ -27,13 +27,21 @@ module.exports = {
         if (typeof user !== 'object') global.DATABASE._data.users[m.sender] = {}
         if (user) {
             if (!isNumber(user.healt)) user.healt = 0
+            if (!isNumber(user.stamina)) user.stamina = 0
             if (!isNumber(user.level)) user.level = 0
-            if (!user.role) user.role = 'Beginner'
             if (!isNumber(user.exp)) user.exp = 0
             if (!isNumber(user.limit)) user.limit = 100
             if (!isNumber(user.lastclaim)) user.lastclaim = 0
             if (!isNumber(user.money)) user.money = 0
             
+            if (!isNumber(user.rumahsakit)) user.rumahsakit= 0
+            if (!isNumber(user.fortress)) user.fortress = 0
+            if (!isNumber(user.troopcamp)) user.troopcamp = 0
+            if (!isNumber(user.shield)) user.shield = false
+            if (!isNumber(user.pertanian)) user.pertanian = 0
+            if (!isNumber(user.tambang)) user.tambang = 0
+            
+            //
             if (!isNumber(user.diamond)) user.diamond = 0
             if (!isNumber(user.iron)) user.iron = 0
 
@@ -42,10 +50,13 @@ module.exports = {
             if (!isNumber(user.mythic)) user.mythic = 0
             if (!isNumber(user.legendary)) user.legendary = 0
             if (!isNumber(user.pet)) user.pet = 0
+            if (!isNumber(user.psepick)) user.psepick = 0
+            if (!isNumber(user.psenjata)) user.psenjata = 0
         
             if (!isNumber(user.potion)) user.potion = 0
             if (!isNumber(user.sampah)) user.sampah = 0
             if (!isNumber(user.armor)) user.armor = 0
+            if (!isNumber(user.pancing)) user.pancing = 0
             
             if (!isNumber(user.kucing)) user.kucing = 0
             if (!isNumber(user.kucinglastclaim)) user.kucinglastclaim = 0
@@ -55,14 +66,64 @@ module.exports = {
             if (!isNumber(user.rubahlastclaim)) user.rubahlastclaim = 0
             if (!isNumber(user.anjing)) user.anjing = 0
             if (!isNumber(user.anjinglastclaim)) user.anjinglastclaim = 0
-
+            //Penambah STAMINA
+             if (!isNumber(user.apel)) user.apel = 0
+             if (!isNumber(user.ayamb)) user.ayamb = 0
+             if (!isNumber(user.ayamg)) user.ayamg = 0
+             if (!isNumber(user.sapir)) user.sapir = 0
+             if (!isNumber(user.ssapi)) user.ssapi = 0
+             if (!isNumber(user.esteh)) user.esteh = 0
+             if (!isNumber(user.leleb)) user.leleb = 0
+             if (!isNumber(user.leleg)) user.leleg = 0
+             
             if (!'Banneduser' in user) user.Banneduser = false
             if (!'BannedReason' in user) user.BannedReason = ''
             if (!isNumber(user.warn)) user.warn = 0
 
             if (!isNumber(user.afk)) user.afk = -1
             if (!'afkReason' in user) user.afkReason = ''
+            
+            if (!isNumber(user.pedagang)) user.pedagang = false
+            if (!isNumber(user.polisi)) user.polisi = false
+            if (!isNumber(user.dokter)) user.dokter = false
+            if (!isNumber(user.ojek)) user.ojek = false
+            if (!isNumber(user.petani)) user.petani = false
+            if (!isNumber(user.kuli)) user.kuli = false
+            if (!isNumber(user.montir)) user.montir = false
+            if (!isNumber(user.job)) user.job = false
+            //last Job
+            if (!isNumber(user.lastjb)) user.lastjb = 0
+            
+            if (!isNumber(user.nila)) user.nila = 0
+            if (!isNumber(user.bawal)) user.bawal = 0
+            if (!isNumber(user.lele)) user.lele = 0
+            if (!isNumber(user.paus)) user.paus = 0
+     if (!isNumber(user.kepiting)) user.kepiting = 0
+     if (!isNumber(user.gurita)) user.gurita = 0
+     if (!isNumber(user.cumi)) user.cumi= 0
+     if (!isNumber(user.buntal)) user.buntal = 0
+     if (!isNumber(user.dory)) user.dory = 0
+     if (!isNumber(user.lumba)) user.lumba = 0
+     if (!isNumber(user.lobster)) user.lobster = 0
+     if (!isNumber(user.hiu)) user.hiu = 0
+     if (!isNumber(user.udang)) user.udang = 0
+     if (!isNumber(user.ikan)) user.ikan = 0
+     if (!isNumber(user.orca)) user.orca = 0
         
+        if (!isNumber(user.banteng)) user.banteng = 0
+     if (!isNumber(user.harimau)) user.harimau = 0
+     if (!isNumber(user.gajah)) user.gajah = 0
+     if (!isNumber(user.kambing)) user.kambing = 0
+     if (!isNumber(user.panda)) user.panda = 0
+     if (!isNumber(user.buaya)) user.buaya = 0
+     if (!isNumber(user.kerbau)) user.kerbau = 0
+     if (!isNumber(user.sapi)) user.sapi = 0
+     if (!isNumber(user.monyet)) user.monyet = 0
+     if (!isNumber(user.babihutan)) user.babihutan = 0
+     if (!isNumber(user.babi)) user.babi = 0
+     if (!isNumber(user.ayam)) user.ayam = 0
+     //
+      if (!isNumber(user.lastberbru)) user.lastberbru = 0
             if (!isNumber(user.anakkucing)) user.anakkucing = 0
             if (!isNumber(user.anakkuda)) user.anakkuda = 0
             if (!isNumber(user.anakrubah)) user.anakrubah = 0
@@ -74,35 +135,53 @@ module.exports = {
 
             if (!isNumber(user.kayu)) user.kayu = 0
             if (!isNumber(user.batu)) user.batu = 0
-            if (!isNumber(user.string)) user.string = 0
+            if (!isNumber(user.besi)) user.besi = 0
+            if (!isNumber(user.emas)) user.emas = 0
+            if (!isNumber(user.makanan)) user.makanan = 0
+            
             if (!isNumber(user.sword)) user.sword = 0
             if (!isNumber(user.sworddurability)) user.sworddurability = 0
             if (!isNumber(user.pickaxe)) user.pickaxe = 0
             if (!isNumber(user.pickaxedurability)) user.pickaxedurability = 0
             if (!isNumber(user.fishingrod)) user.fishingrod = 0
             if (!isNumber(user.fishingroddurability)) user.fishingroddurability = 0
-
+           //KERAJAAN
+           //
+            
             if (!isNumber(user.lastadventure)) user.lastadventure = 0
             if (!isNumber(user.lastfishing)) user.lastfishing = 0
             if (!isNumber(user.lastdungeon)) user.lastdungeon = 0
+            
+            if (!isNumber(user.lastsda)) user.lastsda = 0
+            if (!isNumber(user.lastsda)) user.lastwar = 0
+            
             if (!isNumber(user.lastduel)) user.lastduel = 0
             if (!isNumber(user.lastmining)) user.lastmining = 0
             if (!isNumber(user.lasthunt)) user.lasthunt = 0
             if (!isNumber(user.lastweekly)) user.lastweekly = 0
             if (!isNumber(user.lastmonthly)) user.lastmontly = 0
+            /////if (!('kingdom' in user)) user.kingdom = false
             if (!('registered' in user)) user.registered = false
             if (!user.registered) {
                 if (!('name' in user)) user.name = this.getName(m.sender)
                 if (!isNumber(user.age)) user.age = -1
                 if (!isNumber(user.regTime)) user.regTime = -1
+                if (!user.role) user.role = 'Beginner'
             }
             if (!('autolevelup' in user)) user.autolevelup = true
         } else global.DATABASE._data.users[m.sender] = {
             healt: 100,
+            stamina: 100,
             level: 0,
-            role: 'Beginner',
+            //
+            rumahsakit: 0,
+            troopcamp: 0,
+            fortress: 0,
+            makanan: 0,
+            shield: false,
+            //
             exp: 0,
-            limit: 10,
+            limit: 100,
             lastclaim: 0,
             money: 0,
             diamond: 0,
@@ -112,7 +191,10 @@ module.exports = {
             mythic: 0,
             legendary: 0,
             pet: 0,
+            psepick: 0,
+            psenjata: 0,
             potion: 0,
+            pancing: 0,
             sampah: 0,
             armor: 0,
             kucing: 0,
@@ -128,6 +210,52 @@ module.exports = {
             warn: 0,
             afk: -1,
             afkReason: '',
+            //
+            polisi: 0,
+          petani: 0,
+          pedagang: 0,
+          ojek: 0,
+          dokter: 0,
+          kuli: 0,
+          montir: 0,
+          //
+          lele: 0,
+          nila: 0,
+          bawal: 0,
+          paus: 0,
+    kepiting: 0,
+    gurita: 0,
+    cumi: 0,
+    buntal: 0,
+    dory: 0,
+    lumba: 0,
+    lobster: 0,
+    hiu: 0,
+    udang: 0,
+    ikan: 0,
+    orca: 0,
+    banteng: 0,
+    harimau: 0,
+    gajah: 0,
+    kambing: 0,
+    panda: 0,
+    buaya: 0,
+    kerbau : 0,
+    sapi: 0,
+    monyet : 0,
+    babihutan: 0,
+    babi: 0,
+    ayam: 0,
+    
+    apel: 0,
+    ayamb: 0,
+    ayamg: 0,
+    ssapi: 0,
+    sapir: 0,
+    leleb: 0,
+    leleg: 0,
+    esteh: 0,
+    
             anakkucing: 0,
             anakkuda: 0,
             anakrubah: 0,
@@ -135,9 +263,13 @@ module.exports = {
             makananpet: 0,
             antispam: 0,
             antispamlastclaim: 0,
+            //SDA
             kayu: 0,
             batu: 0,
-            string: 0,
+            besi: 0,
+            emas: 0,
+            makanan: 0,
+            //
             sword: 0,
             sworddurability: 0,
             pickaxe: 0,
@@ -147,15 +279,19 @@ module.exports = {
             lastadventure: 0,
             lastfishing: 0,
             lastdungeon: 0,
+            lastsda: 0,
+            lastwar: 0,
             lastduel: 0,
             lastmining: 0,
             lasthunt: 0,
+            lastjb: 0,
             lastweekly: 0,
             lastmonthly: 0,
             registered: false,
             name: this.getName(m.sender),
             age: -1,
             regTime: -1,
+            role: 'Beginner',
             autolevelup: true,
         }
 
