@@ -28,6 +28,6 @@ handler.command = /^(pengumuman|announce|hiddentag|hidetag)$/i
 
 handler.group = true
 handler.owner = true
-handler.admin = true
+
 
 module.exports = handler
