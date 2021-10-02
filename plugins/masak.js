@@ -1,6 +1,4 @@
 let { MessageType } = require('@adiwajshing/baileys')
-//BY RIZKY ADI∅
-//DONT DELETE THIS CREDIT
 let handler  = async (m, { conn, command, args, usedPrefix, DevMode }) => {
 	let type = (args[0] || '').toLowerCase()
     let msk= (args[0] || '').toLowerCase()
@@ -62,7 +60,7 @@ break
                        } else conn.reply(m.chat, `Stok buruan mu tidak cukup untuk dimasak`, m)
 break
                 default:
-                    return conn.sendButton( m.chat, cok, `🎮Games Bot wa`, `Ok`, `ok`)
+                    return conn.sendButton( m.chat, cok, `BOT`, `Ok`, `ok`)
             }
         }
     } catch (e) {
