@@ -60,7 +60,7 @@ break
                        } else conn.reply(m.chat, `Stok buruan mu tidak cukup untuk dimasak`, m)
 break
                 default:
-                    return conn.sendButton( m.chat, cok, `BOT`, `Ok`, `ok`)
+                    return conn.sendButton( m.chat, cok, `BOTSTYLE`, `Mantap`, `mantap`)
             }
         }
     } catch (e) {
