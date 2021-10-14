@@ -3,27 +3,13 @@ global.linkGC = ['https://chat.whatsapp.com/DmYC7VwLxpVIPHrysJFIC7']
 global.Owner = {
   // use the phone number with the country code, for example Indonesia '62' America '1' etc
   '62895368900456': { // put your number here
-    name: 'BENNIISMAEL',
+    name: 'benniismael',
     isDev: true, // if true this number will send if bot have bug and developer mode true
     isReport: true, // if true this number will send if user use command /report or /join
     isCreator: true // if true this number will send if user use command /owner or /creator
-  },
-  '6282114499086': { // put your number here
-    name: 'Benniismael',
-    isDev: false, // if true this number will send if bot have bug and developer mode true
-    isReport: true, // if true this number will send if user use command /report or /join
-    isCreator: false // if true this number will send if user use command /owner or /creator
-  },
-  '6282114499086': {
-    name: 'Benniismael',
-    isReport: true, // if true this number will send if user use command /report or /join
-  },
-  '6282114399086': {
-    isReport: true
-  },
-  '62895368900456': {} // ignore if you don't want anything, like name dll
+  }
 }
-global.mods = ['62895368900456']
+global.mods = [] // Want some help?
 global.prems = [] // Premium user has unlimited limit
 global.APIs = { // API Prefix
   // name: 'https://website'
@@ -37,6 +23,7 @@ global.APIs = { // API Prefix
   bg: 'http://bochil.ddns.net',
   fdci: 'https://api.fdci.se',
   bsbt: 'https://bsbt-api-rest.herokuapp.com',
+  botstyle: 'https://botstyle-api.herokuapp.com',
   zekais: 'http://zekais-api.herokuapp.com',
   zeks: 'https://api.zeks.xyz',
   zahir: 'https://zahirr-web.herokuapp.com',
@@ -50,6 +37,7 @@ global.APIKeys = { // APIKey Here
   'https://neoxr-api.herokuapp.com': 'yntkts',
   'https://bx-hunter.herokuapp.com': 'Ikyy69',
   'https://bsbt-api-rest.herokuapp.com': 'benniismaelapikey',
+  'https://botstyle-api.herokuapp.com': 'daftar dulu ya',
   'https://api.zeks.xyz': 'apivinz',
   'https://zahirr-web.herokuapp.com': 'zahirgans',
   'https://hardianto-chan.herokuapp.com': 'hardianto'
