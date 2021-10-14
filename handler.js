@@ -481,15 +481,8 @@ module.exports = {
             fail('private', m, this)
             continue
           }
-          if (plugin.register == true && _user.registered == false) { // Butuh daftar?
-            fail('unreg', m, this)
-            continue
-          }
 
-          m.isCommand = true
-          let xp = 'exp' in plugin ? parseInt(plugin.exp) : 15 // XP Earning per command
-          if (xp > 99999999999) m.reply('Ngecit -_-') // Hehehe
-          else m.exp += xp
+          m.isCommand = true         
           if (!isPrems && plugin.limit && global.DATABASE._data.users[m.sender].limit < plugin.limit * 1) {
             this.reply(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buy*`, m)
             continue // Limit habis
@@ -527,7 +520,7 @@ module.exports = {
               for (let key of Object.values(global.APIKeys))
                 text = text.replace(new RegExp(key, 'g'), '#HIDDEN#')
                 if (DevMode && text.length > 100) {
-                  for (let jid of Object.entries(global.Owner).filter(v => v[1].isDev).map(v => v[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net').filter(v => v != conn.user.jid)) m.reply(`*file:* ${m.plugin}\n*Nomor:* ${m.sender}\n*Text:* ${m.text}\n\n\`\`\`${text}\`\`\``, jid)
+                        for (let jid of global.owner.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').filter(v => v != conn.user.jid))  m.reply(`*file:* ${m.plugin}\n*Nomor:* ${m.sender}\n*Text:* ${m.text}\n\n\`\`\`${text}\`\`\``, jid)
                 }
                 m.reply(text)
             }
@@ -540,7 +533,6 @@ module.exports = {
                 console.error(e)
               }
             }
-            if (m.limit) m.reply(+ m.limit + ' Limit terpakai')
           }
           break
         }
