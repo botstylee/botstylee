@@ -1,13 +1,14 @@
-let handler = async (m, { conn }) => {
-  let who = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-  conn.sendFile(m.chat, global.API('https://some-random-api.ml', '/canvas/lolice', {
-    avatar: await conn.getProfilePicture(who).catch(_ => 'https://telegra.ph/file/24fa902ead26340f3df2c.png'),
-  }), 'lolice.png', 'liuliuliuliuliu kami dengar disini ada lolicon', m)
+let fetch = require('node-fetch')
+let handler = async(m, { conn }) => {
+  let res = await fetch(global.API('botstyle', '/api/loli', {}, 'apikey'))
+
+  if (!res.ok) throw await res.text()
+  let json = await res.json()
+  if (!json.result) throw 'Error!'
+  conn.sendFile(m.chat, json.result, '', 'ini lolinya kak', m)
 }
-
-handler.help = ['lolice']
+handler.help = ['loli']
 handler.tags = ['anime']
-
-handler.command = /^(lolice)$/i
+handler.command = /^(loli)$/i
 
 module.exports = handler
