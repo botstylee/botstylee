@@ -2,7 +2,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     let id = m.chat
     conn.vote = conn.vote ? conn.vote : {}
     if (!(id in conn.vote)) {
-        await conn.sendButton(m.chat, `_*tidak ada voting digrup ini!*_`, 'BOTSTYLE', 'MULAI VOTE', `${usedPrefix}mulaivote`)
+        await conn.sendButton(m.chat, `_*tidak ada voting digrup ini!*_`, 'BOTSTYLE', 'MULAI VOTE', `${usedPrefix}mulaivote`, m)
         throw false
     }
     let isVote = conn.vote[id][1].concat(conn.vote[id][2])
@@ -24,9 +24,9 @@ ${upvote.map(u => '@' + u.split('@')[0]).join('\n')}
 *DEVOTE*
 _Total: ${devote.length}_
 ${devote.map(u => '@' + u.split('@')[0]).join('\n')}
-_by ariffb_
+_VOTE BY BENNIISMAEL_
     `.trim()
-    await conn.send2Button(m.chat, caption, 'BOSTYLE', 'UPVOTE', `${usedPrefix}upvote`, 'DEVOTE', `${usedPrefix}devote`, { contextInfo: { mentionedJid } })
+    await conn.send2Button(m.chat, caption, 'BOTSTYLE', 'UPVOTE', `${usedPrefix}upvote`, 'DEVOTE', `${usedPrefix}devote`, m, { contextInfo: { mentionedJid } })
 }
 handler.help = ['upvote', 'devote']
 handler.tags = ['vote']
