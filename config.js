@@ -15,6 +15,7 @@ global.APIs = { // API Prefix
   // name: 'https://website'
   nrtm: 'https://nurutomo.herokuapp.com',
   pencarikode: 'https://pencarikode.xyz',
+  rey: 'https://server-api-rey.herokuapp.com',
   xteam: 'https://api.xteam.xyz',
   dhnjing: 'https://dhnjing.xyz',
   bx: 'https://bx-hunter.herokuapp.com',
@@ -33,6 +34,7 @@ global.APIs = { // API Prefix
 global.APIKeys = { // APIKey Here
   // 'https://website': 'apikey'
   'https://api.xteam.xyz': 'benniismaelapikey',
+  'https://server-api-rey.herokuapp.com': 'apirey',
   'https://pencarikode.xyz': 'pais',
   'https://neoxr-api.herokuapp.com': 'yntkts',
   'https://bx-hunter.herokuapp.com': 'Ikyy69',
