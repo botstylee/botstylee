@@ -38,7 +38,7 @@
   "dependencies": {
     "@adiwajshing/baileys": "^3.5.1",
     "awesome-phonenumber": "^2.47.0",
-    "brainly-scraper-v2": "^1.1.2",
+    "brainly-scraper-v2": "^2.0.4-1",
     "cfonts": "^2.9.3",
     "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.5",
