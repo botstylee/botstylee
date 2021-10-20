@@ -9,7 +9,7 @@ let handler  = async (m, { conn, usedPrefix }) => {
         conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.tebakbendera[id][0])
         throw false
     }
-    let res = await fetch(global.API('botstyle', '/api/tebakbendera', {}, 'apikey'))
+    let res = await fetch(global.API('botstyle', '/tebakbendera', {}, 'apikey'))
     let json = await res.json()
     conn.tebakbendera[id] = [
       await conn.reply(m.chat, `Bendera: *${json.result.bendera}*\nTimeout: *${(timeout / 1000).toFixed(2)} detik*\nKetik *${usedPrefix}tbhint* untuk hint\nBonus: ${poin} XP`, m),
