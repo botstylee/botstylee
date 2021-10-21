@@ -1,27 +1,11 @@
-const fetch = require('node-fetch')
-const FormData = require('form-data')
-const { MessageType } = require('@adiwajshing/baileys')
-const { sticker } = require('../lib/sticker')
-
-let handler  = async (m, { conn, text }) => {
-   pp = `https://xteam.xyz/videomaker/poly?text=${text}&APIKEY=${Apikey}`
-                     await sticker(false, pp, 'Poly Text', '_BOTSTYLE_').then(gege => {
-                     conn.sendMessage(m.chat, gege, 'stickerMessage', { quoted: m })
-                     })
-  if (!text) throw 'Teksnya.. mana sayang?'
+const uploadImage = require('../lib/uploadImage')
+let handler = async (m, { conn, text }) => {
+  let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
+  await conn.sendFile(m.chat, global.API('xteam', '/videomaker/poly', { text: teks }, 'APIKEY'), 'poly.mp4', teks, m)
 }
-handler.help = ['poly <teks>']
-//handler.tags = ['creator']
-handler.command = /^sleding$/i
-handler.owner = false
-handler.mods = false
-handler.premium = false
-handler.group = false
-handler.private = false
+handler.help = ['poly'].map((v) => v + " <text>")
+handler.tags = ['videomaker']
 
-handler.admin = false
-handler.botAdmin = false
-
-handler.fail = null
+handler.command = /^poly$/i
 
 module.exports = handler
