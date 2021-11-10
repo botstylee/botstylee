@@ -16,9 +16,9 @@ conn.sendMessage(m.chat, buf, MessageType.image, { quoted: m, caption: 'nihhhh!!
 })
 .catch(error => console.log(error));
 }
-handler.help = ['jewerly [text]']
+handler.help = ['steel [text]']
 handler.tags = ['te']
-handler.command = /^jewerly$/i
+handler.command = /^steel$/i
 module.exports = handler
 
 const getBuffer = async (url, options) => {
