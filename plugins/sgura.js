@@ -18,6 +18,8 @@ try {
     await conn.sendFile(m.chat, apiUrl, 'image.png', null, m)
   }
 }
+handler.help = ['gura <text>']
+handler.tags = ['sticker']
 handler.command = /^gura$/i
 handler.register = true
 handler.limit = 2
