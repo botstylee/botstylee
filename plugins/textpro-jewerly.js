@@ -17,7 +17,7 @@ conn.sendMessage(m.chat, buf, MessageType.image, { quoted: m, caption: 'nihhhh!!
 .catch(error => console.log(error));
 }
 handler.help = ['jewerly <text>']
-handler.tags = ['te']
+handler.tags = ['textpro']
 handler.command = /^jewerly$/i
 handler.owner = false
 handler.mods = false
