@@ -20,8 +20,8 @@ try {
 }
 handler.help = ['gura <text>']
 handler.tags = ['sticker']
-handler.command = /^gura$/i
+handler.command = /^sgura$/i
 handler.register = true
-handler.limit = 2
+handler.limit = true
 // Semoga di acc  >\\< //
 module.exports = handler
