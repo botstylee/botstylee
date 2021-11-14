@@ -1,5 +1,5 @@
 global.DeveloperMode = 'false' //true Or false
-global.linkGC = ['https://chat.whatsapp.com/DmYC7VwLxpVIPHrysJFIC7']
+global.linkGC = ['https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip']
 global.Owner = {
   // use the phone number with the country code, for example Indonesia '62' America '1' etc
   '62895368900456': { // put your number here
@@ -46,7 +46,7 @@ global.APIKeys = { // APIKey Here
 }
 
 // Sticker WM
-global.packname = 'Benniganteng\'ig : Beni_230'
+global.packname = 'Benniganteng \'ig : Beni_230'
 global.author = 'Benniismael'
 
 global.wait = '_*tunggu..*_'
