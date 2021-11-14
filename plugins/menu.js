@@ -27,7 +27,7 @@ let handler  = async (m, { conn, usedPrefix: _p, DevMode }) => {
       'main': 'Main',
       'about': 'About And Info',
       'creator': 'Creator',
-      'videomaker: 'Videomaker',
+      'videomaker': 'Videomaker',
       'ephoto360': 'Ephoto360',
       'rpg': 'Rpg',
       'game': 'Games',
