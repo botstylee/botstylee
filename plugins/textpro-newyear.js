@@ -19,7 +19,7 @@ conn.sendMessage(m.chat, buf, MessageType.video, {
 .catch(error => console.log(error));
 }
 handler.help = ['newyear <text>']
-handler.tags = ['te']
+handler.tags = ['textpro']
 handler.command = /^newyear$/i
 handler.owner = false
 handler.mods = false
