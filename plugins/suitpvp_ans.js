@@ -27,15 +27,15 @@ klik wa.me/${conn.user.jid.split`@`[0]}`, m.chat, {
         }
       })
 
-      if (!room.pilih) this.reply(room.p, ` *「 SUIT PVP 」*\n\nMenang +Rp${room.poin}\nKalah -Rp${room.poin_lose}\n\nBatu ✊🏻\nKertas 🖐🏻\nGunting ✌🏻`, m)
-      if (!room.pilih2) this.reply(room.p2, ` *「 SUIT PVP 」*\n\nMenang +Rp${room.poin}\nKalah -Rp${room.poin_lose}\n\nBatu ✊🏻\nKertas 🖐🏻\nGunting ✌🏻`, m)
+      if (!room.pilih) this.reply(room.p, ` *「 SUIT PVP 」*\n\nMenang +${room.poin} money\nKalah -${room.poin_lose} money\n\nBatu ✊🏻\nKertas 🖐🏻\nGunting ✌🏻`, m)
+      if (!room.pilih2) this.reply(room.p2, ` *「 SUIT PVP 」*\n\nMenang +${room.poin} money\nKalah -${room.poin_lose} money\n\nBatu ✊🏻\nKertas 🖐🏻\nGunting ✌🏻`, m)
       room.waktu_milih = setTimeout(() => {
         if (!room.pilih && !room.pilih2) this.reply(m.chat, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
         else if (!room.pilih || !room.pilih2) {
           win = !room.pilih ? room.p2 : room.p
           this.reply(m.chat, `@${(room.pilih ? room.p2 : room.p).split`@`[0]} tidak memilih suit, game berakhir`, m, { contextInfo: { mentionedJid: [room.p2, room.p] } })
-          global.DATABASE._data.users[win == room.p ? room.p : room.p2].uang += room.poin
-          global.DATABASE._data.users[win == room.p ? room.p2 : room.p].uang -= room.poin_lose
+          global.DATABASE._data.users[win == room.p ? room.p : room.p2].money += room.poin
+          global.DATABASE._data.users[win == room.p ? room.p2 : room.p].money -= room.poin_lose
         }
         delete this.suit[room.id]
         return !0
@@ -74,13 +74,13 @@ klik wa.me/${conn.user.jid.split`@`[0]}`, m.chat, {
 *「 HASIL SUIT 」*${tie ? '\n\nSERI' : ''}
 
 
-@${room.p.split`@`[0]} (${room.text}) ${tie ? '' : room.p == win ? ` Menang \n+Rp${room.poin}` : ` Kalah \n-Rp${room.poin_lose}`}
+@${room.p.split`@`[0]} (${room.text}) ${tie ? '' : room.p == win ? ` Menang \n+${room.poin} money` : ` Kalah \n-${room.poin_lose} money`} 
 
-@${room.p2.split`@`[0]} (${room.text2}) ${tie ? '' : room.p2 == win ? ` Menang \n+Rp${room.poin}` : ` Kalah \n-Rp${room.poin_lose}`}
+@${room.p2.split`@`[0]} (${room.text2}) ${tie ? '' : room.p2 == win ? ` Menang \n+${room.poin} money` : ` Kalah \n-${room.poin_lose} money`}
 `.trim(), m, { contextInfo: { mentionedJid: [room.p, room.p2] } })
       if (!tie) {
-        global.DATABASE._data.users[win == room.p ? room.p : room.p2].uang += room.poin
-        global.DATABASE._data.users[win == room.p ? room.p2 : room.p].uang += room.poin_lose
+        global.DATABASE._data.users[win == room.p ? room.p : room.p2].money += room.poin
+        global.DATABASE._data.users[win == room.p ? room.p2 : room.p].money += room.poin_lose
 
       }
       delete this.suit[room.id]
