@@ -20,7 +20,7 @@ conn.sendMessage(m.chat, buf, MessageType.image, { quoted: m, caption: 'nihhhh!!
 
 
 handler.help = ['glitch [teks]|[text2]']
-handler.tags = ['te']
+handler.tags = ['textpro']
 handler.command = /^glitch$/i
 handler.owner = false
 handler.mods = false
