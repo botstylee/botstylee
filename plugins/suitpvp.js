@@ -32,6 +32,8 @@ Ketik "terima/ok/gas" untuk memulai suit\nKetik "tolak/gabisa/nanti" untuk menol
     }, timeout), poin, poin_lose, timeout
   }
 }
+handler.help = ['suitpvp']
+handler.tags = ['game']
 handler.command = /^suit(pvp|2)$/i
 handler.limit = false
 handler.group = true
