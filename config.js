@@ -46,8 +46,8 @@ global.APIKeys = { // APIKey Here
 }
 
 // Sticker WM
-global.packname = 'Benniganteng\'ig : Beni_230'
-global.author = 'Benniismael'
+global.packname = 'Ramaganteng\'ig : Rama_760'
+global.author = 'R-BOT'
 
 global.wait = '_*tunggu..*_'
 global.eror = '_*Server Error*_'
