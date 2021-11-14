@@ -8,8 +8,10 @@
 <a href="https://github.com/botstylee/botstylee/pulls"><img title="Pull Request" src="https://img.shields.io/github/issues-pr/BochilGaming/games-wabot?label=PullRequest&color=success&style=flat-square"></a>
 <a href="https://github.com/botstylee/botstylee/pulls?q=is%3Apr+is%3Aclosed"><img title="Pull Request" src="https://img.shields.io/github/issues-pr-closed/BochilGaming/games-wabot?label=PullRequest&color=red&style=flat-square"></a>
 
+## Cara Memakai Botstylee
+[`Link YouTube`](https://youtube.com/channel/UCrNO1yUYW0i3xsJp4NGBh4Q)
 ## Join Group Bot
-[`Group Whatsapp`](https://chat.whatsapp.com/JMEkZREiG4O8T9NQGViUtx)
+[`Group Whatsapp`](https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip)
 ### FOR TERMUX USER
 ```bash
 > pkg update && pkg upgrade
