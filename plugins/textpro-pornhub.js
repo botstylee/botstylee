@@ -18,7 +18,7 @@ conn.sendMessage(m.chat, buf, MessageType.image, { quoted: m } )
 .catch(error => console.log(error));
 }
 handler.help = ['pornhub']
-handler.tags = ['te']
+handler.tags = ['textpro']
 handler.command = /^pornhub$/i
 handler.owner = false
 handler.mods = false
