@@ -1,33 +1,18 @@
-const { MessageType } = require('@adiwajshing/baileys')
-let handler = async function(m, { conn , args, text, isAdmin, isBotAdmin, groupMetadata }) {
+let handler = m => m
 
-  let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-  let asu = m.sender
-  let vir = asu.split("@s.whatsapp.net")[0]
-  if (!m.isGroup) { 
-    await m.reply('_BAPAK LO JAGOAN MANA ANJING !?!?_')
-    conn.blockUser(m.sender, "add")
-  } else {
-  	if (isAdmin) return m.reply('*ADMIN KONTOL!*')
-    await conn.reply(m.chat, `
-*[ CHAT ANTI VIRTEX ]*
-_Terdeteksi *@${asu.split("@")[0]}* telah mengirim virtex!_
-Maaf Kamu akan dikick oleh *BOT_STYLE*
-`.trim(), m, { 
-      contextInfo: {  
-        mentionedJid: [asu]
-      }
-    })
- if (isBotAdmin) {
-   conn.groupRemove(m.chat, [asu])
-     } else { 
-     	m.reply('```JADIKAN BOT_STYLE SEBAGAI ADMIN !!!```')
+let linkRegex = /৭৭৭|๒๒๒|؋.ᄻ.ྜྷ.ᇸ.ྙ|๖ۣۜy๖ۣۜF๖ۣۜr๖|๑๑๑|৭৭৭৭৭৭৭৭|๑๑๑๑๑๑๑๑|ผิดุท้่เึางืผิดุท้่เึางื|๒๒๒๒๒๒๒๒|ผิดุท้่เึางืผิดุท้่เึางื/i
+
+handler.before = function (m, { user, isAdmin, isBotAdmin }) {
+
+  if (m.isBaileys && m.fromMe) throw false
+  let chat = global.DATABASE.data.chats[m.chat]
+  let name = this.getName(m.sender)
+  let isGroupVirtex = linkRegex.exec(m.text)
+
+  if (chat.antiVirtext && isGroupVirtex) {
+ m.reply(`*「 ANTI VIRTEXT 」*\n\nTerdeteksi *${name}* bocah telah mengirim Virtext !\n\nMaaf Bocah Virtext Tidak Berguna Bagi Bot!`)
+  this.groupRemove(m.chat, [m.sender])
     }
-  } conn.sendMessage(vir + '@s.whatsapp.net', `${m.text}`, MessageType.text)
 }
-handler.customPrefix = //i
-handler.command = new RegExp
-
-handler.fail = null
 
 module.exports = handler
