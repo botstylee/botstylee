@@ -147,6 +147,14 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       conn.callWhitelistMode = isEnable
       break
+    case 'clear':
+      isAll = true
+      if (!isOwner) {
+        global.dfail('owner', m, conn)
+        throw false
+      }
+      setting.clear = isEnable
+      break  
     case 'nsfw':
       if (!isOwner) {
         global.dfail('owner', m, conn)
@@ -182,6 +190,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 ├ detect
 ├ document
 ├ jadibot
+├ clear
 ├ nsfw
 ├ public
 ├ stiker
