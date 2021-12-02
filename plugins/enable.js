@@ -153,7 +153,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
         global.dfail('owner', m, conn)
         throw false
       }
-      setting.clear = isEnable
+      chat.clear = isEnable
       break  
     case 'nsfw':
       if (!isOwner) {
