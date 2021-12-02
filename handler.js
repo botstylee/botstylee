@@ -343,13 +343,17 @@ module.exports = {
 					if (!isNumber(settings.backupDATABASE)) settings.backupDATABASE = 0
 					if (!'groupOnly' in settings) settings.groupOnly = false
 					if (!'nsfw' in settings) settings.nsfw = true
+                                        if (!'clear' in settings) settings.clear = false
+                                        if (!isNumber(settings.cleartime)) settings.cleartime = 0 
 				} else global.db.data.settings = {
 					antispam: true,
 					antitroli: true,
 					backup: false,
 					backupDB: 0,
 					groupOnly: false,
-					nsfw: true
+					nsfw: true,
+                                        clear: false,
+                                        cleartime: 0,
 				}
 			} catch (e) {
 				console.error(e)
