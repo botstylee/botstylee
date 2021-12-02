@@ -1,6 +1,7 @@
 let handler = m => m
 let debugMode = !1
 
+
 let winScore = 500
 let playScore = 50
 
