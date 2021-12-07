@@ -3,7 +3,7 @@ let handler  = async (m, { conn, args }) => {
 }
  
 handler.help = ['script']
-handler.tags = ['info']
+handler.tags = ['about']
 handler.command = /^(script)$/i
 
 module.exports = handler
