@@ -1,6 +1,6 @@
 {
-  "name": "bot-awa",
-  "version": "1.3.2",
+  "name": "",
+  "version": "",
   "description": "Customizable WhatsApp Bot",
   "depecrated": false,
   "main": "index.js",
@@ -22,15 +22,15 @@
     "whatsapp",
     "js-whatsapp"
   ],
-  "homepage": "https://github.com/Nurutomo/wabot-aq",
+  "homepage": "https://github.com/botstylee/botstylee",
   "author": {
-    "name": "Nurutomo"
+    "name": "Benniismail"
   },
   "repository": {
-    "url": "https://github.com/Nurutomo/wabot-aq.git"
+    "url": "https://github.com/botstylee/botstylee.git"
   },
   "bugs": {
-    "url": "https://github.com/Nurutomo/wabot-aq/issues"
+    "url": "https://github.com/botstylee/botstylee/issues"
   },
   "license": "GPL-3.0",
   "dependencies": {
