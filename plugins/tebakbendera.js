@@ -11,6 +11,12 @@ let handler  = async (m, { conn, usedPrefix }) => {
     }
     let res = await fetch(global.API('botstyle', '/api/tebakbendera', {}, 'apikey'))
     let json = await res.json()
+    let caption = `
+Bendera: *${json.bendera}*\n
+Timeout: *${(timeout / 1000).toFixed(2)} detik*\n
+Ketik *${usedPrefix}tbhint* untuk hint\n
+Bonus: ${poin} XP
+`.trim()
     conn.tebakbendera[id] = [
       await conn.sendButton(m.chat, caption, 'BOTSTYLE', 'Bantuan', '.tbhint', m),
         json, poin,
