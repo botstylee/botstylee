@@ -1,4 +1,4 @@
-let handler = async (m, { conn }) => {
+let handler = async (m, { conn, args }) => {
   if (m.quoted) {
     await conn.groupRemove(m.chat, [m.quoted.sender])
     conn.reply(conn.user.jid, `@${m.sender.split`@`[0]} kick @${m.quoted.sender.split`@`[0]}`, m)
