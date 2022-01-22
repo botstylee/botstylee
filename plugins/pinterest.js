@@ -6,8 +6,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   let pint = res[Math.floor(Math.random() * res.length)]
   await conn.sendButtonImg(m.chat, await(await fetch(pint)).buffer(), `Hasil pencarian\n${text}`, '© Botstylee', 'Next', m.text, m)
 }
-//handler.help = ['pinterest <pencarian>']
-//handler.tags = ['internet']
+handler.help = ['pinterest <pencarian>']
+handler.tags = ['internet']
 handler.command = /^(pint(erest)?)$/i
 handler.register = true
 handler.premium = true
