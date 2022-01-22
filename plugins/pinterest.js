@@ -1,15 +1,16 @@
+let fetch = require('node-fetch')
 let handler = async (m, { conn, text, usedPrefix, command }) => {
-  if (!text) throw `Contoh: ${usedPrefix + command} seblak`
+  if (!text) throw `Contoh: ${usedPrefix + command} minecraft`
+  await m.reply(global.wait)
   let res = await pinterest(text)
   let pint = res[Math.floor(Math.random() * res.length)]
-  conn.sendFile(m.chat, pint, '', `
-*Hasil pencarian*
-${text}
-`.trim(), m)
+  await conn.sendButtonImg(m.chat, await(await fetch(pint)).buffer(), `Hasil pencarian\n${text}`, '© Botstylee', 'Next', m.text, m)
 }
-handler.help = ['pinterest <pencarian>']
-handler.tags = ['internet']
-handler.command = /^(pinterest)$/i
+//handler.help = ['pinterest <pencarian>']
+//handler.tags = ['internet']
+handler.command = /^(pint(erest)?)$/i
+handler.register = true
+handler.premium = true
 
 module.exports = handler
 
