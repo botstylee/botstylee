@@ -21,7 +21,7 @@ Ketik *${usedPrefix}tbhint* untuk bantuan
 Bonus: ${poin} XP
 `.trim()
     conn.tebakbendera[id] = [
-      await conn.sendButton(m.chat, caption, '© Botstylee', 'Bantuan', `..tbhint`, m), 
+      await conn.sendButton(m.chat, caption, '© Botstylee', 'Bantuan', `.tbhint`, m), 
       json, poin, 
       setTimeout(() => { 
                if (conn.tebakbendera[id]) conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, '© Botsylee', 'Tebak Bendera', `.tebakbendera`, conn.tebakbendera[id][0]) 
