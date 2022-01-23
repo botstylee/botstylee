@@ -12,18 +12,21 @@ let handler  = async (m, { conn, usedPrefix }) => {
     let res = await fetch(global.API('botstyle', '/api/tebakbendera', {}, 'apikey'))
     let json = await res.json()
     let caption = `
-Bendera: *${json.bendera}*\n
-Timeout: *${(timeout / 1000).toFixed(2)} detik*\n
-Ketik *${usedPrefix}tbhint* untuk hint\n
+*「 Tebak Bendera 」*
+
+"${json.bendera} Bendera negara manakah ini ?"
+
+Timeout *${(timeout / 1000).toFixed(2)} detik*
+Ketik *${usedPrefix}tbhint* untuk bantuan
 Bonus: ${poin} XP
 `.trim()
     conn.tebakbendera[id] = [
-      await conn.sendButton(m.chat, caption, 'BOTSTYLE', 'Bantuan', '.tbhint', m),
-        json, poin,
-      setTimeout(() => {
-        if (conn.tebakbendera[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, 'BOTSTYLE', 'Tebak Bendera', '.tebakbendera', conn.tebakbendera[id][0])
-            delete conn.tebakbendera[id]
-      }, timeout)
+      await conn.sendButton(m.chat, caption, '© Botstylee', 'Bantuan', `..tbhint`, m), 
+      json, poin, 
+      setTimeout(() => { 
+               if (conn.tebakbendera[id]) conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, '© Botsylee', 'Tebak Bendera', `.tebakbendera`, conn.tebakbendera[id][0]) 
+               delete conn.tebakbendera2[id] 
+       }, timeout)
     ]
   }
   handler.help = ['tebakbendera']
