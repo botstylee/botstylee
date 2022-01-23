@@ -40,13 +40,16 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       chat.delete = isEnable
       break
     case 'antidelete':
-      if (m.isGroup) {
-        if (!isAdmin || !isOwner) {
-          global.dfail('admin', m, conn)
+      if (!m.isGroup) {
+        if (!isOwner) {
+          global.dfail('group', m, conn)
           throw false
         }
+      } else if (!isAdmin) {
+        global.dfail('admin', m, conn)
+        throw false
       }
-      chat.delete = !isEnable
+      chat.delete = isEnable
       break
     case 'antivirtext':
       if (!m.isGroup) {
@@ -105,20 +108,26 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       global.opts['self'] = !isEnable
       break
     case 'antilink':
-      if (m.isGroup) {
-        if (!isAdmin || !isOwner) {
-          global.dfail('admin', m, conn)
+      if (!m.isGroup) {
+        if (!isOwner) {
+          global.dfail('group', m, conn)
           throw false
         }
+      } else if (!isAdmin) {
+        global.dfail('admin', m, conn)
+        throw false
       }
       chat.antiLink = isEnable
       break
     case 'stiker':
-      if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
-          global.dfail('admin', m, conn)
+      if (!m.isGroup) {
+        if (!isOwner) {
+          global.dfail('group', m, conn)
           throw false
         }
+      } else if (!isAdmin) {
+        global.dfail('admin', m, conn)
+        throw false
       }
       chat.stiker = isEnable
       break
