@@ -10,8 +10,8 @@ handler.before = async function (m) {
         let json = JSON.parse(JSON.stringify(this.tebakbendera[id][1]))
         if (['.tbhint', 'Bantuan', ''].includes(m.text)) return !0
         if (m.text.toLowerCase() == json.jawaban.toLowerCase().trim()) {
-            global.db.data.users[m.sender].exp += this.tebakbendera[id][2]
-            await this.sendButton(m.chat, `*Benar!* +${this.tebakbendera[id][2]} XP`, 'BOTSTYLE', 'Tebak Bendera', '.tebakbendera', m)
+            db.data.users[m.sender].exp += this.tebakbendera[id][2]
+            await this.sendButton(m.chat, `*Benar!* +${this.tebakbendera[id][2]} XP`, '© Botstylee', 'Tebak Bendera', '.tebakbendera', m)
             clearTimeout(this.tebakbendera[id][3])
             delete this.tebakbendera[id]
         } else if (similarity(m.text.toLowerCase(), json.jawaban.toLowerCase().trim()) >= threshold) m.reply(`Dikit Lagi!`)
@@ -19,6 +19,5 @@ handler.before = async function (m) {
     }
     return !0
 }
-handler.exp = 0
 
 module.exports = handler
