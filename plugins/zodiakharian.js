@@ -44,7 +44,7 @@ ${rezeki}`
 	}
 }
 
-handler.help = ['zodiakharian <zodiak>']
+handler.help = ['Zodiakharian <zodiak>']
 handler.tags = ['primbon']
 handler.command = /^zodiakharian?$/i
 handler.owner = false
