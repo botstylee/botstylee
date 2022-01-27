@@ -672,7 +672,10 @@ Untuk mematikan fitur ini, ketik
 }
 
 global.dfail = (type, m, conn) => {
-	let msg = {
+                let nama = conn.getName(m.sender)
+                let teks = `Anda perlu mendaftar terlebih dahulu dengan cara mengetik:\n\n*#daftar nama.umur*\n_Contoh: #daftar ${nama}.19_`
+                let foot = `Tekan tombol verifikasi di bawah jika anda malas untuk mengetik`
+        	let msg = {
 		rowner: 'Perintah ini hanya dapat digunakan oleh _*OWWNER!1!1!*_',
 		owner: 'Perintah ini hanya dapat digunakan oleh _*Owner Bot*_!',
 		mods: 'Perintah ini hanya dapat digunakan oleh _*Moderator*_ !',
@@ -681,8 +684,8 @@ global.dfail = (type, m, conn) => {
 		private: 'Perintah ini hanya dapat digunakan di Chat Pribadi sayang!',
 		admin: 'Perintah ini hanya untuk *Admin* grup Sayang!',
 		botAdmin: 'Jadikan bot sebagai *Admin* untuk menggunakan perintah ini sayang!',
-		unreg: 'Silahkan daftar untuk menggunakan fitur ini dengan cara mengetik:\n\n*#daftar nama.umur*\n\nContoh: *#daftar BenniGanteng.16*',
-		nsfw: 'Mode NSFW tidak aktif. Hanya pemilik bot yang bisa mengaktifkannya'
+		nsfw: 'Mode NSFW tidak aktif. Hanya pemilik bot yang bisa mengaktifkannya',
+                unreg: conn.sendButton(m.chat, teks, foot, 'V e r i f y', `.reg ${nama}.19`, m.text, m)
 	} [type]
 	if (msg) return m.reply(msg)
 }
