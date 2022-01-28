@@ -43,6 +43,7 @@
     "cfonts": "^2.9.3",
     "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.6",
+    "colors": "1.4.0",
     "countdown": "^2.6.0",
     "decode-tiff": "^0.2.1",
     "dotenv": "^10.0.0",
