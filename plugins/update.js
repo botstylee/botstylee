@@ -9,7 +9,7 @@ let handler = async (m, { conn, text }) => {
 handler.help = ['update']
 handler.tags = ['host']
 handler.command = /^update$/i
-handler.owner = true
+handler.owner = false
 handler.mods = false
 handler.premium = false
 handler.group = false
