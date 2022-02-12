@@ -1,3 +1,4 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 require('./config.js')
 const { WAConnection: _WAConnection } = require('@adiwajshing/baileys')
 const cloudDBAdapter = require('./lib/cloudDBAdapter')
@@ -42,6 +43,7 @@ global.db = new Low(
 global.DATABASE = global.db // Backwards Compatibility
 
 global.conn = new WAConnection()
+conn.browserDescription = ['Hosted By Botstylee', 'Firefox', '3.0']
 let authFile = `${opts._[0] || 'session'}.data.json`
 if (fs.existsSync(authFile)) conn.loadAuthInfo(authFile)
 if (opts['trace']) conn.logger.level = 'trace'
@@ -133,7 +135,7 @@ global.reloadHandler = function () {
     conn.off('group-participants-update', conn.onParticipantsUpdate)
     conn.off('CB:action,,call', conn.onCall)
   }
-  conn.welcome = 'Hai, @user!\nSelamat datang di grup @subject\n\n@desc'
+  conn.welcome = 'Hai, @user!\nSelamat datang di grup @subject\n\nDesc Group:\n@desc'
   conn.bye = 'Selamat tinggal @user!\njangan lupa sholat'
   conn.spromote = '@user sekarang admin!'
   conn.sdemote = '@user sekarang bukan admin!'
