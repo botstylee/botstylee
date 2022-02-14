@@ -1,14 +1,19 @@
+const { MessageType } = require('@adiwajshing/baileys')
 const fetch = require('node-fetch')
 
 let handler = async (m, { conn }) => {
-    let res = await fetch(global.API('xteam', '/randomimage/wpmobile', {}, 'APIKEY'))
-    if (!res.ok) throw await res.text()
-    let img = await res.buffer()
-    if (!img) throw img
-    conn.sendFile(m.chat, img, '', 'BOTSTYLE', m, 0, { thumbnail: await (await fetch(img)).buffer() })
+    try {
+      await m.reply(global.wait)
+        let res = await fetch(global.API('xteam', '/randomimage/wallpaper', {}, 'APIKEY'))
+        let img = await res.buffer()
+        await conn.sendButtonImg(m.chat, img, 'Random Anime Picture', '© Botstylee', 'N e x t', '#wpanime', m)
+    } catch (e) {
+        console.log(e)
+        throw '_*Owner belum membayar tagihan fitur ini*_'
+    }
 }
-handler.help = ['wallpaperanime']
-handler.tags = ['internet']
+handler.help = ['wallpaperanime','wpanime']
+handler.tags = ['weebs']
 handler.command = /^(wallpaper|wp)anime$/i
 handler.limit = true
 
