@@ -28,7 +28,7 @@ global.APIs = { // API Prefix
   zekais: 'http://zekais-api.herokuapp.com',
   zeks: 'https://api.zeks.xyz',
   zahir: 'https://zahirr-web.herokuapp.com',
-  hardianto: 'https://hardianto-chan.herokuapp.com'
+  hardianto: 'https://hardianto.xyz'
   
 }
 global.APIKeys = { // APIKey Here
@@ -42,7 +42,7 @@ global.APIKeys = { // APIKey Here
   'https://botstyle-api.herokuapp.com': 'daftar dulu yaa',
   'https://api.zeks.xyz': 'apivinz',
   'https://zahirr-web.herokuapp.com': 'zahirgans',
-  'https://hardianto-chan.herokuapp.com': 'hardianto'
+  'https://hardianto.xyz': 'hardianto'
 }
 
 let fs = require('fs')
