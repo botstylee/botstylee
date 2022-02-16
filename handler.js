@@ -172,6 +172,7 @@ module.exports = {
 						if (!user.role) user.role = 'Beginner'
 					}
 					if (!('autolevelup' in user)) user.autolevelup = true
+                                        if (!isNumber(user.regTime)) user.regTime = -1
                                         if (!('premium' in user)) user.premium = false
                                         if (!isNumber(user.premiumTime)) user.premiumTime = 0
 				} else global.db.data.users[m.sender] = {
@@ -299,6 +300,8 @@ module.exports = {
 					regTime: -1,
 					role: 'Beginner',
 					autolevelup: true,
+                                        premium: false,
+                                        premiumTime: 0,
 				}
 
 				let chat = global.db.data.chats[m.chat]
@@ -335,8 +338,6 @@ module.exports = {
 					antiBugfont: false,
 					antiToxic: false,
 					expired: 0,
-                                        premium: false,
-                                        premiumTime: 0,
 				}
 				let settings = global.db.data.settings
 				if (typeof settings !== 'object') global.db.data.settings = {}
