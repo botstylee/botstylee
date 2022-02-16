@@ -4,8 +4,8 @@ let handler = async(m, { conn, text }) => {
     if (!text) return conn.reply(m.chat, 'Silahkan masukan mimpimu', m)
 
   await m.reply('Searching...')
-	axios.get('https://bsbt-api-rest.herokuapp.com/api/artimimpi/?mimpi=${text}&apikey=benniismael').then ((res) => {
-	 	let hasil = `Arti Mimpimu\n\n${res.data.arti.string}`
+	axios.get('https://bsbt-api-rest.herokuapp.com/api/artimimpi/?mimpi=${text}').then ((res) => {
+	 	let hasil = `Arti Mimpimu\n\n${res.data.result}`
 
     conn.reply(m.chat, hasil, m)
 	})
