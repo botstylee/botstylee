@@ -21,6 +21,7 @@
 > pkg install imagemagick -y
 > git clone https://github.com/botstylee/botstylee
 > cd botstylee
+> npm install -g npm@6.14.14
 > npm install
 ```
 ###### Run
@@ -38,7 +39,6 @@
 ```bash
 > git clone https://github.com/botstylee/botstylee
 > cd botstylee
-> npm install -g npm@6.14.14
 > npm install
 ```
 ###### Run
