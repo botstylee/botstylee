@@ -172,8 +172,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       setting.nsfw = isEnable
       break
     case 'simi':
-      if (m.isGroup) {
-        global.dfail('admin', m, conn)
+      if (m.isGroup || !isAdmin) {
+        global.dfail('group', m, conn)
         throw false
 
       } else if (!(isAdmin || isOwner)) {
