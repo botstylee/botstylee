@@ -172,7 +172,6 @@ module.exports = {
 						if (!user.role) user.role = 'Beginner'
 					}
 					if (!('autolevelup' in user)) user.autolevelup = true
-                                        if (!isNumber(user.regTime)) user.regTime = -1
                                         if (!('premium' in user)) user.premium = false
                                         if (!isNumber(user.premiumTime)) user.premiumTime = 0
 				} else global.db.data.users[m.sender] = {
