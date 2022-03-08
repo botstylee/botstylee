@@ -1,7 +1,3 @@
-let {
-	MessageType
-} = require('@adiwajshing/baileys')
-
 let handler = async (m, {
 	conn,
 	args,
