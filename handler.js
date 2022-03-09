@@ -1,9 +1,7 @@
 let util = require('util')
 let simple = require('./lib/simple')
 let {
-	WA_MESSAGE_STUB_TYPES,
-	MessageType,
-	Presence
+	MessageType
 } = require('@adiwajshing/baileys')
 
 const isNumber = x => typeof x === 'number' && !isNaN(x)
@@ -174,9 +172,8 @@ module.exports = {
 						if (!user.role) user.role = 'Beginner'
 					}
 					if (!('autolevelup' in user)) user.autolevelup = true
-					if (!isNumber(user.regTime)) user.regTime = -1
-					if (!('premium' in user)) user.premium = false
-					if (!isNumber(user.premiumTime)) user.premiumTime = 0
+                                        if (!('premium' in user)) user.premium = false
+                                        if (!isNumber(user.premiumTime)) user.premiumTime = 0
 				} else global.db.data.users[m.sender] = {
 					healt: 100,
 					stamina: 100,
@@ -302,8 +299,8 @@ module.exports = {
 					regTime: -1,
 					role: 'Beginner',
 					autolevelup: true,
-					premium: false,
-					premiumTime: 0,
+                                        premium: false,
+                                        premiumTime: 0,
 				}
 
 				let chat = global.db.data.chats[m.chat]
@@ -322,7 +319,7 @@ module.exports = {
 					if (!('antiVirtext' in chat)) chat.antiVirtext = false
 					if (!('antiPhilip' in chat)) chat.antiPhilip = false
 					if (!('antiBugfont' in chat)) chat.antiBugfont = false
-					if (!('novirtex' in chat)) chat.novirtex = false
+					if (!('antiToxic' in chat)) chat.antiToxic = false
 					if (!isNumber(chat.expired)) chat.expired = 0
 				} else global.db.data.chats[m.chat] = {
 					isBanned: false,
@@ -338,7 +335,7 @@ module.exports = {
 					antiVirtext: false,
 					antiPhilip: false,
 					antiBugfont: false,
-					novirtex: false,
+					antiToxic: false,
 					expired: 0,
 				}
 				let settings = global.db.data.settings
@@ -350,8 +347,8 @@ module.exports = {
 					if (!isNumber(settings.backupDATABASE)) settings.backupDATABASE = 0
 					if (!'groupOnly' in settings) settings.groupOnly = false
 					if (!'nsfw' in settings) settings.nsfw = true
-					if (!'clear' in settings) settings.clear = false
-					if (!isNumber(settings.cleartime)) settings.cleartime = 0
+                                        if (!'clear' in settings) settings.clear = false
+                                        if (!isNumber(settings.cleartime)) settings.cleartime = 0 
 				} else global.db.data.settings = {
 					antispam: true,
 					antitroli: true,
@@ -359,8 +356,8 @@ module.exports = {
 					backupDB: 0,
 					groupOnly: false,
 					nsfw: true,
-					clear: false,
-					cleartime: 0,
+                                        clear: false,
+                                        cleartime: 0,
 				}
 			} catch (e) {
 				console.error(e)
@@ -400,25 +397,6 @@ module.exports = {
 			let isAdmin = user.isAdmin || user.isSuperAdmin || false // Is User Admin?
 			let isBotAdmin = bot.isAdmin || bot.isSuperAdmin || false // Are you Admin?
 			let DevMode = (global.DeveloperMode.toLowerCase() == 'true') || false
-			let enable = global.db.data.chats[m.chat]
-			let stp = m.messageStubType ? WA_MESSAGE_STUB_TYPES[m.messageStubType] : ''
-			if (enable.novirtex && !m.fromMe && m.isGroup && !isAdmin && !isOwner && isBotAdmin) {
-				if (!m.fromMe && m.text.length > 180000 || stp == "OVERSIZED") {
-					console.log(stp)
-					conn.updatePresence(m.chat, Presence.composing)
-					delay(3000).then(async () => {
-						conn.reply(m.chat, `*oversized message is not allowed in here*`, m)
-					})
-					conn.updatePresence(m.chat, Presence.composing)
-					delay(2000).then(async () => {
-						conn.reply(m.chat, `*You will be kicked from here in 3 seconds again*`, m)
-					})
-					delay(3000).then(async () => {
-						conn.groupRemove(m.chat, [m.sender])
-					})
-				}
-
-			}
 			for (let name in global.plugins) {
 				let plugin = global.plugins[name]
 				if (!plugin) continue
@@ -667,7 +645,7 @@ module.exports = {
 		if (m.key.fromMe) return
 		let chat = global.db.data.chats[m.key.remoteJid]
 		if (chat.delete) return
-		/*await this.reply(m.key.remoteJid, `
+		await this.reply(m.key.remoteJid, `
 Terdeteksi @${m.participant.split`@`[0]} telah menghapus pesan
 
 Untuk mematikan fitur ini, ketik
@@ -677,7 +655,7 @@ Untuk mematikan fitur ini, ketik
 				mentionedJid: [m.participant]
 			}
 		})
-		this.copyNForward(m.key.remoteJid, m.message).catch(e => console.log(e, m))*/
+		this.copyNForward(m.key.remoteJid, m.message).catch(e => console.log(e, m))
 	},
 	async onCall(json) {
 		let {
@@ -698,10 +676,10 @@ Untuk mematikan fitur ini, ketik
 }
 
 global.dfail = (type, m, conn) => {
-	let nama = conn.getName(m.sender)
-	let teks = `Anda perlu mendaftar terlebih dahulu dengan cara mengetik:\n\n*#daftar nama.umur*\n_Contoh: #daftar ${nama}.19_`
-	let foot = `Tekan tombol verifikasi di bawah jika anda malas untuk mengetik`
-	let msg = {
+                let nama = conn.getName(m.sender)
+                let teks = `Anda perlu mendaftar terlebih dahulu dengan cara mengetik:\n\n*#daftar nama.umur*\n_Contoh: #daftar ${nama}.19_`
+                let foot = `Tekan tombol verifikasi di bawah jika anda malas untuk mengetik`
+        	let msg = {
 		rowner: 'Perintah ini hanya dapat digunakan oleh _*OWWNER!1!1!*_',
 		owner: 'Perintah ini hanya dapat digunakan oleh _*Owner Bot*_!',
 		mods: 'Perintah ini hanya dapat digunakan oleh _*Moderator*_ !',
@@ -711,7 +689,7 @@ global.dfail = (type, m, conn) => {
 		admin: 'Perintah ini hanya untuk *Admin* grup Sayang!',
 		botAdmin: 'Jadikan bot sebagai *Admin* untuk menggunakan perintah ini sayang!',
 		nsfw: 'Mode NSFW tidak aktif. Hanya pemilik bot yang bisa mengaktifkannya',
-		unreg: conn.sendButton(m.chat, teks, foot, 'V e r i f y', `.reg ${nama}.19`, m.text, m)
+                unreg: conn.sendButton(m.chat, teks, foot, 'V e r i f y', `.reg ${nama}.19`, m.text, m)
 	} [type]
 	if (msg) return m.reply(msg)
 }
