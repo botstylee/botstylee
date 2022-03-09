@@ -13,7 +13,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
     await conn.sendButton(res.gid, `
 *${conn.user.name}* adalah bot whatsapp yang dibangun dengan Nodejs, *${conn.user.name}* diundang ke group oleh @${m.sender.split`@`[0]}
     
-ketik *${usedPrefix}menu* untuk melihat daftar perintah`.trim(), 'BOTSTYLEE', 'Menu', `${usedPrefix}?`, m {
+ketik *${usedPrefix}menu* untuk melihat daftar perintah`.trim(), 'BOTSTYLEE', 'Menu', `${usedPrefix}?`, m, {
 contextInfo: {
 mentionedJid: [m.sender]
 }})

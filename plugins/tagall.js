@@ -4,7 +4,8 @@ let handler = async (m, {
 	participants
 }) => {
     let text = args.join` ` || "oi bang!"
-	let users = participants.map(u => u.jid)	conn.reply(m.chat, '*「 TAG ALL 」*\n'+ 'Message:'+ ` *${text}*`+ '\n\n❖ ' + users.map(v => '@' + v.replace(/@.+/, '')).join`\n❖ `, m, {
+	let users = participants.map(u => u.jid)
+	conn.reply(m.chat, '*「 TAG ALL 」*\n'+ 'Message:'+ ` *${text}*`+ '\n\n❖ ' + users.map(v => '@' + v.replace(/@.+/, '')).join`\n❖ `, m, {
 		contextInfo: {
 			mentionedJid: users
 		}
