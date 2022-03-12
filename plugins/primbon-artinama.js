@@ -8,7 +8,7 @@ let handler = async (m, {
 	text
 }) => {
 if (!text) throw `*masukan namanya...*\n*example*\n*${usedPrefix+command} benny*`
-var a = await fetch("https://bsbt-api-rest.herokuapp.com/api/artinama?nama="+text) 
+var a = await fetch("https://rest-beni.herokuapp.com/api/artinama?nama="+text) 
 var b = await a.json() 
 m.reply(`arti namamu adalah\n\n${b.result}`)
 }
