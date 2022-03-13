@@ -8,7 +8,7 @@ let handler = async (m, { conn, usedPrefix }) => {
         conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.tebakkabupaten[id][0])
         throw false
     }
-    let res = await fetch('https://bsbt-api-rest.herokuapp.com/api/game/tebakkabupaten')
+    let res = await fetch('https://rest-beni.herokuapp.com/api/game/tebakkabupaten')
     let data = await res.json()
     let caption = `
 Timeout *${(timeout / 1000).toFixed(2)} detik*
