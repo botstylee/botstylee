@@ -1,7 +1,7 @@
 {
-  "name": "",
-  "version": "",
-  "description": "Customizable WhatsApp Bot",
+  "name": "FAIRUZZbotz",
+  "version": "1.0.1",
+  "description": "Gak boleh spam bot,gunakan bot sesuai keperluan, kalo ada problem atau masalah bisa tanya owner nya kalo emang ngeyel di bilangin nya terpaksa harus di blok kalo mau minta di bukain blokan nya harus minta sama owner nya sekian punten🙏",
   "depecrated": false,
   "main": "index.js",
   "directories": {
@@ -18,9 +18,9 @@
   },
   "keywords": [
     "termux-whatsapp-bot",
-    "whatsapp-bot",
-    "whatsapp",
-    "js-whatsapp"
+    "FAIRUZZbotz",
+    "FAIRUZZbotz",
+    ""
   ],
   "homepage": "https://github.com/botstylee/botstylee",
   "author": {
