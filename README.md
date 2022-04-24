@@ -1,4 +1,4 @@
-# wabot-bsbt
+# BOTSTYLEE-MD
 <a href="https://github.com/botstylee/botstylee/network/members"><img title="Forks" src="https://img.shields.io/github/forks/botstylee/botstylee?label=Forks&color=blue&style=flat-square"></a>
 <a href="https://github.com/botstylee/botstylee/watchers"><img title="Watchers" src="https://img.shields.io/github/watchers/botstylee/botstylee?label=Watchers&color=green&style=flat-square"></a>
 <a href="https://github.com/botstylee/botstylee/stargazers"><img title="Stars" src="https://img.shields.io/github/stars/botstylee/botstylee?label=Stars&color=yellow&style=flat-square"></a>
@@ -52,12 +52,9 @@
 
 [`BENNIISMAEL`](https://github.com/botstylee)
 
-[`BochilGaming`](https://github.com/BochilGaming)
-
-
-[`RR018|RIZKI`](https://github.com/rizkiramadhan4617)
+[`Contributor`] (https://github.com/findme-19)
 
 [`xteam`](https://api.xteam.xyz)
 
 
-[`bsbt`](https://bsbt-api-rest.herokuapp.com)
+[`bsbt`](https://rest-beni.herokuapp.com)
