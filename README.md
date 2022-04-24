@@ -15,14 +15,10 @@
 ### FOR TERMUX USER
 ```bash
 > pkg update && pkg upgrade
-> pkg install git -y
-> pkg install nodejs -y
-> pkg install ffmpeg -y
-> pkg install imagemagick -y
+> pkg install git ffmpeg imagemagick nodejs nano mc -y
 > git clone https://github.com/botstylee/botstylee
 > cd botstylee
-> npm install -g npm@6.14.14
-> npm install
+> npm install -g npm@6.14.14 && npm install
 ```
 ###### Run
 ```bash
@@ -52,7 +48,7 @@
 
 [`BENNIISMAEL`](https://github.com/botstylee)
 
-[`Contributor`] (https://github.com/findme-19)
+[`Contributor`](https://github.com/findme-19)
 
 [`xteam`](https://api.xteam.xyz)
 
