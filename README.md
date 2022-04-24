@@ -43,6 +43,9 @@
 ```
 --------------
 
+### Original Source
+[`BochilGeming`](https://github.com/BochilGaming/games-wabot-md)
+
 ### Thanks To 
 [`Nurutomo`](https://github.com/Nurutomo)
 
