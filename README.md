@@ -10,7 +10,7 @@
 
 ## Cara Memakai Botstylee
 [`Link YouTube`](https://youtube.com/channel/UCrNO1yUYW0i3xsJp4NGBh4Q)
-## Join Group Bot
+## Join Grup Wa Kalau Mau Bertanya
 [`Group Whatsapp`](https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip)
 ### FOR TERMUX USER
 ```bash
