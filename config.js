@@ -10,8 +10,8 @@ import {
 global.owner = [
 	//  ['6281234288573'],
 	['12546153210'],
-	['62895368900456'],
-	['6282331033919', 'need me?', true]
+	['6282331033919'],
+	['62895368900456', 'Benniismail?', true]
 	// [number, dia creator/owner?, dia developer?]
 ] // Put your number here
 global.mods = [] // Want some help?
@@ -36,8 +36,8 @@ global.APIKeys = { // APIKey Here
 }
 
 // Sticker WM
-global.packname = 'I hope You\'re fine'
-global.author = 'Wuis'
+global.packname = 'ig : Beni_230\'Benniismael'
+global.author = 'BOT BY BENNIISMAEL & ghost'
 
 global.multiplier = 69 // The higher, The harder levelup
 
