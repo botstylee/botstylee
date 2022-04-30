@@ -48,7 +48,7 @@ const defaultMenu = {
 ├ 🕰️ Waktu: *%time*
 ├ 📈 Uptime: *%uptime (%muptime)*
 ├ 📊 Database: %totalreg
-╰────
+│============================
 %readmore`.trimStart(),
 	header: '◪「 %category 」',
 	body: '├❏ %cmd %islimit %isPremium',
