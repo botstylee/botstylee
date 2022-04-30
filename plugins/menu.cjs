@@ -20,7 +20,6 @@ let tags = {
 	'premium': 'Premium',
 	'internet': 'Internet',
 	'anonymous': 'Anonymous Chat',
-	'nulis': 'MagerNulis & Logo',
 	'downloader': 'Downloader',
 	'tools': 'Tools',
 	'fun': 'Fun',
@@ -185,10 +184,10 @@ let handler = async (m, {
 			['Donate', '/donasi'],
 			['Speed', '/ping'],
 			['Owner', '/owner']
-		], m)
+		], false, {asLocation: true})
 	} catch (e) {
 		conn.reply(m.chat, 'Maaf, menu sedang error', m)
-		throw e
+		throw conn.reply(conn.user.jid, e, m)
 	}
 }
 handler.help = ['menu', 'help', '?']
