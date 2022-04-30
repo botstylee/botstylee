@@ -28,7 +28,7 @@ let handler = async (m, {
 }
 handler.help = ['marble [text]']
 handler.tags = ['textpro']
-handler.command = /^blood$/i
+handler.command = /^marble$/i
 
 
 module.exports = handler
