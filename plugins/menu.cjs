@@ -12,6 +12,7 @@ let tags = {
 	'game': 'Game',
 	'rpg': 'RPG Games',
 	'xp': 'Exp & Limit',
+        'canvascord': 'Canvascord',
 	'sticker': 'Sticker',
 	'kerang': 'Kerang Ajaib',
 	'primbon': 'Primbon Jawa',
