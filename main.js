@@ -72,11 +72,12 @@ const {
 const {
 	chain
 } = lodash
+import fetch from 'node-fetch'
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
 protoType()
 serialize()
-
+global.fetch = fetch
 global.API = (name, path = '/', query = {}, apikeyqueryname) => (name in global.APIs ? global.APIs[name] : name) + path + (query || apikeyqueryname ? '?' + new URLSearchParams(Object.entries({
 	...query,
 	...(apikeyqueryname ? {
