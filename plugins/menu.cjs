@@ -36,19 +36,18 @@ let tags = {
 }
 const defaultMenu = {
 	before: `
-╭─「 %me 🤖」
-│ 👋🏻 Hai, %name!
+┌──「 %me 🤖」
+│============================
+├ 👋🏻 Hai, %name!
 │
-│ 🧱 Limit : *%limit Limit*
-│ 🦸🏼‍♂️ Role : *%role*
-│ 🔼 Level : *%level (%exp / %maxexp)*
-│ 💫 Total XP : %totalexp ✨
-│ 
-│ 📅 Tanggal: *%week, %date*
-│ 🕰️ Waktu: *%time*
-│
-│ 📈 Uptime: *%uptime (%muptime)*
-│ 📊 Database: %totalreg
+├ 🧱 Limit : *%limit Limit*
+├ 🦸🏼‍♂️ Role : *%role*
+├ 🔼 Level : *%level (%exp / %maxexp)*
+├ 💫 Total XP : %totalexp ✨
+├ 📅 Tanggal: *%week, %date*
+├ 🕰️ Waktu: *%time*
+├ 📈 Uptime: *%uptime (%muptime)*
+├ 📊 Database: %totalreg
 ╰────
 %readmore`.trimStart(),
 	header: '◪「 %category 」',
