@@ -6,7 +6,7 @@ let handler = async (m, {
 	let txt = args.join` `
 	if (!txt) return conn.reply(m.chat, 'harap masukan teksnya!!!', m)
 	if (txt.length > 15) return conn.reply(m.chat, 'maksimal 15', m)
-	var a = await tp("https://textpro.me/break-wall-text-effect-871.html", txt)
+	var a = await tp("https://textpro.me/carbon-text-effect-833.html", txt)
 	console.log(a)
 	try {
 		var buffer = await require("axios").request(a, {
