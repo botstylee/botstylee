@@ -1,6 +1,6 @@
-const uploadImage = require('../lib/uploadImage')
-const uploadFile = require('../lib/uploadFile')
-const { sticker } = require('../lib/sticker')
+const uploadImage = require('../lib/uploadImage.cjs')
+const uploadFile = require('../lib/uploadFile.cjs')
+const { sticker } = require('../lib/sticker.cjs')
 const { MessageType } = require('@adiwajshing/baileys')
 
 let handler = async (m, { conn, text }) => {
@@ -17,7 +17,7 @@ d = await (await fetch('https://tessyy-api.herokuapp.com/canvas/bautiful?url='+e
   }
 }
 handler.help = ['beautiful (@tag)']
-handler.tags = ['sticker']
+handler.tags = ['canvascord']
 handler.command = /^beautiful|cantik$/i
 handler.owner = false
 handler.mods = false
