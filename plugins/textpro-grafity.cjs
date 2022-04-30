@@ -1,4 +1,4 @@
-const textpro = require("../lib/textpro.js");
+const textpro = require("../lib/textpro.cjs");
 const axios = require ("axios")
 const { MessageType } = require('@adiwajshing/baileys')
 let handler = async (m, { conn, args, text }) => {
