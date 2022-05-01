@@ -9,7 +9,7 @@ import {
 
 global.owner = [
 	//  ['6281234288573'],
-	['12546153210'],
+	['436508448617777'],
 	['6282331033919'],
 	['62895368900456', 'Benniismail?', true]
 	// [number, dia creator/owner?, dia developer?]
