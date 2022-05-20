@@ -19,4 +19,6 @@ let handler = async (m, {
 handler.help = ['linkgroup']
 handler.tags = ['group']
 handler.command = /^link(gro?up)?$/i
+handler.group = true
+handler.botAdmin = true
 module.exports = handler

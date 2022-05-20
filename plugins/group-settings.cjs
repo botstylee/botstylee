@@ -19,7 +19,7 @@ let handler = async (m, {
 handler.help = ['group *open / close*']
 handler.tags = ['group']
 handler.command = /^(group)$/i
-
+handler.group = true
 handler.admin = true
 handler.botAdmin = true
 

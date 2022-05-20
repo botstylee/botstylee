@@ -25,5 +25,5 @@ handler.help = ['artimimpi [teks]']
 handler.tags = ['primbon']
 
 handler.command = /^artimimpi$/i
-
+handler.premium = true
 module.exports = handler

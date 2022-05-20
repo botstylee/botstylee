@@ -4,52 +4,24 @@ const {
 const {
 	join
 } = require('path');
-const {
-	xpRange
-} = require('../lib/levelling.cjs');
-let tags = {
-	'main': 'Main',
-	'game': 'Game',
-	'rpg': 'RPG Games',
-	'xp': 'Exp & Limit',
-        'canvascord': 'Canvascord',
-	'sticker': 'Sticker',
-	'kerang': 'Kerang Ajaib',
-	'primbon': 'Primbon Jawa',
-	'admin': 'Admin',
-	'group': 'Group',
-	'premium': 'Premium',
-	'internet': 'Internet',
-	'anonymous': 'Anonymous Chat',
-	'downloader': 'Downloader',
-	'tools': 'Tools',
-	'fun': 'Fun',
-	'database': 'Database',
-	'vote': 'Voting',
-	'absen': 'Absen',
-	'quran': 'Al Qur\'an',
-	'jadibot': 'Jadi Bot',
-	'owner': 'Owner',
-	'host': 'Host',
-	'advanced': 'Advanced',
-	'info': 'Info',
-	'': 'No Category',
-}
+let levelling = require('../lib/levelling.cjs')
+let moment = require('moment-timezone')
 const defaultMenu = {
 	before: `
-┌──「 %me 🤖」
-│============================
-├ 👋🏻 Hai, %name!
+╭─「 %me 🤖」
+│ 👋🏻 Hai, %name!
 │
-├ 🧱 Limit : *%limit Limit*
-├ 🦸🏼‍♂️ Role : *%role*
-├ 🔼 Level : *%level (%exp / %maxexp)*
-├ 💫 Total XP : %totalexp ✨
-├ 📅 Tanggal: *%week, %date*
-├ 🕰️ Waktu: *%time*
-├ 📈 Uptime: *%uptime (%muptime)*
-├ 📊 Database: %totalreg
-│============================
+│ 🧱 Limit : *%limit Limit*
+│ 🦸🏼‍♂️ Role : *%role*
+│ 🔼 Level : *%level (%exp / %maxexp)*
+│ 💫 Total XP : %totalexp ✨
+│ 
+│ 📅 Tanggal: *%week, %date*
+│ 🕰️ Waktu: *%time*
+│
+│ 📈 Uptime: *%uptime (%muptime)*
+│ 📊 Database: %totalreg
+╰────
 %readmore`.trimStart(),
 	header: '◪「 %category 」',
 	body: '├❏ %cmd %islimit %isPremium',
@@ -59,8 +31,96 @@ const defaultMenu = {
 let handler = async (m, {
 	conn,
 	usedPrefix: _p,
-	__dirname
+	__dirname,
+	args,
+	command
 }) => {
+	let tags
+	let teks = `${args[0]}`.toLowerCase()
+	let arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'database', 'owner', 'jadian', 'noktg']
+	if (!arrayMenu.includes(teks)) teks = '404'
+	if (teks == 'all') tags = {
+		'main': 'Main',
+		'game': 'Games',
+		'rpg': 'RPG Games',
+		'xp': 'Exp & Limit',
+		'sticker': 'Sticker',
+		'kerang': 'Kerang Ajaib',
+		'primbon': 'Primbon Jawa',
+		'admin': 'Admin',
+		'group': 'Group',
+		'premium': 'Premium',
+		'internet': 'Internet',
+		'anonymous': 'Anonymous Chat',
+		'downloader': 'Downloader',
+		'tools': 'Tools',
+		'fun': 'Fun',
+		'database': 'Database',
+		'vote': 'Voting',
+		'absen': 'Absen',
+		'owner': 'Owner',
+		'user': 'User',
+		'advanced': 'Advanced',
+		'info': 'Info',
+		'': 'No Category',
+	}
+	if (teks == 'game') tags = {
+		'game': 'Games',
+		'fun': 'Fun', 
+		'berburu': 'Berburu'
+	}
+	if (teks == 'rpg') tags = {
+		'rpg': 'RPG Games'
+	}
+	if (teks == 'xp') tags = {
+		'xp': 'Exp & Limit'
+	}
+	if (teks == 'sticker') tags = {
+		'sticker': 'Sticker'
+	}
+	if (teks == 'kerang') tags = {
+		'kerang': 'Kerang Ajaib'
+	}
+	if (teks == 'primbon') tags = {
+		'primbon': 'Primbon Jawa'
+	}
+	if (teks == 'group') tags = {
+		'admin': 'Admin',
+		'group': 'Group',
+		'vote': 'Voting',
+		'absen': 'Absen'
+	}
+	if (teks == 'premium') tags = {
+		'premium': 'Premium'
+	}
+	if (teks == 'internet') tags = {
+		'internet': 'Internet'
+	}
+	if (teks == 'anonymous') tags = {
+		'anonymous': 'Anonymous Chat'
+	}
+	if (teks == 'downloader') tags = {
+		'downloader': 'Downloader'
+	}
+	if (teks == 'tools') tags = {
+		'tools': 'Tools'
+	}
+	if (teks == 'database') tags = {
+		'database': 'Database'
+	}
+	if (teks == 'owner') tags = {
+		'owner': 'Owner',
+		'advanced': 'Advanced'
+	}
+	if (teks == 'jadian') tags = {
+		'user': 'User', 
+		'jadian': 'Jadian'
+	}
+	if (teks == 'noktg') tags = {
+		'info': 'Info',
+		'': 'No Category'
+	}
+
 	try {
 		let _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
 		let {
@@ -73,7 +133,7 @@ let handler = async (m, {
 			min,
 			xp,
 			max
-		} = xpRange(level, global.multiplier)
+		} = levelling.xpRange(level, global.multiplier)
 		let name = await conn.getName(m.sender)
 		let d = new Date(new Date + 3600000)
 		let locale = 'id'
@@ -123,10 +183,99 @@ let handler = async (m, {
 				enabled: !plugin.disabled,
 			}
 		})
-		for (let plugin of help)
-			if (plugin && 'tags' in plugin)
-				for (let tag of plugin.tags)
-					if (!(tag in tags) && tag) tags[tag] = tag
+		if (teks == '404') {
+			const sendMsg = await conn.sendMessage(m.chat, {
+				text: 'Sekarang Jam ' + time,
+				footer: author,
+				title: '```'+ ucapan() + name + '```\n*' + week + ' - ' + date + '*\n',
+				buttonText: "Click",
+				sections: [{
+					title: "List Featured",
+					rows: [{
+							title: "All",
+							rowId: _p + `? all`
+						},
+						{
+							title: "Games",
+							rowId: _p + `? game`
+						},
+						{
+							title: "RPG Games",
+							rowId: _p + `? rpg`
+						},
+						{
+							title: "Exp & Limit",
+							rowId: _p + `? xp`
+						},
+						{
+							title: "Stickers",
+							rowId: _p + `? sticker`
+						},
+						{
+							title: "Kerang Ajaib",
+							rowId: _p + `? kerang`
+						},
+						{
+							title: "Primbon Jawa",
+							rowId: _p + `? primbon`
+						},
+						{
+							title: "Groups",
+							rowId: _p + `? group`
+						},
+						{
+							title: "Premium",
+							rowId: _p + `? premium`
+						},
+						{
+							title: "Internet",
+							rowId: _p + `? internet`
+						},
+						{
+							title: "Anonymous Chat",
+							rowId: _p + `? anonymous`
+						},
+						{
+							title: "Downloader",
+							rowId: _p + `? downloader`
+						},
+						{
+							title: "Tools",
+							rowId: _p + `? tools`
+						},
+						{
+							title: "Database",
+							rowId: _p + `? database`
+						},
+						{
+							title: "Owner",
+							rowId: _p + `? owner`
+						},
+						{
+							title: "Jadian",
+							rowId: _p + `? jadian`
+						},
+						{
+							title: "Tanpa Kategori",
+							rowId: _p + `? noktg`
+						}
+					]
+				}]
+			})
+			await delay(60000)
+			return conn.sendMessage(m.chat, {
+				delete: sendMsg.key
+			})
+		}
+		let groups = {}
+		for (let tag in tags) {
+			groups[tag] = []
+			for (let plugin of help)
+				if (plugin.tags && plugin.tags.includes(tag))
+					if (plugin.help) groups[tag].push(plugin)
+			// for (let tag of plugin.tags)
+			//   if (!(tag in tags)) tags[tag] = tag
+		}
 		conn.menu = conn.menu ? conn.menu : {}
 		let before = conn.menu.before || defaultMenu.before
 		let header = conn.menu.header || defaultMenu.header
@@ -179,12 +328,14 @@ let handler = async (m, {
 			readmore: readMore
 		}
 		text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
-		const pp = await conn.profilePictureUrl(conn.user.jid).catch(_ => './src/avatar_contact.png')
-		conn.sendHydrated(m.chat, text.trim(), author, pp, 'https://github.com/botstylee/botstylee', 'Github', null, null, [
+		const pp = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => './src/avatar_contact.png')
+		conn.sendHydrated(m.chat, text.trim(), author, pp, 'https://github.com/findme-19', 'Github', null, null, [
 			['Donate', '/donasi'],
 			['Speed', '/ping'],
 			['Owner', '/owner']
-		], false, {asLocation: true})
+		], false, {
+			asLocation: true
+		})
 	} catch (e) {
 		conn.reply(m.chat, 'Maaf, menu sedang error', m)
 		throw conn.reply(conn.user.jid, e, m)
@@ -204,4 +355,22 @@ function clockString(ms) {
 	let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
 	let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
 	return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
+}
+
+function ucapan() {
+	const time = moment.tz('Asia/Jakarta').format('HH')
+	res = "Selamat pagi "
+	if (time >= 4) {
+		res = "Selamat pagi "
+	}
+	if (time > 10) {
+		res = "Selamat siang "
+	}
+	if (time >= 15) {
+		res = "Selamat sore "
+	}
+	if (time >= 18) {
+		res = "Selamat malam "
+	}
+	return res
 }

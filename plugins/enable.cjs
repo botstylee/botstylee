@@ -173,7 +173,7 @@ let handler = async (m, {
 			break
 		default:
 			if (!/[01]/.test(command)) return m.reply(`
-List option: welcome | delete | antilink | antidelete | antitoxic | autolevelup | detect | document | whitelistmycontacts | nyimak | autoread | gconly | swonly
+List option: welcome | delete | antidelete | nyimak
 Contoh:
 ${usedPrefix}enable welcome
 ${usedPrefix}disable welcome

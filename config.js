@@ -38,7 +38,7 @@ global.APIKeys = { // APIKey Here
 // Sticker WM
 global.packname = 'ig : Beni_230\'Benniismael'
 global.author = 'BOT BY BENNIISMAEL & ghost'
-
+global.nomorown = '6282331033919'
 global.multiplier = 69 // The higher, The harder levelup
 
 global.rpg = {

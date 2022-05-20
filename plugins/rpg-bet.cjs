@@ -8,6 +8,8 @@ async function handler(m, {
 	if (m.sender in confirm) throw 'Kamu masih melakukan judi, tunggu sampai selesai!!'
 	try {
 		let user = global.db.data.users[m.sender]
+		if (!args[0]) return m.reply('brani taruhan brapa?')
+		if (args[0] < 1000 || args > 100000) return m.reply('minimal 1000, max 100000 buat taruhan')
 		let count = (args[0] && number(parseInt(args[0])) ? Math.max(parseInt(args[0]), 1) : /all/i.test(args[0]) ? Math.floor(parseInt(user.money)) : 1) * 1
 		if ((user.money * 1) < count) return m.reply('💵Uang kamu tidak cukup!!')
 		if (!(m.sender in confirm)) {
@@ -47,7 +49,7 @@ handler.before = async m => {
 	let txt = (m.msg && m.msg.selectedDisplayText ? m.msg.selectedDisplayText : m.text ? m.text : '').toLowerCase()
 	try {
 		if (/^y(es|a)?$/i.test(txt)) {
-			let Bot = (Math.ceil(Math.random() * 91)) * 1
+			let Bot = (Math.floor(Math.random() * 80)) * 1
 			let Kamu = (Math.floor(Math.random() * 71)) * 1
 			let status = 'Kalah'
 			if (Bot < Kamu) {

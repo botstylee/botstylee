@@ -12,10 +12,10 @@ handler.all = async function(m, {conn} ) {
 	} else if ((user.exp * 1) < 0) {
 		user.exp = 0
 	}
-	if ((user.healt * 1) > 100) {
-		user.healt = 100
-	} else if ((user.money * 1) < 0) {
-		user.healt = 0
+	if ((user.health * 1) > 100) {
+		user.health = 100
+	} else if ((user.health * 1) < 0) {
+		user.health = 0
 	}
 }
 

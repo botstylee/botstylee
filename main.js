@@ -14,6 +14,7 @@ import {
 import {
 	platform
 } from 'process'
+global.delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 global.__filename = function filename(pathURL =
 	import.meta.url, rmPrefix = platform !== 'win32') {
 	return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString()
@@ -27,7 +28,7 @@ global.__require = function require(dir =
 }
 
 import * as ws from 'ws';
-import {
+import fs, {
 	readdirSync,
 	statSync,
 	unlinkSync,
@@ -65,19 +66,25 @@ const {
 	useSingleFileAuthState,
 	DisconnectReason
 } = await import('@adiwajshing/baileys')
-
 const {
 	CONNECTING
 } = ws
 const {
 	chain
 } = lodash
-import fetch from 'node-fetch'
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
-
+import axios from 'axios';
+import former from 'form-data';
+import cheri from 'cheerio';
+import fetch from 'node-fetch';
+global.fetch = fetch
+global.fs = fs
+global.axios = axios
+global.former = former
+global.cheerio = cheri
 protoType()
 serialize()
-global.fetch = fetch
+
 global.API = (name, path = '/', query = {}, apikeyqueryname) => (name in global.APIs ? global.APIs[name] : name) + path + (query || apikeyqueryname ? '?' + new URLSearchParams(Object.entries({
 	...query,
 	...(apikeyqueryname ? {
@@ -116,12 +123,12 @@ global.loadDatabase = async function loadDatabase() {
 	await global.db.read().catch(console.error)
 	global.db.READ = null
 	global.db.data = {
+		settings: {},
 		users: {},
 		chats: {},
 		stats: {},
 		msgs: {},
 		sticker: {},
-		settings: {},
 		...(global.db.data || {})
 	}
 	global.db.chain = chain(global.db.data)
@@ -137,7 +144,7 @@ const {
 const connectionOptions = {
 	printQRInTerminal: true,
 	auth: state,
-	logger: pino({ level: 'silent' })
+	// logger: pino({ level: 'trace' })
 }
 
 global.conn = makeWASocket(connectionOptions)
@@ -172,8 +179,10 @@ async function connectionUpdate(update) {
 	const {
 		connection,
 		lastDisconnect,
-		isNewLogin
+		isNewLogin, 
+		acceptPendingNotifications
 	} = update
+	if(acceptPendingNotifications) conn. acceptPendingNotifications = false
 	if (isNewLogin) conn.isInit = true
 	const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
 	if (code && code !== DisconnectReason.loggedOut && conn?.ws.readyState !== CONNECTING) {
@@ -182,8 +191,6 @@ async function connectionUpdate(update) {
 	}
 	if (global.db.data == null) loadDatabase()
 }
-
-
 process.on('uncaughtException', console.error)
 // let strQuot = /(["'])(?:(?=(\\?))\2.)*?\1/
 
@@ -320,6 +327,29 @@ async function _quickTest() {
 	if (s.ffmpeg && !s.ffmpegWebp) conn.logger.warn('Stickers may not animated without libwebp on ffmpeg (--enable-ibwebp while compiling ffmpeg)')
 	if (!s.convert && !s.magick && !s.gm) conn.logger.warn('Stickers may not work without imagemagick if libwebp on ffmpeg doesnt isntalled (pkg install imagemagick)')
 }
+async function expired() {
+	return new Promise(async (resolve, reject) => {
+		let user = Object.keys(global.db.data.users)
+		for (let jid of user) {
+			var users = global.db.data.users[jid]
+			var {
+				name,
+				premium,
+				expired
+			} = users
+			if (users.premium) {
+				if (Date.now() >= users.expired) {
+					users.premium = false
+					users.expired = 0
+					resolve(console.log(`masa premium ${name} sudah habis`))
+				}
+			}
+		}
+	})
+}
+setInterval(async () => {
+	var b = await expired()
+}, 1000)
 setInterval(async () => {
 	var a = await clearTmp()
 	//console.log(a)

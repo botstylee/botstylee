@@ -6,6 +6,8 @@ let handler = async (m, {
 	participants
 }) => {
 	let users = m.mentionedJid.filter(u => !areJidsSameUser(u, conn.user.id))
+	console.log(users)
+	if (!users) return m.reply("tag orangnya dong bang")
 	let kickedUser = []
 	for (let user of users)
 		if (user.endsWith('@s.whatsapp.net') && !(participants.find(v => areJidsSameUser(v.id, user)) || {

@@ -15,7 +15,9 @@ import {
 } from 'fs'
 import chalk from 'chalk'
 import schedule from 'node-schedule';
-
+import {
+	WAMessageStubType
+} from '@adiwajshing/baileys'
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function() {
 	clearTimeout(this)
@@ -50,6 +52,8 @@ export async function handler(chatUpdate) {
 					user.limit = 10
 				if (!isNumber(user.lastclaim))
 					user.lastclaim = 0
+				if (!isNumber(user.as))
+					user.as = 0
 				if (!('registered' in user))
 					user.registered = false
 				if (!user.registered) {
@@ -74,13 +78,17 @@ export async function handler(chatUpdate) {
 					user.role = 'Beginner'
 				if (!('autolevelup' in user))
 					user.autolevelup = true
+				if (!('premium' in user))
+					user.premium = false
+				if (!('pasangan' in user))
+					user.pasangan = ''
+				if (!isNumber(user.expired))
+					user.expired = 0
 
 				if (!isNumber(user.money))
 					user.money = 0
 				if (!isNumber(user.health))
 					user.health = 100
-				if (!isNumber(user.limit))
-					user.limit = 0
 				if (!isNumber(user.potion))
 					user.potion = 0
 				if (!isNumber(user.trash))
@@ -175,6 +183,57 @@ export async function handler(chatUpdate) {
 					user.lastweekly = 0
 				if (!isNumber(user.lastmonthly))
 					user.lastmonthly = 0
+				
+//database berburu
+				if (!isNumber(user.paus))
+					user.paus = 0
+				if (!isNumber(user.kepiting))
+					user.kepiting = 0
+				if (!isNumber(user.gurita))
+					user.gurita = 0
+				if (!isNumber(user.cumi))
+					user.cumi = 0
+				if (!isNumber(user.buntal))
+					user.buntal = 0
+				if (!isNumber(user.dory))
+					user.dory = 0
+				if (!isNumber(user.lumba))
+					user.lumba = 0
+				if (!isNumber(user.lobster))
+					user.lobster = 0
+				if (!isNumber(user.hiu))
+					user.hiu = 0
+				if (!isNumber(user.udang))
+					user.udang = 0
+				if (!isNumber(user.ikan))
+					user.ikan = 0
+				if (!isNumber(user.orca))
+					user.orca = 0
+
+				if (!isNumber(user.banteng))
+					user.banteng = 0
+				if (!isNumber(user.harimau))
+					user.harimau = 0
+				if (!isNumber(user.gajah))
+					user.gajah = 0
+				if (!isNumber(user.kambing))
+					user.kambing = 0
+				if (!isNumber(user.panda))
+					user.panda = 0
+				if (!isNumber(user.buaya))
+					user.buaya = 0
+				if (!isNumber(user.kerbau))
+					user.kerbau = 0
+				if (!isNumber(user.sapi))
+					user.sapi = 0
+				if (!isNumber(user.monyet))
+					user.monyet = 0
+				if (!isNumber(user.babihutan))
+					user.babihutan = 0
+				if (!isNumber(user.babi))
+					user.babi = 0
+				if (!isNumber(user.ayam))
+					user.ayam = 0
 			} else
 				global.db.data.users[m.sender] = {
 					exp: 0,
@@ -192,9 +251,34 @@ export async function handler(chatUpdate) {
 					role: 'Beginner',
 					autolevelup: true,
 
+					as: 0,
+					paus: 0,
+					kepiting: 0,
+					gurita: 0,
+					cumi: 0,
+					buntal: 0,
+					dory: 0,
+					lumba: 0,
+					lobster: 0,
+					hiu: 0,
+					udang: 0,
+					ikan: 0,
+					orca: 0,
+					banteng: 0,
+					harimau: 0,
+					gajah: 0,
+					kambing: 0,
+					panda: 0,
+					buaya: 0,
+					kerbau: 0,
+					sapi: 0,
+					monyet: 0,
+					babihutan: 0,
+					babi: 0,
+					ayam: 0,
+
 					money: 0,
 					health: 100,
-					limit: 100,
 					potion: 10,
 					trash: 0,
 					wood: 0,
@@ -244,6 +328,9 @@ export async function handler(chatUpdate) {
 					lasthunt: 0,
 					lastweekly: 0,
 					lastmonthly: 0,
+					premium: false,
+					expired: 0,
+					pasangan: ''
 				}
 			let chat = global.db.data.chats[m.chat]
 			if (typeof chat !== 'object')
@@ -273,6 +360,8 @@ export async function handler(chatUpdate) {
 					chat.antiToxic = false
 				if (!('reminder' in chat))
 					chat.reminder = false
+				if (!('nofirtex' in chat))
+					chat.nofirtext = false
 				if (!isNumber(chat.expired))
 					chat.expired = 0
 			} else
@@ -289,6 +378,7 @@ export async function handler(chatUpdate) {
 					viewonce: false,
 					antiToxic: false,
 					reminder: false,
+					nofirtex: false,
 					expired: 0,
 				}
 			let settings = global.db.data.settings[this.user.jid]
@@ -328,7 +418,7 @@ export async function handler(chatUpdate) {
 		if (settinge.pconly && m.chat.endsWith('g.us'))
 			return
 		const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-		const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+		const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || global.db.data.users[m.sender].premium
 
 		if (opts['queque'] && m.text && !(isMods || isPrems)) {
 			let queque = this.msgqueque,
@@ -356,7 +446,18 @@ export async function handler(chatUpdate) {
 		const isAdmin = isRAdmin || user?.admin == 'admin' || false // Is User Admin?
 		const isBotAdmin = bot?.admin || false // Are you Admin?
 		const enable = global.db.data.chats[m.chat]
-		if (enable.antiToxic && !m.fromMe && m.isGroup && !isAdmin && !isOwner && isBotAdmin) {
+		let stp = m.messageStubType ? WAMessageStubType[m.messageStubType] : ''
+		let settinges = global.db.data.settings[this.user.jid]
+		if (settinges.restrict && enable.nofirtek && !m.fromMe && m.isGroup && isBotAdmin) {
+			if (!m.fromMe && m.text.match(/(৭৭৭|๒๒๒|؋.ᄻ.ྜྷ.ᇸ.ྙ|๖ۣۜy๖ۣۜF๖ۣۜr๖|๑๑๑|৭৭৭৭৭৭৭৭|๑๑๑๑๑๑๑๑|ผิดุท้่เึางืผิดุท้่เึางื|๒๒๒๒๒๒๒๒|ผิดุท้่เึางืผิดุท้่เึางื)/gi) && m.text.length >= 66255 || stp == "OVERSIZED") {
+				conn.reply(m.chat, " ngapain ngirim firtex bang😅☝", m)
+				await delay(1000)
+				conn.reply(m.chat, "kamu harus di kick sih bang", false)
+				await delay(2000)
+				conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+			}
+		}
+		if (settinges.restrict && enable.antiToxic && !m.fromMe && m.isGroup && !isAdmin && !isOwner && isBotAdmin) {
 			if (!m.fromMe && m.text.match(/(asadebangsat|Dakjal|anak setan|ngntd|ngentot|jancuk|kuntul|babi|kampang|kenthu|tempik|kimak|patek|kondom|bugil|seks|sex|sexy|tai|Tai|jancok|jembut|bokep|xnxx|xxx|xvideos|xvid|jilboob|seksi|Anjing|Babi|Kunyuk|Bajingan|Bangsat|Kampret|Kontol|Memek|Ngentot|Pentil|Perek|Pepek|Pecun|Bencong|Banci|Maho|Sinting|Lonte|Hencet|Taptei|Kampang|Keparat|Bejad|Gembel|Brengsek|Taek|Anjrit|Fuck|Tetek|Ngulum|Jembut|Totong|Kolop|Pukimak|bacot|Bacot|Juancok|asw|Bodat|Heang|Jancuk|Burit|Titit|Nenen|Bejat|Silit|Sempak|Fucking|Asshole|Bitch|Penis|Vagina|Klitoris|Kelentit|Borjong|Dancuk|anjg|Anjg|Bcd|bct|Bgsd|Bgst|bgsd|bgst|ajg|tolol|Tolol|Pantek|kondom|Teho|Bejat|Pantat|Bagudung|Babami|Kanciang|Bungul|Idiot|Kimak|Henceut|Kacuk|pukimak|goblok|bodo|Pussy|ngewe|Dick|Damn|Assu|tempek|celeng|shit|jingan|ngentot anjing ngewe|Dont use unlisted command|kontol|ngentod|colmek|alat vital|bangkinang|tits|tetek|coli|ngocok peli|ANJING!!!|kntl|ngtd|anying|amjin|sikontol|bang bros|ngocok|toket|A n j i n g|Tahi|anjass|biadap|bbii|biadab|Tomlol|dongo|dungu|anjk|bcot|BURUNG KECIL JAN SOK KERAS:V|nude|p3n1s|p3nis)/gi)) {
 				await conn.sendPresenceUpdate('composing', m.chat)
 				var cBad = global.db.data.users[m.sender].warn += 1
@@ -373,7 +474,7 @@ export async function handler(chatUpdate) {
 				}
 			}
 		}
-		if (!m.fromMe && m.text.match(/(makasi|thanks|thank|terima kasih|tq|suwon)/gi)) {
+		if (!m.fromMe && m.text.match(/(makasi|thanks|thank|terima kasih|suwon)/gi)) {
 			conn.reply(m.chat, "hooh😅👆", false)
 		}
 		if (enable.reminder && m.isGroup && isAdmin) {
@@ -402,22 +503,6 @@ export async function handler(chatUpdate) {
 			isya.second = 8;
 			isya.minute = 37;
 			isya.hour = 18;
-                        let sahur = new schedule.RecurrenceRule();
-                        sahur.tz = 'Asia/Jakarta';
-                        sahur.second = 2;
-                        sahur.minute = 3;
-                        sahur.hour = 3;
-                        let buka = new schedule.RecurrenceRule();
-                        buka.tz = 'Asia/Jakarta';
-                        buka.second = 7;
-                        buka.minute = 59;
-                        buka.hour = 17;
-			schedule.scheduleJob(sahur, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu sahur ayok kita sahur dulu sayang\njangan lupa untuk sholat subuh ya sayang\nPukul: ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *BOTSTYLE*`, false)
-			});
-		        schedule.scheduleJob(buka, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu untuk berbuka puasa bagi yang sedang menjalankan puasa\njangan lupa untuk sholat tarawih ya sayang\nPukul ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *BOTSTYLE*`, false)
-			});
 			schedule.scheduleJob(subuh, () => {
 				conn.reply(m.chat, `Telah Masuk Waktu sholat Subuh\nUntuk Daerah Pasuruan dan sekitarnya\nPukul: ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
 			});
@@ -434,6 +519,19 @@ export async function handler(chatUpdate) {
 				conn.reply(m.chat, `Telah Masuk Waktu sholat Isya\nUntuk Daerah Pasuruan dan sekitarnya\nPukul ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
 			});
 		}
+		let limit = new schedule.RecurrenceRule();
+		limit.tz = 'Asia/Jakarta';
+		limit.second = 59;
+		limit.minute = 59;
+		limit.hour = 23;
+		schedule.scheduleJob(limit, () => {
+			let useres = Object.keys(global.db.data.users)
+			for (let jid of useres) {
+				global.db.data.users[jid].limit = 10
+				global.db.data.users[jid].healt = 100
+			}
+			console.log('Reseted Limit & healt')
+		});
 		const ___dirname = path.join(path.dirname(fileURLToPath(
 			import.meta.url)), './plugins')
 		for (let name in global.plugins) {
@@ -461,8 +559,7 @@ export async function handler(chatUpdate) {
 				}
 			}
 			const strict = global.db.data.settings[this.user.jid].restrict
-			const stric = global.db.data.settings[this.user.jid].restrict
-			if (!stric) {
+			if (!strict) {
 				global.db.data.chats[m.chat].antiToxic = false
 				global.db.data.chats[m.chat].antiLink = false
 			}
@@ -539,9 +636,9 @@ export async function handler(chatUpdate) {
 				if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
 					let chat = global.db.data.chats[m.chat]
 					let user = global.db.data.users[m.sender]
-					if (name != 'owner-unbanchat.js' && chat?.isBanned)
+					if (!['owner-unbanchat.cjs', 'group-info.cjs'].includes(name) && chat?.isBanned)
 						return // Except this
-					if (name != 'owner-unbanuser.js' && user?.banned)
+					if (name != 'owner-unbanuser.cjs' && user?.banned)
 						return
 				}
 				if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { // Both Owner
@@ -588,7 +685,7 @@ export async function handler(chatUpdate) {
 				//	console.log('Ngecit -_-') // Hehehe
 				//m.exp += xp
 				if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-					this.reply(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buy*`, m)
+					this.reply(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buy*\n\n!*NOTE*\nLimit di reset tiap jam 12 malam WIB`, m)
 					continue // Limit habis
 				}
 				if (plugin.level > _user.level) {
