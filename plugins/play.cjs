@@ -3,6 +3,7 @@
 let limit = 50
 let { youtubeSearch, youtubedl, youtubedlv2, youtubedlv3 } = require('@bochilteam/scraper')
 let fs = require('fs')
+let fetch = require('node-fetch')
 let handler = async (m, { conn, args, isPrems, isOwner, command, text, usedPrefix }) => {
 if (!text) throw 'Cari apa?'
 let chat = global.db.data.chats[m.chat]
