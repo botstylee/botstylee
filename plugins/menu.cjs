@@ -8,23 +8,22 @@ let levelling = require('../lib/levelling.cjs')
 let moment = require('moment-timezone')
 const defaultMenu = {
 	before: `
-╭─「 %me 🤖」
-│ 👋🏻 Hai, %name!
-│
-│ 🧱 Limit : *%limit Limit*
-│ 🦸🏼‍♂️ Role : *%role*
-│ 🔼 Level : *%level (%exp / %maxexp)*
-│ 💫 Total XP : %totalexp ✨
-│ 
-│ 📅 Tanggal: *%week, %date*
-│ 🕰️ Waktu: *%time*
-│
-│ 📈 Uptime: *%uptime (%muptime)*
-│ 📊 Database: %totalreg
-╰────
-%readmore`.trimStart(),
-	header: '◪「 %category 」',
-	body: '├❏ %cmd %islimit %isPremium',
+👋🏻 Halo kak %name
+
+*Limit* : %limit
+*Role* : %role
+*Level* : %level (%exp / %maxexp)
+*Total exp* : %totalexp
+
+*Tanggal*: %week, %date
+*Waktu*: %time
+
+*Uptime*: %uptime (%muptime)
+*Database*: %totalreg
+
+`.trimStart(),
+	header: '*%category*',
+	body: '⚄ %cmd %islimit %isPremium',
 	footer: '\n',
 	after: ``,
 }
@@ -37,7 +36,7 @@ let handler = async (m, {
 }) => {
 	let tags
 	let teks = `${args[0]}`.toLowerCase()
-	let arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'database', 'owner', 'jadian', 'noktg']
+	let arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
 	if (!arrayMenu.includes(teks)) teks = '404'
 	if (teks == 'all') tags = {
 		'main': 'Main',
@@ -50,6 +49,10 @@ let handler = async (m, {
 		'admin': 'Admin',
 		'group': 'Group',
 		'premium': 'Premium',
+		'textpro': 'Textpro',
+		'ephoto': 'Ephoto',
+		'photooxy': 'Photooxy',
+		'photofunia': 'Photofunia',
 		'internet': 'Internet',
 		'anonymous': 'Anonymous Chat',
 		'downloader': 'Downloader',
@@ -68,6 +71,16 @@ let handler = async (m, {
 		'game': 'Games',
 		'fun': 'Fun', 
 		'berburu': 'Berburu'
+	}
+	if (teks == 'textmaker') tags = {
+		'textpro': 'Textpro',
+		'photofunia': 'Photofunia',
+		'ephoto': 'Ephoto'
+	}
+	if (teks == 'imagemaker') tags = {
+		'photooxy': 'Photooxy',
+		'canvas': 'Canvas',
+		'funnyphoto': 'Funny Photo'
 	}
 	if (teks == 'rpg') tags = {
 		'rpg': 'RPG Games'
@@ -128,7 +141,7 @@ let handler = async (m, {
 			limit,
 			level,
 			role
-		} = global.db.data.users[m.sender]
+		} = db.data.users[m.sender]
 		let {
 			min,
 			xp,
@@ -171,8 +184,8 @@ let handler = async (m, {
 		}
 		let muptime = clockString(_muptime)
 		let uptime = clockString(_uptime)
-		let totalreg = Object.keys(global.db.data.users).length
-		let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length
+		let totalreg = Object.keys(db.data.users).length
+		let rtotalreg = Object.values(db.data.users).filter(user => user.registered == true).length
 		let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => {
 			return {
 				help: Array.isArray(plugin.tags) ? plugin.help : [plugin.help],
@@ -220,6 +233,14 @@ let handler = async (m, {
 							rowId: _p + `? primbon`
 						},
 						{
+							title: "Text Maker",
+							rowId: _p + `? textmaker`
+						},
+						{
+							title: "Image Maker",
+							rowId: _p + `? imagemaker`
+						},
+						{
 							title: "Groups",
 							rowId: _p + `? group`
 						},
@@ -263,9 +284,9 @@ let handler = async (m, {
 				}]
 			})
 			await delay(60000)
-			return conn.sendMessage(m.chat, {
+			return (await conn.sendMessage(m.chat, {
 				delete: sendMsg.key
-			})
+			}))
 		}
 		let groups = {}
 		for (let tag in tags) {
@@ -289,8 +310,8 @@ let handler = async (m, {
 					...help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
 						return menu.help.map(help => {
 							return body.replace(/%cmd/g, menu.prefix ? help : '%p' + help)
-								.replace(/%islimit/g, menu.limit ? '(Limit)' : '')
-								.replace(/%isPremium/g, menu.premium ? '(Premium)' : '')
+								.replace(/%islimit/g, menu.limit ? '🄻' : '')
+								.replace(/%isPremium/g, menu.premium ? '🄿' : '')
 								.trim()
 						}).join('\n')
 					}),
@@ -327,9 +348,9 @@ let handler = async (m, {
 			role,
 			readmore: readMore
 		}
-		text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
+		text = await tiny(text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name]))
 		const pp = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => './src/avatar_contact.png')
-		conn.sendHydrated(m.chat, text.trim(), author, pp, 'https://github.com/findme-19', 'Github', null, null, [
+		conn.sendHydrated(m.chat, text.trim(), '🄿 Premium | 🄻 Limit', pp, 'https://github.com/botstylee', 'Github', null, null, [
 			['Donate', '/donasi'],
 			['Speed', '/ping'],
 			['Owner', '/owner']
@@ -338,7 +359,7 @@ let handler = async (m, {
 		})
 	} catch (e) {
 		conn.reply(m.chat, 'Maaf, menu sedang error', m)
-		throw conn.reply(conn.user.jid, e, m)
+		throw conn.reply(conn.user.jid, await e, m)
 	}
 }
 handler.help = ['menu', 'help', '?']

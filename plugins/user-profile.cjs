@@ -12,8 +12,8 @@ let handler = async (m, {
 
 	} finally {
 		let about = (await conn.fetchStatus(who).catch(console.error) || {}).status || ''
-		if (typeof global.db.data.users[who] == "undefined") {
-			global.db.data.users[who] = {
+		if (typeof db.data.users[who] == "undefined") {
+			db.data.users[who] = {
 				exp: 0,
 				limit: 10,
 				lastclaim: 0,
@@ -42,7 +42,7 @@ let handler = async (m, {
 			banned,
 			pasangan,
 			premium
-		} = global.db.data.users[who]
+		} = db.data.users[who]
 		let {
 			min,
 			xp,
@@ -53,7 +53,7 @@ let handler = async (m, {
 		let jodoh
 		if (pasangan == "") {
 			jodoh = `Gak punya`
-		} else if (global.db.data.users[global.db.data.users[who].pasangan].pasangan != who) {
+		} else if (db.data.users[db.data.users[who].pasangan].pasangan != who) {
 			jodoh = `sedang menunggu jawaban dari @${pasangan.split('@')[0]}`
 		} else {
 			jodoh = `@${pasangan.split('@')[0]}`
@@ -66,17 +66,32 @@ XP: TOTAL ${exp} (${exp - min} / ${xp}) [${math <= 0 ? `Siap untuk *${usedPrefix
 Level: ${level}
 Role: *${role}*
 Limit: ${limit}
-Premium:  ${premium ? 'Ya' : 'Tidak'}
+Premium: ${premium ? 'Ya' : 'Tidak'}
 Terdaftar: ${registered ? 'Ya (' + new Date(regTime).toLocaleString() + ')' : 'Tidak'}${lastclaim > 0 ? '\nTerakhir Klaim: ' + new Date(lastclaim).toLocaleString() : ''}
 Pasangan: ${jodoh}
 `.trim()
 		let mentions = pasangan ? [who, pasangan] : [who]
-		conn.sendFile(m.chat, pp, 'pp.jpg', banned ? 'jiakh ke banned' : str, m, false, {
-			mentions
+		conn.reply(m.chat, banned ? 'jiakh ke banned' : str, m, false, {
+			mentions,
+			contextInfo: {
+				externalAdReply: {
+					mediaType: 2,
+					description: 'anu',
+					title: await tiny('hai' + username),
+					mediaUrl: yt,
+					body: '𓃗𓅜',
+					thumbnail: await axios.get(pp, {
+						responseType: 'arraybuffer'
+					}),
+					sourceUrl: gc,
+					showAdAttribution: true, // false
+					//renderLargerThumbnail: true // false
+				}
+			}
 		})
 	}
 }
-handler.help = ['profile [@user]']
+handler.help = ['profile *@user*']
 handler.tags = ['user']
 handler.command = /^profile$/i
 module.exports = handler

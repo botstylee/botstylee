@@ -1,6 +1,7 @@
 const {
 	areJidsSameUser
 } = require('@adiwajshing/baileys');
+
 const leaderboards = [
 	'level',
 	'exp',
@@ -29,7 +30,7 @@ let handler = async (m, {
 	usedPrefix,
 	command
 }) => {
-	let users = Object.entries(global.db.data.users).map(([key, value]) => {
+	let users = Object.entries(db.data.users).map(([key, value]) => {
 		return {
 			...value,
 			jid: key
@@ -48,7 +49,7 @@ ${rpg.emoticon(v)}${v}
 `.trim()).join('\n')}
 `.trim()
 	if (!leaderboard.includes(type)) return m.reply(wrong)
-	let page = isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 1), getPage(type)) : 1
+	let page = isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 0), getPage(type)) : 0
 	let sortedItem = users.map(toNumber(type)).sort(sort(type))
 	let userItem = sortedItem.map(enumGetKey)
 	// let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 5)) : Math.min(5, sortedExp.length)
@@ -62,7 +63,7 @@ ${sortedItem.slice(page * 25, page * 25 + 25).map((user, i) => `${i + 1}. ${part
 		mentions: [...userItem.slice(page * 25, page * 25 + 25)].filter(v => !participants.some(p => areJidsSameUser(v, p.id)))
 	})
 }
-handler.help = ['leaderboard [jumlah user]', 'lb [jumlah user]']
+handler.help = ['leaderboard *jumlah user*', 'lb *jumlah user*']
 handler.tags = ['xp']
 handler.command = /^(leaderboard|lb)$/i
 

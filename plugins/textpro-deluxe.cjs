@@ -9,7 +9,7 @@ let handler = async (m, {
 	var a = await tp("https://textpro.me/deluxe-silver-text-effect-970.html", txt)
 	console.log(a)
 	try {
-		var buffer = await require("axios").request(a, {
+		var buffer = await axios.request(a, {
 			method: "GET",
 			responseType: "arraybuffer",
 			headers: {
@@ -26,9 +26,9 @@ let handler = async (m, {
 		}
 	}
 }
-handler.help = ['delux [text]']
+handler.help = ['deluxe [text]']
 handler.tags = ['textpro']
-handler.command = /^delux$/i
+handler.command = /^deluxe$/i
 
 
 module.exports = handler

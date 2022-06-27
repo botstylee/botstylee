@@ -28,19 +28,19 @@ let handler = async (m, {
 			var user = number + '@s.whatsapp.net'
 		}
 	} catch (e) {} finally {
-		const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
+		const groupMetadata = (m.isGroup ? ((store.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
 		const participants = (m.isGroup ? groupMetadata.participants : []) || []
 		const users = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === user) : {}) || {}
 		if (!users) return conn.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
 		if (user === m.sender) return conn.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
 		if (user === conn.user.jid) return conn.reply(m.chat, `Tidak bisa berpacaran dengan saya t_t`, m)
 
-		if (global.db.data.users[user].pasangan != m.sender) {
+		if (db.data.users[user].pasangan != m.sender) {
 			conn.reply(m.chat, `Maaf @${user.split('@')[0]} tidak sedang menembak anda`, m, {
 				mentions: [user]
 			})
 		} else {
-			global.db.data.users[m.sender].pasangan = user
+			db.data.users[m.sender].pasangan = user
 			conn.reply(m.chat, `Selamat anda resmi berpacaran dengan @${user.split('@')[0]}\n\nSemoga langgeng dan bahagia selalu @${user.split('@')[0]} 💓 @${m.sender.split('@')[0]} 🥳🥳🥳`, m, {
 				mentions: [m.sender, user]
 			})

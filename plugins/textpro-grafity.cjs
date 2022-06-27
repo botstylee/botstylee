@@ -1,52 +1,40 @@
-const textpro = require("../lib/textpro.cjs");
-const axios = require ("axios")
-const { MessageType } = require('@adiwajshing/baileys')
-let handler = async (m, { conn, args, text }) => {
-    let txt = args.join` `
-    let [u,s] = text.split(/[&|.]/i)
-    	  if (!u) return conn.reply(m.chat, 'harap masukan teksnya!!!\ncontoh\n#grafity2 pee|opo', m)
-    	  if (!s) return conn.reply(m.chat, 'teks keduanya mana?\ncomtoh\n#grafity2 pee|opo',m)
-    textpro("https://textpro.me/create-a-cool-graffiti-text-on-the-wall-1010.html", [`${u}`,`${s}`])
-.then(async (data) => {
-let au = `${data}`
-console.log(data)
-let buf = await getBuffer(data);
-conn.reply(m.chat, '_tunggu sebentar. . ._',m)
-conn.sendMessage(m.chat, buf, MessageType.image, { quoted: m, caption: 'nihhhh!!!!'} )
-})
-.catch(error => console.log(error));
+var tp = require("../lib/textpro.cjs")
+let handler = async (m, {
+	conn,
+	args, 
+	text, 
+	usedPrefix: _p, 
+	command: _c
+}) => {
+if(!text) throw 'ulangi command tadi, lalu coba seperti ini\n'+ _p+_c+ ' jawi&jawa'
+var [t1, t2] = text.split(/[&|,]/i).trim()
+if(!(t1, t2)){
+t1 = 'jawi'
+t2 = 'jawa'
 }
-handler.help = ['grafity2 <text>']
-handler.tags = ['textpro']
-handler.command = /^grafity2$/i
-handler.owner = false
-handler.mods = false
-handler.premium = false
-handler.group = false
-handler.private = false
-handler.admin = false
-handler.botAdmin = false
-handler.fail = null
-handler.limit = true
-handler.exp = 0
-module.exports = handler
-
-const getBuffer = async (url, options) => {
+	var a = await tp("https://textpro.me/create-a-cool-graffiti-text-on-the-wall-1010.html", [t1, t2])
+	console.log(a)
 	try {
-		options ? options : {}
-		const res = await axios({
-			method: "get",
-			url,
+		var buffer = await axios.request(a, {
+			method: "GET",
+			responseType: "arraybuffer",
 			headers: {
-				'DNT': 1,
-                    'User-Agent': 'GoogleBot',
-				'Upgrade-Insecure-Request': 1
-			},
-			...options,
-			responseType: 'arraybuffer'
+				"user-agent": "GoogleBot"
+			}
 		})
-		return res.data
+		console.log(buffer.status)
+		m.reply("tunggu sebentar")
+		conn.sendFile(m.chat, buffer.data, "", "nih bruh", false)
 	} catch (e) {
-		console.log(`Error : ${e}`)
+		if (e.response) {
+			console.log(e.response.statusText)
+			throw "emror bruh"
+		}
 	}
 }
+handler.help = ['grafity [text]']
+handler.tags = ['textpro']
+handler.command = /^grafity$/i
+
+
+module.exports = handler

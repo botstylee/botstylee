@@ -14,7 +14,7 @@ let handler = async (m, {
 		}
 	})
 }
-handler.help = ['react [reply] [emo]']
+handler.help = ['react *reply emo*']
 handler.tags = ['tools']
 handler.command = /^react$/i
 module.exports = handler

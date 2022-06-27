@@ -21,7 +21,7 @@ let handler = async (m, {
 		}
 	}
 }
-handler.help = ['kecocokanpasangan [namamu&namapasanganmu]']
+handler.help = ['kecocokanpasangan *namamu&namapasanganmu*']
 handler.tags = ['primbon']
 
 handler.command = /^kecocokanpasangan$/i

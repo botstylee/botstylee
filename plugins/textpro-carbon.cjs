@@ -9,7 +9,7 @@ let handler = async (m, {
 	var a = await tp("https://textpro.me/carbon-text-effect-833.html", txt)
 	console.log(a)
 	try {
-		var buffer = await require("axios").request(a, {
+		var buffer = await axios.request(a, {
 			method: "GET",
 			responseType: "arraybuffer",
 			headers: {

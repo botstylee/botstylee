@@ -6,12 +6,17 @@ let handler = async (m, {
 	command,
 	args
 }) => {
-	let who
-	if (m.isGroup) who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : args[0] ? (args[0].replace(/[@ .+-]/g, '') + '@s.whatsapp.net').trim() : ''
-	else who = args[0] ? (args[0].replace(/[@ .+-]/g, '') + '@s.whatsapp.net').trim() : m.chat
-	let user = global.db.data.users[who]
-	if (!(who in global.db.data.users)) return m.reply(`User ${who} not in database`)
-	if (!who) return m.reply(`Tag/Mention!\n\nContoh:\n${usedPrefix + command} @0 1d\n\n huruf d mewakili hari, huruf w mewakili minggu`)
+	function no(number) {
+		return number.replace(/\s/g, '').replace(/([@+-])/g, '')
+	}
+	var hl = []
+	hl[0] = text.split('|')[0]
+	hl[0] = no(hl[0]) + "@s.whatsapp.net"
+	hl[1] = text.split('|')[1].toLowerCase()
+
+	if (!text) return conn.reply(m.chat, `*❏ GET NUMBER*\n\n• ${usedPrefix+command} number|expired\n*Example:* ${usedPrefix+command} 62823310391919|9m\n\n• ${usedPrefix+command} @tag|expired\n*Example:* ${usedPrefix+command} @6282331033919|9m\n*INFO expired*\n1m for 1minutes\n1d for 1days\n1w for 1week\n1y for 1years`, m)
+	let user = db.data.users[hl[0]]
+	if (!(hl[0] in db.data.users)) return m.reply(`User ${hl[0]} not in database`)
 	if (!('premium' in user)) {
 		user.premium = false
 	}
@@ -19,23 +24,42 @@ let handler = async (m, {
 		dateStyle: 'full',
 		timeStyle: 'long'
 	}).format(user.expired))
-	let txt = text.replace('@' + who.split`@` [0], '').trim().toLowerCase()
-	if (!txt) throw `mau uprgade user brapa hari?\n\nContoh:\n${usedPrefix + command} @0 1d`
-	if (!txt.match(/(d|w|m|y)/gi)) return m.reply(`hanya mendukung hari, menit, tahun, minggu\nExample: ${usedPrefix+command} 1d\n!*NOTE*\nGunakan format: d untuk hari, w untuk minggu, m untuk menit, y untuk tahun`)
-	user.expired += Date.now() + toMs(txt)
+	if (!hl[1]) throw `mau uprgade user brapa hari?\n\nContoh:\n${usedPrefix + command} @0 1d`
+	hl[2] = hl[1].replace(/[0-9]/g, '').charAt(0)
+	if (!hl[2].match(/(d|w|m|y)/gi)) return m.reply(`hanya mendukung hari, menit, tahun, minggu\nExample: ${usedPrefix+command} @0 1d\n*!NOTE*\nGunakan format: d untuk hari, w untuk minggu, m untuk menit, y untuk tahun`)
+	user.expired += Date.now() + toMs(hl[1].replace(/[^0-9]/g, '')+hl[2])
 	user.premium = true
+	user.limitjoin += 2
 	let format
-	if (txt.match('d')) format = txt.replace('d', ' Hari')
-	if (txt.match('w')) format = txt.replace('w', ' Minggu')
-	if (txt.match('m')) format = txt.replace('m', ' Menit')
-	if (txt.match('y')) format = txt.replace('y', ' Tahun')
+	if (hl[2].match('d')) format = hl[2].replace('d', hl[1].replace(/[^0-9]/g, '')+' Hari')
+	if (hl[2].match('w')) format = hl[2].replace('w', hl[1].replace(/[^0-9]/g, '')+' Minggu')
+	if (hl[2].match('m')) format = hl[2].replace('m', hl[1].replace(/[^0-9]/g, '')+' Menit')
+	if (hl[2].match('y')) format = hl[2].replace('y', hl[1].replace(/[^0-9]/g, '')+' Tahun')
 	m.reply(`Berhasil menambahkan *${user.name}* sebagai pengguna Premium selama ${format}.\n\nExpired: ` + new Intl.DateTimeFormat('id-ID', {
 		dateStyle: 'full',
 		timeStyle: 'long'
 	}).format(user.expired))
+	await delay(2000)
+	conn.reply(hl[0], `*hai ${await conn.getName(hl[0])}*\nowner @${m.sender.split`@`[0]} baru saja menambah kamu menjadi user premium\n\n╭⚅\t\t\t\t\t\t\t\t\t\t*PREMIUM*\t\t\t\t\t\t\t\t\t\t⚅\n⎸\n ⎸limitjoin: ${user.limitjoin}\n ⎸expired: ${msToDate(user.expired - new Date() * 1)}\n⎸\n╰⚅`, null,null, {mentions:[hl[0],m.sender]})
 }
-handler.help = ['addprem [@user] <angka>']
+handler.help = ['addprem *@user|expired*']
 handler.tags = ['owner', 'premium']
 handler.command = /^(add|tambah|\+)p(rem)?$/i
 handler.owner = true
 module.exports = handler
+function msToDate(ms) {
+	temp = ms
+	years = Math.floor(ms / (12 * 30 * 24 * 60 * 60 * 1000));
+	yearsms = ms % (12 * 30 * 24 * 60 * 60 * 1000);
+	month = Math.floor((yearsms) / (30 * 24 * 60 * 60 * 1000));
+	monthms = ms % (30 * 24 * 60 * 60 * 1000);
+	days = Math.floor((monthms) / (24 * 60 * 60 * 1000));
+	daysms = ms % (24 * 60 * 60 * 1000);
+	hours = Math.floor((daysms) / (60 * 60 * 1000));
+	hoursms = ms % (60 * 60 * 1000);
+	minutes = Math.floor((hoursms) / (60 * 1000));
+	minutesms = ms % (60 * 1000);
+	sec = Math.floor((minutesms) / (1000));
+	return days + " Hari " + minutes + " Menit";
+	// +minutes+":"+sec;
+}

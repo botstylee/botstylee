@@ -66,7 +66,7 @@ let handler = async (m, {
 	args,
 	usedPrefix
 }) => {
-	let user = global.db.data.users[m.sender]
+	let user = db.data.users[m.sender]
 	let listCrate = Object.fromEntries(Object.entries(rewards).filter(([v]) => v && v in user))
 	let info = `
 Use Format *${usedPrefix}${command} [crate] [count]*
@@ -115,7 +115,7 @@ Congrats you got a rare item, which is ${diamond ? `*${diamond}* ${rpg.emoticon(
 Congrats you got a epic item, which is ${pet ? `*${pet}* ${rpg.emoticon('pet')}pet` : ''}${pet && legendary && emerald ? ', ' : (pet && legendary || legendary && emerald || emerald && pet) ? 'and ' : ''}${legendary ? `*${legendary}* ${rpg.emoticon('legendary')}legendary` : ''}${pet && legendary && emerald ? 'and ' : ''}${emerald ? `*${emerald}* ${rpg.emoticon('emerald')}emerald` : ''}
 `.trim())
 }
-handler.help = ['open', 'gacha'].map(v => v + ' [crate] [count]')
+handler.help = ['open', 'gacha'].map(v => v + ' *crate count*')
 handler.tags = ['rpg']
 handler.command = /^(open|buka|gacha)$/i
 

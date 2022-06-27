@@ -8,24 +8,24 @@ https://github.com/hairullana
 let handler = async (m, {
 	conn
 }) => {
-	ayg = global.db.data.users[m.sender]
+	ayg = db.data.users[m.sender]
 
 	if (ayg.pasangan == "") {
 		return conn.reply(m.chat, `Anda tidak memiliki pasangan.`, m)
 	}
 
-	beb = global.db.data.users[global.db.data.users[m.sender].pasangan]
+	beb = db.data.users[db.data.users[m.sender].pasangan]
 
 	if (typeof beb == "undefined") {
-		conn.reply(m.chat, `Berhasil putus hubungan dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}`, m, {
-			mentions: [global.db.data.users[m.sender].pasangan]
+		conn.reply(m.chat, `Berhasil putus hubungan dengan @${db.data.users[m.sender].pasangan.split('@')[0]}`, m, {
+			mentions: [db.data.users[m.sender].pasangan]
 		})
 		ayg.pasangan = ""
 	}
 
 	if (m.sender == beb.pasangan) {
-		conn.reply(m.chat, `Berhasil putus hubungan dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}`, m, {
-			mentions: [global.db.data.users[m.sender].pasangan]
+		conn.reply(m.chat, `Berhasil putus hubungan dengan @${db.data.users[m.sender].pasangan.split('@')[0]}`, m, {
+			mentions: [db.data.users[m.sender].pasangan]
 		})
 		ayg.pasangan = ""
 		beb.pasangan = ""

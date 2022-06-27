@@ -12,18 +12,18 @@ let handler = async (m, {
 	switch (text) {
 		case "on":
 		case "enable":
-			let cek = global.db.data.settings[conn.user.jid].self
+			let cek = db.data.settings[conn.user.jid].self
 			if (!cek) return conn.reply(m.chat, `*public telah diaktifkan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
-			global.db.data.settings[conn.user.jid].self = false
+			db.data.settings[conn.user.jid].self = false
 			conn.reply(m.chat, `*public berhasil diaktifkan pada bot ini*`, m)
 			break
 		case "off":
 		case "disable":
-			let ce = global.db.data.settings[conn.user.jid].self
+			let ce = db.data.settings[conn.user.jid].self
 			if (ce) return conn.reply(m.chat, `*public telah dimatikan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
-			global.db.data.settings[conn.user.jid].self = true
+			db.data.settings[conn.user.jid].self = true
 			conn.reply(m.chat, `*public berhasil dimatikan pada bot ini*`, m)
 			break
 		default:
@@ -32,9 +32,9 @@ let handler = async (m, {
 			break
 	}
 }
-handler.help = ['public'].map(v => v + ' [on/off]')
+/*handler.help = ['public'].map(v => v + ' [on/off]')
 handler.tags = ['owner']
-handler.command = /^(public)$/i
+handler.command = /^(public)$/i*/
 
 handler.owner = true
 

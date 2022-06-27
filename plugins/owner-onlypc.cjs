@@ -12,18 +12,18 @@ let handler = async (m, {
 	switch (text) {
 		case "on":
 		case "enable":
-			let cek = global.db.data.settings[conn.user.jid].pconly
+			let cek = db.data.settings[conn.user.jid].pconly
 			if (cek) return conn.reply(m.chat, `*pconly telah diaktifkan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
-			global.db.data.settings[conn.user.jid].pconly = true
+			db.data.settings[conn.user.jid].pconly = true
 			conn.reply(m.chat, `*pconly berhasil diaktifkan pada bot ini*`, m)
 			break
 		case "off":
 		case "disable":
-			let ce = global.db.data.settings[conn.user.jid].pconly
+			let ce = db.data.settings[conn.user.jid].pconly
 			if (!ce) return conn.reply(m.chat, `*pconly telah dimatikan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
-			global.db.data.settings[conn.user.jid].pconly = false
+			db.data.settings[conn.user.jid].pconly = false
 			conn.reply(m.chat, `*pconly berhasil dimatikan pada bot ini*`, m)
 			break
 		default:
@@ -32,9 +32,9 @@ let handler = async (m, {
 			break
 	}
 }
-handler.help = ['pconly'].map(v => v + ' [on/off]')
+/*handler.help = ['pconly'].map(v => v + ' [on/off]')
 handler.tags = ['owner']
-handler.command = /^(pconly)$/i
+handler.command = /^(pconly)$/i*/
 
 handler.owner = true
 

@@ -46,7 +46,7 @@ let handler = async (m, {
 		else throw 'Conversion failed'
 	}
 }
-handler.help = ['stiker (caption|reply media)', 'stiker <url>', 'stikergif (caption|reply media)', 'stikergif <url>']
+handler.help = ['stiker (caption|reply media)', 'stiker *url*', 'stikergif (caption|reply media)', 'stikergif *url*']
 handler.tags = ['sticker']
 handler.command = /^s(tic?ker)?(gif)?(wm)?$/i
 

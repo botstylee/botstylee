@@ -10,7 +10,7 @@ let handler = async (m, {
 		asSticker: true
 	})
 }
-handler.help = ['attp <teks>']
+handler.help = ['attp *teks*']
 handler.tags = ['sticker']
 
 handler.command = /^attp$/i

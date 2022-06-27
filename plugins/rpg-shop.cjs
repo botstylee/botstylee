@@ -25,7 +25,7 @@ let handler = async (m, {
 	usedPrefix,
 	args
 }) => {
-	let user = global.db.data.users[m.sender]
+	let user = db.data.users[m.sender]
 	const listItems = Object.fromEntries(Object.entries(items[command.toLowerCase()]).filter(([v]) => v && v in user))
 	const info = `
 Use Format *${usedPrefix}${command} [crate] [count]*
@@ -54,7 +54,7 @@ ${Object.keys(listItems).map((v) => {
 	}
 }
 
-handler.help = ['buy', 'sell'].map(v => v + ' [item] [count]')
+handler.help = ['buy', 'sell'].map(v => v + ' *item count*')
 handler.tags = ['rpg']
 handler.command = /^(buy|sell)$/i
 

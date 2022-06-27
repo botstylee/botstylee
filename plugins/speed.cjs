@@ -19,7 +19,7 @@ let format = sizeFormatter({
 let handler = async (m, {
 	conn
 }) => {
-	const chats = Object.entries(conn.chats).filter(([id, data]) => id && data.isChats)
+	const chats = Object.entries(store.chats).filter(([id, data]) => id && data.isChats)
 	const groupsIn = chats.filter(([id]) => id.endsWith('@g.us')) //groups.filter(v => !v.read_only)
 	const used = process.memoryUsage()
 	const cpus = _cpus().map(cpu => {

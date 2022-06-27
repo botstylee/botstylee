@@ -7,7 +7,7 @@ async function handler(m, {
 	//if (!isROwner) throw 'Dalam perbaikan'
 	if (m.sender in confirm) throw 'Kamu masih melakukan judi, tunggu sampai selesai!!'
 	try {
-		let user = global.db.data.users[m.sender]
+		let user = db.data.users[m.sender]
 		if (!args[0]) return m.reply('brani taruhan brapa?')
 		if (args[0] < 1000 || args > 100000) return m.reply('minimal 1000, max 100000 buat taruhan')
 		let count = (args[0] && number(parseInt(args[0])) ? Math.max(parseInt(args[0]), 1) : /all/i.test(args[0]) ? Math.floor(parseInt(user.money)) : 1) * 1
@@ -44,7 +44,7 @@ handler.before = async m => {
 		timeout,
 		count
 	} = confirm[m.sender]
-	let user = global.db.data.users[m.sender]
+	let user = db.data.users[m.sender]
 	let moneyDulu = user.money * 1
 	let txt = (m.msg && m.msg.selectedDisplayText ? m.msg.selectedDisplayText : m.text ? m.text : '').toLowerCase()
 	try {
@@ -90,7 +90,7 @@ Kamu *${status}*, kamu ${status == 'Menang' ? `Mendapatkan *+${count * 2}*` : st
 	}
 }
 
-handler.help = ['judi [jumlah]']
+handler.help = ['judi *jumlah*']
 handler.tags = ['rpg']
 handler.command = /^(judi|bet)$/i
 

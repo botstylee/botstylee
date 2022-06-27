@@ -18,7 +18,8 @@ let handler = async (m, {
 		if (!who) who = m.chat
 		if (who.endsWith('g.us')) db.data.chats[who].isBanned = true
 		else db.data.users[who].banned = true
-		m.reply(`*${conn.user.name} sekarang tidak aktif dichat ${conn.getName(who) == undefined ? 'ini' : conn.getName(who)}.`)
+		nano = await conn.getName(who)
+		m.reply(`*${conn.user.name} sekarang tidak aktif dichat ${nano == undefined ? 'ini' : nano}.*`)
 	} catch (e) {
 		throw `jid tidak ada didatabase!`
 	}

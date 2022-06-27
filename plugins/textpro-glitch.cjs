@@ -5,11 +5,13 @@ let handler = async (m, {
 }) => {
 	let txt = args.join` `
 	if (!txt) return conn.reply(m.chat, 'harap masukan teksnya!!!', m)
-	if (txt.length > 15) return conn.reply(m.chat, 'maksimal 15', m)
-	var [txt1, txt2] = await tp("https://textpro.me/create-a-glitch-text-effect-online-free-1026.html", [txt1, txt2])
+	if (txt.length > 35) return conn.reply(m.chat, 'maksimal 35', m)
+  if (!txt2) return conn.reply(m.chat, 'gunakan command seperti ini\m*Contoh*:\n'+`${usedPrefix+command} benni|ganteng`, m)
+	if (txt2.length > 35) return conn.reply(m.chat, 'maksimal 35', m)
+	var a = await tp("https://textpro.me/create-a-glitch-text-effect-online-free-1026.html", txt1,txt2)
 	console.log(a)
 	try {
-		var buffer = await require("axios").request(a, {
+		var buffer = await axios.request(a, {
 			method: "GET",
 			responseType: "arraybuffer",
 			headers: {
@@ -26,7 +28,7 @@ let handler = async (m, {
 		}
 	}
 }
-handler.help = ['glitch [text]']
+handler.help = ['glitch [teks]|[text2]']
 handler.tags = ['textpro']
 handler.command = /^glitch$/i
 
