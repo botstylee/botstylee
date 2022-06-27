@@ -1,6 +1,7 @@
 /* Created by https://github.com/BrunoSobrino */
 
 let limit = 50
+let db = require('../lib/database.js')
 let { youtubeSearch, youtubedl, youtubedlv2, youtubedlv3 } = require('@bochilteam/scraper')
 let fs = require('fs')
 let handler = async (m, { conn, args, isPrems, isOwner, command, text, usedPrefix }) => {
