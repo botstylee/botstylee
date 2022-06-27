@@ -8,8 +8,8 @@ handler.before = async function(m, {
 	if (m.isBaileys && m.fromMe)
 		return !0
 	if (!m.isGroup) return !1
-	let chat = global.db.data.chats[m.chat]
-	let bot = global.db.data.settings[this.user.jid] || {}
+	let chat = db.data.chats[m.chat]
+	let bot = db.data.settings[this.user.jid] || {}
 	const isGroupLink = linkRegex.exec(m.text)
 	const groupAdmins = participants.filter(p => p.admin)
 	const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')

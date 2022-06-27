@@ -1,11 +1,14 @@
 let handler = m => m
 
 handler.all = async function(m, {conn} ) {
-	let user = global.db.data.users[m.sender]
+	let user = db.data.users[m.sender]
 	if ((user.money * 1) > 99999998) {
 		user.money = 99999999
 	} else if ((user.money * 1) < 0) {
 		user.money = 0
+	}
+	if ((user.limitjoin * 1) > 5) {
+		 user.limitjoin = 5
 	}
 	if ((user.exp * 1) > 99999998) {
 		user.exp = 99999999

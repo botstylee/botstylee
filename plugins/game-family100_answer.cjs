@@ -18,7 +18,7 @@ handler.before = async function(m) {
 		}
 		if (room.terjawab[index])
 			return !0
-		let users = global.db.data.users[m.sender]
+		let users = db.data.users[m.sender]
 		room.terjawab[index] = m.sender
 		users.exp += room.winScore
 	}

@@ -2,18 +2,18 @@ let handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
-	let banteng = global.db.data.users[m.sender].banteng
-	let harimau = global.db.data.users[m.sender].harimau
-	let gajah = global.db.data.users[m.sender].gajah
-	let kambing = global.db.data.users[m.sender].kambing
-	let panda = global.db.data.users[m.sender].panda
-	let buaya = global.db.data.users[m.sender].buaya
-	let kerbau = global.db.data.users[m.sender].kerbau
-	let sapi = global.db.data.users[m.sender].sapi
-	let monyet = global.db.data.users[m.sender].monyet
-	let babihutan = global.db.data.users[m.sender].babihutan
-	let babi = global.db.data.users[m.sender].babi
-	let ayam = global.db.data.users[m.sender].ayam
+	let banteng = db.data.users[m.sender].banteng
+	let harimau = db.data.users[m.sender].harimau
+	let gajah = db.data.users[m.sender].gajah
+	let kambing = db.data.users[m.sender].kambing
+	let panda = db.data.users[m.sender].panda
+	let buaya = db.data.users[m.sender].buaya
+	let kerbau = db.data.users[m.sender].kerbau
+	let sapi = db.data.users[m.sender].sapi
+	let monyet = db.data.users[m.sender].monyet
+	let babihutan = db.data.users[m.sender].babihutan
+	let babi = db.data.users[m.sender].babi
+	let ayam = db.data.users[m.sender].ayam
 
 	let ndy = `
 *《 KANDANG MU 》*

@@ -6,9 +6,8 @@ handler.all = async function(m) {
 	if (!chats.expired)
 		return !0
 	if (+new Date() > chats.expired) {
-/*		m.reply('Bye🖐 bot akan left!!')
-		chats.expired = 0
-		await this.groupLeave(m.chat)*/
+		await m.reply('Bye🖐 bot akan left!!')
+		await this.groupLeave(m.chat)
 	}
 }
 

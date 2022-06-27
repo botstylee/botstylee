@@ -36,7 +36,7 @@ ${usedPrefix}math hard
 		}, math.time)
 	]
 }
-handler.help = ['math <mode>']
+handler.help = ['math *mode*']
 handler.tags = ['game']
 handler.command = /^math/i
 

@@ -9,7 +9,7 @@ handler.before = async function(m) {
 		// if (m.quoted.id == this.math[id][0].id) {
 		let math = JSON.parse(JSON.stringify(this.math[id][1]))
 		if (m.text == math.result) {
-			global.db.data.users[m.sender].exp += math.bonus
+			db.data.users[m.sender].exp += math.bonus
 			clearTimeout(this.math[id][3])
 			delete this.math[id]
 			await this.sendButton(m.chat, `*Jawaban Benar!*\n+${math.bonus} XP`, author, null, [

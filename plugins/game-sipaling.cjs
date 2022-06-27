@@ -13,7 +13,7 @@ let handler = async (m, {
 		mentions
 	})
 }
-handler.help = ['sipaling <teks>']
+handler.help = ['sipaling *teks*']
 handler.tags = ['game']
 handler.command = /^(sipaling)$/i
 

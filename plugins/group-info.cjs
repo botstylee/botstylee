@@ -15,8 +15,10 @@ let handler = async (m, {
 		antiLink,
 		delete: del,
 		reminder,
-		antiToxic
-	} = global.db.data.chats[m.chat]
+		antiToxic,
+		groupexpired,
+		expired
+	} = db.data.chats[m.chat]
 	const groupAdmins = participants.filter(p => p.admin)
 	const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
 	const owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || m.chat.split`-` [0] + '@s.whatsapp.net'
@@ -33,6 +35,7 @@ ${participants.length} Members
 @${owner.split('@')[0]}
 *Group Admins:*
 ${listAdmin}
+${groupexpired ? '*Group Expired:*\nExpired: ' + await msToDate(expired - new Date() * 1)+ '\n' : ''}
 *Group Settings:*
 ${isBanned ? '✅' : '❌'} Banned
 ${welcome ? '✅' : '❌'} Welcome
@@ -47,8 +50,21 @@ Bye: ${sBye}
 Promote: ${sPromote}
 Demote: ${sDemote}
 `.trim()
-	conn.sendFile(m.chat, pp, 'pp.jpg', text, m, false, {
-		mentions: [...groupAdmins.map(v => v.id), owner]
+	conn.reply(m.chat, text , m, false, {
+		mentions: [...groupAdmins.map(v => v.id), owner],
+		contextInfo: {
+			externalAdReply: {
+				mediaType: 2,
+				description: 'anu',
+				title: conn.getName(m.chat),
+				mediaUrl: yt,
+				body: '𓃗𓅜',
+				thumbnail: pp,
+				sourceUrl: gc,
+				showAdAttribution: true, // false
+				//renderLargerThumbnail: true // false
+			}
+		}
 	})
 }
 
@@ -59,3 +75,20 @@ handler.command = /^(gro?upinfo|info(gro?up|gc))$/i
 handler.group = true
 
 module.exports = handler
+
+function msToDate(ms) {
+	temp = ms
+	years = Math.floor(ms / (12 * 30 * 24 * 60 * 60 * 1000));
+	yearsms = ms % (12 * 30 * 24 * 60 * 60 * 1000);
+	month = Math.floor((yearsms) / (30 * 24 * 60 * 60 * 1000));
+	monthms = ms % (30 * 24 * 60 * 60 * 1000);
+	days = Math.floor((monthms) / (24 * 60 * 60 * 1000));
+	daysms = ms % (24 * 60 * 60 * 1000);
+	hours = Math.floor((daysms) / (60 * 60 * 1000));
+	hoursms = ms % (60 * 60 * 1000);
+	minutes = Math.floor((hoursms) / (60 * 1000));
+	minutesms = ms % (60 * 1000);
+	sec = Math.floor((minutesms) / (1000));
+	return days + " Hari " + hours + " Jam " + minutes + " Menit";
+	// +minutes+":"+sec;
+}

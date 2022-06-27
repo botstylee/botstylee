@@ -3,8 +3,10 @@ const {
 	generateWAMessage,
 	areJidsSameUser
 } = require('@adiwajshing/baileys')
+//var plugins = import('../lib/plugins.js').then(async({plugins}) { return new Promise(async(resolve,reject)=>{resolve(plugins)})})
 let handler = m => m
 handler.all = async function(m, chatUpdate) {
+//console.log(plugins)
 	if (m.isBaileys)
 		return
 	if (!m.message)
@@ -22,6 +24,9 @@ handler.all = async function(m, chatUpdate) {
 		if (plugin.disabled)
 			continue
 		if (!opts['restrict'])
+			if (plugin.tags && plugin.tags.includes('admin'))
+				continue
+		if(!db.data.settings[this.user.jid].restrict)
 			if (plugin.tags && plugin.tags.includes('admin'))
 				continue
 		if (typeof plugin !== 'function')
@@ -81,7 +86,7 @@ handler.all = async function(m, chatUpdate) {
 	messages.key.id = m.key.id
 	messages.pushName = m.name
 	if (m.isGroup)
-		messages.participant = m.sender
+		messages.key.participant = messages.participant = m.sender
 	let msg = {
 		...chatUpdate,
 		messages: [proto.WebMessageInfo.fromObject(messages)].map(v => (v.conn = this, v)),

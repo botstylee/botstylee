@@ -1,11 +1,11 @@
 let handler = async (m, {
 	conn
 }) => {
-	let __timers = (new Date - global.db.data.users[m.sender].as)
+	let __timers = (new Date - db.data.users[m.sender].as)
 	let _timers = (500000 - __timers)
 	let timers = clockString(_timers)
-	let user = global.db.data.users[m.sender]
-	if (new Date - global.db.data.users[m.sender].as > 500000) {
+	let user = db.data.users[m.sender]
+	if (new Date - db.data.users[m.sender].as > 500000) {
 		let randomaku1 = `${Math.floor(Math.random() * 10)}`
 		let randomaku2 = `${Math.floor(Math.random() * 10)}`
 		let randomaku4 = `${Math.floor(Math.random() * 10)}`
@@ -58,18 +58,18 @@ let handler = async (m, {
 
  *${author}*
 `
-		global.db.data.users[m.sender].banteng += rbrb1
-		global.db.data.users[m.sender].harimau += rbrb2
-		global.db.data.users[m.sender].gajah += rbrb3
-		global.db.data.users[m.sender].kambing += rbrb4
-		global.db.data.users[m.sender].panda += rbrb5
-		global.db.data.users[m.sender].buaya += rbrb6
-		global.db.data.users[m.sender].kerbau += rbrb7
-		global.db.data.users[m.sender].sapi += rbrb8
-		global.db.data.users[m.sender].monyet += rbrb9
-		global.db.data.users[m.sender].babihutan += rbrb10
-		global.db.data.users[m.sender].babi += rbrb11
-		global.db.data.users[m.sender].ayam += rbrb12
+		db.data.users[m.sender].banteng += rbrb1
+		db.data.users[m.sender].harimau += rbrb2
+		db.data.users[m.sender].gajah += rbrb3
+		db.data.users[m.sender].kambing += rbrb4
+		db.data.users[m.sender].panda += rbrb5
+		db.data.users[m.sender].buaya += rbrb6
+		db.data.users[m.sender].kerbau += rbrb7
+		db.data.users[m.sender].sapi += rbrb8
+		db.data.users[m.sender].monyet += rbrb9
+		db.data.users[m.sender].babihutan += rbrb10
+		db.data.users[m.sender].babi += rbrb11
+		db.data.users[m.sender].ayam += rbrb12
 
 		setTimeout(() => {
 			m.reply(`${hsl}`)

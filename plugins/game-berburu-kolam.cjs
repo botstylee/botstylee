@@ -3,18 +3,18 @@ let handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
-	let paus = global.db.data.users[m.sender].paus
-	let kepiting = global.db.data.users[m.sender].kepiting
-	let gurita = global.db.data.users[m.sender].gurita
-	let cumi = global.db.data.users[m.sender].cumi
-	let buntal = global.db.data.users[m.sender].buntal
-	let dory = global.db.data.users[m.sender].dory
-	let lumba = global.db.data.users[m.sender].lumba
-	let lobster = global.db.data.users[m.sender].lobster
-	let hiu = global.db.data.users[m.sender].hiu
-	let udang = global.db.data.users[m.sender].udang
-	let ikan = global.db.data.users[m.sender].ikan
-	let orca = global.db.data.users[m.sender].orca
+	let paus = db.data.users[m.sender].paus
+	let kepiting = db.data.users[m.sender].kepiting
+	let gurita = db.data.users[m.sender].gurita
+	let cumi = db.data.users[m.sender].cumi
+	let buntal = db.data.users[m.sender].buntal
+	let dory = db.data.users[m.sender].dory
+	let lumba = db.data.users[m.sender].lumba
+	let lobster = db.data.users[m.sender].lobster
+	let hiu = db.data.users[m.sender].hiu
+	let udang = db.data.users[m.sender].udang
+	let ikan = db.data.users[m.sender].ikan
+	let orca = db.data.users[m.sender].orca
 
 	let ndy = `
 *《 KOLAM MU 》*

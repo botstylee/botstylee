@@ -12,18 +12,18 @@ let handler = async (m, {
 	switch (text) {
 		case "on":
 		case "enable":
-			let cek = global.db.data.chats[m.chat].antiLink
+			let cek = db.data.chats[m.chat].antiLink
 			if (cek) return conn.reply(m.chat, `*Anti-Link telah aktif pada grup ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
-			global.db.data.chats[m.chat].antiLink = true
+			db.data.chats[m.chat].antiLink = true
 			conn.reply(m.chat, `*Anti-Link berhasil diaktifkan.*`, m)
 			break
 		case "off":
 		case "disable":
-			let ce = global.db.data.chats[m.chat].antiLink
+			let ce = db.data.chats[m.chat].antiLink
 			if (!ce) return conn.reply(m.chat, `*Anti-Link belum aktif pada grup ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
-			global.db.data.chats[m.chat].antiLink = false
+			db.data.chats[m.chat].antiLink = false
 			conn.reply(m.chat, `*Anti-Link berhasil dimatikan.*`, m)
 			break
 		default:
