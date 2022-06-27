@@ -2,6 +2,9 @@ import {
 	smsg
 } from './lib/simple.js'
 import {
+	plugins
+} from './lib/plugins.js'
+import {
 	format
 } from 'util'
 import {
@@ -11,29 +14,40 @@ import path, {
 	join
 } from 'path'
 import {
-	watch
+	unwatchFile,
+	watchFile
 } from 'fs'
 import chalk from 'chalk'
-import schedule from 'node-schedule';
+import Connection from './lib/connection.js'
+import printMessage from './lib/print.js'
+import Helper from './lib/helper.js'
+import db, {
+	loadDatabase
+} from './lib/database.js'
 import {
 	WAMessageStubType
 } from '@adiwajshing/baileys'
+// const { proto } = (await import('@adiwajshing/baileys')).default
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function() {
 	clearTimeout(this)
 	resolve()
 }, ms))
 
+/**
+ * Handle messages upsert
+ * @this {import('./lib/connection').Socket}
+ * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['messages.upsert']} chatUpdate
+ */
 export async function handler(chatUpdate) {
 	this.msgqueque = this.msgqueque || []
 	if (!chatUpdate)
 		return
-	this.pushMessage(chatUpdate.messages).catch(console.error)
 	let m = chatUpdate.messages[chatUpdate.messages.length - 1]
 	if (!m)
 		return
-	if (global.db.data == null)
-		await global.loadDatabase()
+	if (db.data == null)
+		await loadDatabase()
 	try {
 		m = smsg(this, m) || m
 		if (!m)
@@ -42,9 +56,9 @@ export async function handler(chatUpdate) {
 		m.limit = false
 		try {
 			// TODO: use loop to insert data instead of this
-			let user = global.db.data.users[m.sender]
+			let user = db.data.users[m.sender]
 			if (typeof user !== 'object')
-				global.db.data.users[m.sender] = {}
+				db.data.users[m.sender] = {}
 			if (user) {
 				if (!isNumber(user.exp))
 					user.exp = 0
@@ -52,8 +66,6 @@ export async function handler(chatUpdate) {
 					user.limit = 10
 				if (!isNumber(user.lastclaim))
 					user.lastclaim = 0
-				if (!isNumber(user.as))
-					user.as = 0
 				if (!('registered' in user))
 					user.registered = false
 				if (!user.registered) {
@@ -78,17 +90,19 @@ export async function handler(chatUpdate) {
 					user.role = 'Beginner'
 				if (!('autolevelup' in user))
 					user.autolevelup = true
-				if (!('premium' in user))
-					user.premium = false
-				if (!('pasangan' in user))
-					user.pasangan = ''
-				if (!isNumber(user.expired))
-					user.expired = 0
 
 				if (!isNumber(user.money))
 					user.money = 0
+				if (!isNumber(user.atm))
+					user.atm = 0
+				if (!isNumber(user.fullatm))
+					user.fullatm = 0
+				if (!isNumber(user.bank))
+					user.bank = 0
 				if (!isNumber(user.health))
 					user.health = 100
+				if (!isNumber(user.limit))
+					user.limit = 0
 				if (!isNumber(user.potion))
 					user.potion = 0
 				if (!isNumber(user.trash))
@@ -110,6 +124,8 @@ export async function handler(chatUpdate) {
 					user.gold = 0
 				if (!isNumber(user.iron))
 					user.iron = 0
+				if (!isNumber(user.upgrader))
+					user.upgrader = 0
 
 				if (!isNumber(user.common))
 					user.common = 0
@@ -119,6 +135,8 @@ export async function handler(chatUpdate) {
 					user.mythic = 0
 				if (!isNumber(user.legendary))
 					user.legendary = 0
+				if (!isNumber(user.superior))
+					user.superior = 0
 				if (!isNumber(user.pet))
 					user.pet = 0
 
@@ -138,6 +156,10 @@ export async function handler(chatUpdate) {
 					user.dog = 0
 				if (!isNumber(user.dogexp))
 					user.dogexp = 0
+				if (!isNumber(user.robo))
+					user.robo = 0
+				if (!isNumber(user.roboxp))
+					user.roboxp = 0
 
 				if (!isNumber(user.horselastfeed))
 					user.horselastfeed = 0
@@ -183,8 +205,12 @@ export async function handler(chatUpdate) {
 					user.lastweekly = 0
 				if (!isNumber(user.lastmonthly))
 					user.lastmonthly = 0
-				
+				if (!isNumber(user.lastbunga))
+					user.lastbunga = 0
+
 //database berburu
+				if (!isNumber(user.as))
+					user.as = 0
 				if (!isNumber(user.paus))
 					user.paus = 0
 				if (!isNumber(user.kepiting))
@@ -234,8 +260,21 @@ export async function handler(chatUpdate) {
 					user.babi = 0
 				if (!isNumber(user.ayam))
 					user.ayam = 0
+					
+				if (!('premium' in user))
+					user.premium = false
+				if (!user.premium) {
+					if (!isNumber(user.expired))
+						user.expired = 0
+				}
+				if (!('sewa' in user))
+					user.sewa = false
+				if (!isNumber(user.limitjoin))
+					user.limitjoin = 1
+				if (!('pasangan' in user))
+					user.pasangan = ''
 			} else
-				global.db.data.users[m.sender] = {
+				db.data.users[m.sender] = {
 					exp: 0,
 					limit: 10,
 					lastclaim: 0,
@@ -251,34 +290,12 @@ export async function handler(chatUpdate) {
 					role: 'Beginner',
 					autolevelup: true,
 
-					as: 0,
-					paus: 0,
-					kepiting: 0,
-					gurita: 0,
-					cumi: 0,
-					buntal: 0,
-					dory: 0,
-					lumba: 0,
-					lobster: 0,
-					hiu: 0,
-					udang: 0,
-					ikan: 0,
-					orca: 0,
-					banteng: 0,
-					harimau: 0,
-					gajah: 0,
-					kambing: 0,
-					panda: 0,
-					buaya: 0,
-					kerbau: 0,
-					sapi: 0,
-					monyet: 0,
-					babihutan: 0,
-					babi: 0,
-					ayam: 0,
-
 					money: 0,
+					bank: 0,
+					atm: 0,
+					fullatm: 0,
 					health: 100,
+					limit: 100,
 					potion: 10,
 					trash: 0,
 					wood: 0,
@@ -289,11 +306,13 @@ export async function handler(chatUpdate) {
 					diamond: 0,
 					gold: 0,
 					iron: 0,
+					upgrader: 0,
 
 					common: 0,
 					uncommon: 0,
 					mythic: 0,
 					legendary: 0,
+					superior: 0,
 					pet: 0,
 
 					horse: 0,
@@ -328,16 +347,49 @@ export async function handler(chatUpdate) {
 					lasthunt: 0,
 					lastweekly: 0,
 					lastmonthly: 0,
+					lastbunga: 0,
+					
+					as: 0,
+					paus: 0,
+					kepiting: 0,
+					gurita: 0,
+					cumi: 0,
+					buntal: 0,
+					dory: 0,
+					lumba: 0,
+					lobster: 0,
+					hiu: 0,
+					udang: 0,
+					ikan: 0,
+					orca: 0,
+					banteng: 0,
+					harimau: 0,
+					gajah: 0,
+					kambing: 0,
+					panda: 0,
+					buaya: 0,
+					kerbau: 0,
+					sapi: 0,
+					monyet: 0,
+					babihutan: 0,
+					babi: 0,
+					ayam: 0,
 					premium: false,
 					expired: 0,
+					limitjoin: 0,
+					sewa: false,
 					pasangan: ''
 				}
-			let chat = global.db.data.chats[m.chat]
+			let chat = db.data.chats[m.chat]
 			if (typeof chat !== 'object')
-				global.db.data.chats[m.chat] = {}
+				db.data.chats[m.chat] = {}
 			if (chat) {
 				if (!('isBanned' in chat))
 					chat.isBanned = false
+				if (!('stiker' in chat))
+					chat.stiker = false
+				if (!('simi' in chat))
+					chat.simi = false
 				if (!('welcome' in chat))
 					chat.welcome = false
 				if (!('detect' in chat))
@@ -362,11 +414,17 @@ export async function handler(chatUpdate) {
 					chat.reminder = false
 				if (!('nofirtex' in chat))
 					chat.nofirtext = false
-				if (!isNumber(chat.expired))
-					chat.expired = 0
+				if(!('groupexpired' in chat))
+					chat.groupexpired = false
+				if (!chat.groupexpired) {
+					if (!isNumber(chat.expired))
+						chat.expired = 0
+				}
 			} else
-				global.db.data.chats[m.chat] = {
+				db.data.chats[m.chat] = {
 					isBanned: false,
+					stiker: false,
+					simi: false,
 					welcome: false,
 					detect: false,
 					sWelcome: '',
@@ -379,23 +437,24 @@ export async function handler(chatUpdate) {
 					antiToxic: false,
 					reminder: false,
 					nofirtex: false,
+					groupexpired: false,
 					expired: 0,
 				}
-			let settings = global.db.data.settings[this.user.jid]
-			if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
+			let settings = db.data.settings[this.user.jid]
+			if (typeof settings !== 'object') db.data.settings[this.user.jid] = {}
 			if (settings) {
 				if (!('self' in settings)) settings.self = false
 				if (!('autoread' in settings)) settings.autoread = false
 				if (!('restrict' in settings)) settings.restrict = false
 				if (!('pconly' in settings)) settings.pconly = false
-			} else global.db.data.settings[this.user.jid] = {
+			} else db.data.settings[this.user.jid] = {
 				self: false,
 				autoread: false,
 				restrict: false,
 				pconly: false
 			}
 		} catch (e) {
-			console.error(e)
+			console.error({db: e})
 		}
 		if (opts['nyimak'])
 			return
@@ -407,18 +466,21 @@ export async function handler(chatUpdate) {
 			return
 		if (opts['swonly'] && m.chat !== 'status@broadcast')
 			return
+		if(m.chat == 'status@broadcast')
+			return
+		if(db.data.users[m.sender].banned)
+			return
 		if (typeof m.text !== 'string')
 			m.text = ''
-
-		const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+		const isROwner = [this.decodeJid(this.user.id), ...global.owner.map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 		const isOwner = isROwner || m.fromMe
-		let settinge = global.db.data.settings[this.user.jid]
+		let settinge = db.data.settings[this.user.jid]
 		if (!isOwner && settinge.self)
 			return
-		if (settinge.pconly && m.chat.endsWith('g.us'))
+		if (settinge.pconly && m.chat.endsWith('g.us') && !isOwner)
 			return
 		const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-		const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || global.db.data.users[m.sender].premium
+		const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || db.data.users[m.sender].premium
 
 		if (opts['queque'] && m.text && !(isMods || isPrems)) {
 			let queque = this.msgqueque,
@@ -433,41 +495,41 @@ export async function handler(chatUpdate) {
 
 		if (m.isBaileys)
 			return
-		//m.exp += Math.ceil(Math.random() * 10)
+		m.exp += Math.ceil(Math.random() * 10)
 
 		let usedPrefix
-		let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
+		let _user = db.data && db.data.users && db.data.users[m.sender]
 
-		const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
+		const groupMetadata = (m.isGroup ? await Connection.store.fetchGroupMetadata(m.chat, this.groupMetadata) : {}) || {}
 		const participants = (m.isGroup ? groupMetadata.participants : []) || []
-		const user = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === m.sender) : {}) || {} // User Data
-		const bot = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) == this.user.jid) : {}) || {} // Your Data
+		const user = (m.isGroup ? participants.find(u => this.decodeJid(u.id) === m.sender) : {}) || {} // User Data
+		const bot = (m.isGroup ? participants.find(u => this.decodeJid(u.id) == this.user.jid) : {}) || {} // Your Data
 		const isRAdmin = user?.admin == 'superadmin' || false
 		const isAdmin = isRAdmin || user?.admin == 'admin' || false // Is User Admin?
 		const isBotAdmin = bot?.admin || false // Are you Admin?
-		const enable = global.db.data.chats[m.chat]
+		const enable = db.data.chats[m.chat]
 		let stp = m.messageStubType ? WAMessageStubType[m.messageStubType] : ''
-		let settinges = global.db.data.settings[this.user.jid]
+		let settinges = db.data.settings[this.user.jid]
 		if (settinges.restrict && enable.nofirtek && !m.fromMe && m.isGroup && isBotAdmin) {
 			if (!m.fromMe && m.text.match(/(৭৭৭|๒๒๒|؋.ᄻ.ྜྷ.ᇸ.ྙ|๖ۣۜy๖ۣۜF๖ۣۜr๖|๑๑๑|৭৭৭৭৭৭৭৭|๑๑๑๑๑๑๑๑|ผิดุท้่เึางืผิดุท้่เึางื|๒๒๒๒๒๒๒๒|ผิดุท้่เึางืผิดุท้่เึางื)/gi) && m.text.length >= 66255 || stp == "OVERSIZED") {
 				conn.reply(m.chat, " ngapain ngirim firtex bang😅☝", m)
-				await delay(1000)
-				conn.reply(m.chat, "kamu harus di kick sih bang", false)
 				await delay(2000)
+				//conn.reply(m.chat, "kamu harus di kick sih bang", false)
+				//await delay(2000)
 				conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
 			}
 		}
 		if (settinges.restrict && enable.antiToxic && !m.fromMe && m.isGroup && !isAdmin && !isOwner && isBotAdmin) {
 			if (!m.fromMe && m.text.match(/(asadebangsat|Dakjal|anak setan|ngntd|ngentot|jancuk|kuntul|babi|kampang|kenthu|tempik|kimak|patek|kondom|bugil|seks|sex|sexy|tai|Tai|jancok|jembut|bokep|xnxx|xxx|xvideos|xvid|jilboob|seksi|Anjing|Babi|Kunyuk|Bajingan|Bangsat|Kampret|Kontol|Memek|Ngentot|Pentil|Perek|Pepek|Pecun|Bencong|Banci|Maho|Sinting|Lonte|Hencet|Taptei|Kampang|Keparat|Bejad|Gembel|Brengsek|Taek|Anjrit|Fuck|Tetek|Ngulum|Jembut|Totong|Kolop|Pukimak|bacot|Bacot|Juancok|asw|Bodat|Heang|Jancuk|Burit|Titit|Nenen|Bejat|Silit|Sempak|Fucking|Asshole|Bitch|Penis|Vagina|Klitoris|Kelentit|Borjong|Dancuk|anjg|Anjg|Bcd|bct|Bgsd|Bgst|bgsd|bgst|ajg|tolol|Tolol|Pantek|kondom|Teho|Bejat|Pantat|Bagudung|Babami|Kanciang|Bungul|Idiot|Kimak|Henceut|Kacuk|pukimak|goblok|bodo|Pussy|ngewe|Dick|Damn|Assu|tempek|celeng|shit|jingan|ngentot anjing ngewe|Dont use unlisted command|kontol|ngentod|colmek|alat vital|bangkinang|tits|tetek|coli|ngocok peli|ANJING!!!|kntl|ngtd|anying|amjin|sikontol|bang bros|ngocok|toket|A n j i n g|Tahi|anjass|biadap|bbii|biadab|Tomlol|dongo|dungu|anjk|bcot|BURUNG KECIL JAN SOK KERAS:V|nude|p3n1s|p3nis)/gi)) {
 				await conn.sendPresenceUpdate('composing', m.chat)
-				var cBad = global.db.data.users[m.sender].warn += 1
-				var warning = global.db.data.users[m.sender].warn
+				var cBad = db.data.users[m.sender].warn += 1
+				var warning = db.data.users[m.sender].warn
 				if (warning >= 6) {
 					conn.reply(m.chat, `*Over badword!*\nyou will be removed after 3 second`, m).then(() => {
 						setTimeout(() => {
 							conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
 						}, 2000)
-						global.db.data.users[m.sender].warn = 0
+						db.data.users[m.sender].warn = 0
 					})
 				} else {
 					conn.reply(m.chat, `*⺀ BADWORD DETECTOR ⺀*\n\n*Kamu mendapat peringatan : [ ${warning} / 6 ]*\n\n*Jangan berkata kasar atau menggunakan kalimat sampah sebanyak 6x atau kamu akan dikeluarkan dari grup secara otomatis.*\n\n▌│█║▌║▌║║▌║▌║█│▌▌│█║`, m)
@@ -477,65 +539,10 @@ export async function handler(chatUpdate) {
 		if (!m.fromMe && m.text.match(/(makasi|thanks|thank|terima kasih|suwon)/gi)) {
 			conn.reply(m.chat, "hooh😅👆", false)
 		}
-		if (enable.reminder && m.isGroup && isAdmin) {
-			let subuh = new schedule.RecurrenceRule();
-			subuh.tz = 'Asia/Jakarta';
-			subuh.second = 2;
-			subuh.minute = 12;
-			subuh.hour = 4;
-			let zuhur = new schedule.RecurrenceRule();
-			zuhur.tz = 'Asia/Jakarta';
-			zuhur.second = 5;
-			zuhur.minute = 29;
-			zuhur.hour = 11;
-			let asar = new schedule.RecurrenceRule();
-			asar.tz = 'Asia/Jakarta';
-			asar.second = 6;
-			asar.minute = 48;
-			asar.hour = 14;
-			let maghrib = new schedule.RecurrenceRule();
-			maghrib.tz = 'Asia/Jakarta';
-			maghrib.second = 7;
-			maghrib.minute = 27;
-			maghrib.hour = 17;
-			let isya = new schedule.RecurrenceRule();
-			isya.tz = 'Asia/Jakarta';
-			isya.second = 8;
-			isya.minute = 37;
-			isya.hour = 18;
-			schedule.scheduleJob(subuh, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu sholat Subuh\nUntuk Daerah Pasuruan dan sekitarnya\nPukul: ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
-			});
-			schedule.scheduleJob(zuhur, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu sholat Zuhur\nUntuk Daerah Pasuruan dan sekitarnya\nPukul ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
-			});
-			schedule.scheduleJob(asar, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu sholat Asar\nUntuk Daerah Pasuruan dan sekitarnya\nPukul ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
-			});
-			schedule.scheduleJob(maghrib, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu sholat Maghrib\nUntuk Daerah Pasuruan dan sekitarnya\nPukul ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
-			});
-			schedule.scheduleJob(isya, () => {
-				conn.reply(m.chat, `Telah Masuk Waktu sholat Isya\nUntuk Daerah Pasuruan dan sekitarnya\nPukul ${new Date().getHours()+ " : " + new Date().getMinutes()}\n             *ANTI-BOT*`, false)
-			});
-		}
-		let limit = new schedule.RecurrenceRule();
-		limit.tz = 'Asia/Jakarta';
-		limit.second = 59;
-		limit.minute = 59;
-		limit.hour = 23;
-		schedule.scheduleJob(limit, () => {
-			let useres = Object.keys(global.db.data.users)
-			for (let jid of useres) {
-				global.db.data.users[jid].limit = 10
-				global.db.data.users[jid].healt = 100
-			}
-			console.log('Reseted Limit & healt')
-		});
 		const ___dirname = path.join(path.dirname(fileURLToPath(
 			import.meta.url)), './plugins')
-		for (let name in global.plugins) {
-			let plugin = global.plugins[name]
+		for (let name in plugins) {
+			let plugin = plugins[name]
 			if (!plugin)
 				continue
 			if (plugin.disabled)
@@ -550,18 +557,18 @@ export async function handler(chatUpdate) {
 					})
 				} catch (e) {
 					// if (typeof e === 'string') continue
-					console.error(e)
+					console.error({plugin:e})
 					for (let [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
-						let data = (await conn.onWhatsApp(jid))[0] || {}
+						let data = (await this.onWhatsApp(jid))[0] || {}
 						if (data.exists)
 							m.reply(`*Plugin:* ${name}\n*Sender:* ${m.sender}\n*Chat:* ${m.chat}\n*Command:* ${m.text}\n\n\`\`\`${format(e)}\`\`\``.trim(), data.jid)
 					}
 				}
 			}
-			const strict = global.db.data.settings[this.user.jid].restrict
+			const strict = db.data.settings[this.user.jid].restrict
 			if (!strict) {
-				global.db.data.chats[m.chat].antiToxic = false
-				global.db.data.chats[m.chat].antiLink = false
+				db.data.chats[m.chat].antiToxic = false
+				db.data.chats[m.chat].antiLink = false
 			}
 			if (!strict)
 				if (plugin.tags && plugin.tags.includes('admin')) {
@@ -569,7 +576,7 @@ export async function handler(chatUpdate) {
 					continue
 				}
 			const str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-			let _prefix = plugin.customPrefix ? plugin.customPrefix : conn.prefix ? conn.prefix : global.prefix
+			let _prefix = plugin.customPrefix ? plugin.customPrefix : this.prefix ? this.prefix : global.prefix
 			let match = (_prefix instanceof RegExp ? // RegExp Mode?
 				[
 					[_prefix.exec(m.text), _prefix]
@@ -590,7 +597,7 @@ export async function handler(chatUpdate) {
 					]
 				]
 			).find(p => p[1])
-			if (typeof plugin.before === 'function')
+			if (typeof plugin.before === 'function') {
 				if (await plugin.before.call(this, m, {
 						match,
 						conn: this,
@@ -609,6 +616,7 @@ export async function handler(chatUpdate) {
 						__filename
 					}))
 					continue
+			}
 			if (typeof plugin !== 'function')
 				continue
 			if ((usedPrefix = (match[0] || '')[0])) {
@@ -633,10 +641,10 @@ export async function handler(chatUpdate) {
 				if (!isAccept)
 					continue
 				m.plugin = name
-				if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
-					let chat = global.db.data.chats[m.chat]
-					let user = global.db.data.users[m.sender]
-					if (!['owner-unbanchat.cjs', 'group-info.cjs'].includes(name) && chat?.isBanned)
+				if (m.chat in db.data.chats || m.sender in db.data.users) {
+					let chat = db.data.chats[m.chat]
+					let user = db.data.users[m.sender]
+					if (!['owner-unbanchat.cjs', 'group-info.cjs', 'owner-exec.cjs', 'owner-exec2.cjs', 'tool-delete.cjs'].includes(name) && chat?.isBanned)
 						return // Except this
 					if (name != 'owner-unbanuser.cjs' && user?.banned)
 						return
@@ -680,12 +688,13 @@ export async function handler(chatUpdate) {
 					continue
 				}
 				m.isCommand = true
-				//let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17 // XP Earning per command
-				//if (xp > 200)
-				//	console.log('Ngecit -_-') // Hehehe
-				//m.exp += xp
-				if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-					this.reply(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buy*\n\n!*NOTE*\nLimit di reset tiap jam 12 malam WIB`, m)
+				/*let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17 // XP Earning per command
+				if (xp > 200)
+				    m.reply('Ngecit -_-') // Hehehe
+				else
+				    m.exp += xp*/
+				if (!isPrems && plugin.limit && db.data.users[m.sender].limit < plugin.limit * 1) {
+					this.reply(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buy\n*atau tunggu besok*`, m)
 					continue // Limit habis
 				}
 				if (plugin.level > _user.level) {
@@ -722,14 +731,14 @@ export async function handler(chatUpdate) {
 				} catch (e) {
 					// Error occured
 					m.error = e
-					console.error(e)
+					console.error({e})
 					if (e) {
 						let text = format(e)
 						for (let key of Object.values(global.APIKeys))
 							text = text.replace(new RegExp(key, 'g'), '#HIDDEN#')
 						if (e.name)
 							for (let [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
-								let data = (await conn.onWhatsApp(jid))[0] || {}
+								let data = (await this.onWhatsApp(jid))[0] || {}
 								if (data.exists)
 									m.reply(`*Plugin:* ${m.plugin}\n*Sender:* ${m.sender}\n*Chat:* ${m.chat}\n*Command:* ${usedPrefix}${command} ${args.join(' ')}\n\n\`\`\`${text}\`\`\``.trim(), data.jid)
 							}
@@ -741,27 +750,27 @@ export async function handler(chatUpdate) {
 						try {
 							await plugin.after.call(this, m, extra)
 						} catch (e) {
-							console.error(e)
+							console.error({after:e})
 						}
 					}
 					if (m.limit)
-						console.log(+m.limit + ' Limit terpakai')
+						m.reply(+m.limit + ' Limit terpakai')
 				}
 				break
 			}
 		}
 	} catch (e) {
-		console.error(e)
+		console.error({last:e})
 	} finally {
 		if (opts['queque'] && m.text) {
 			const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id)
 			if (quequeIndex !== -1)
 				this.msgqueque.splice(quequeIndex, 1)
 		}
-		//console.log(global.db.data.users[m.sender])
-		let user, stats = global.db.data.stats
+		//console.log(db.data.users[m.sender])
+		let user, stats = db.data.stats
 		if (m) {
-			if (m.sender && (user = global.db.data.users[m.sender])) {
+			if (m.sender && (user = db.data.users[m.sender])) {
 				user.exp += m.exp
 				user.limit -= m.limit * 1
 			}
@@ -796,42 +805,48 @@ export async function handler(chatUpdate) {
 		}
 
 		try {
-			if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
+			if (!opts['noprint']) await printMessage(m, this)
 		} catch (e) {
 			console.log(m, m.quoted, e)
 		}
-		await this.sendPresenceUpdate('available', m.chat)
-		await this.chatRead(m.chat, m.isGroup ? m.sender : undefined, m.id || m.key.id).catch(() => {})
+		await this.readMessages([m.key])
 		if (opts['autoread'])
-			await this.chatRead(m.chat, m.isGroup ? m.sender : undefined, m.id || m.key.id).catch(() => {})
+			await this.readMessages([m.key])
+
 	}
 }
+
+/**
+ * Handle groups participants update
+ * @this {import('./lib/connection').Socket}
+ * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate 
+ */
 export async function participantsUpdate({
 	id,
 	participants,
 	action
 }) {
-	if (opts['self'])
+	let settinge = db.data.settings[this.user.jid]
+	if (settinge.self)
 		return
-	// if (id in conn.chats) return // First login will spam
-	if (global.isInit)
+	if (this.isInit)
 		return
-	if (global.db.data == null)
+	if (db.data == null)
 		await loadDatabase()
-	let chat = global.db.data.chats[id] || {}
+	let chat = db.data.chats[id] || {}
 	let text = ''
 	switch (action) {
 		case 'add':
 		case 'remove':
 			if (chat.welcome) {
-				let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
+				let groupMetadata = await Connection.store.fetchGroupMetadata(id, this.groupMetadata)
 				for (let user of participants) {
 					let pp = './src/avatar_contact.png'
 					try {
 						pp = await this.profilePictureUrl(user, 'image')
 					} catch (e) {} finally {
-						text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
-							(chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
+						text = (action === 'add' ? (chat.sWelcome || this.welcome || Connection.conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
+							(chat.sBye || this.bye || Connection.conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
 						this.sendFile(id, pp, 'pp.jpg', text, null, false, {
 							mentions: [user]
 						})
@@ -840,10 +855,10 @@ export async function participantsUpdate({
 			}
 			break
 		case 'promote':
-			text = (chat.sPromote || this.spromote || conn.spromote || '@user ```is now Admin```')
+			text = (chat.sPromote || this.spromote || Connection.conn.spromote || '@user ```is now Admin```')
 		case 'demote':
 			if (!text)
-				text = (chat.sDemote || this.sdemote || conn.sdemote || '@user ```is no longer Admin```')
+				text = (chat.sDemote || this.sdemote || Connection.conn.sdemote || '@user ```is no longer Admin```')
 			text = text.replace('@user', '@' + participants[0].split('@')[0])
 			if (chat.detect)
 				this.sendMessage(id, {
@@ -853,55 +868,85 @@ export async function participantsUpdate({
 			break
 	}
 }
+
+/**
+ * Handle groups update
+ * @this {import('./lib/connection').Socket}
+ * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['groups.update']} groupsUpdate 
+ */
+export async function groupsUpdate(groupsUpdate) {
+	let settinge = db.data.settings[this.user.jid]
+	if (settinge.self)
+		return
+	for (const groupUpdate of groupsUpdate) {
+		const id = groupUpdate.id
+		if (!id) continue
+		let chats = db.data.chats[id],
+			text = ''
+		if (!chats?.detect) continue
+		if (groupUpdate.desc) text = (chats.sDesc || this.sDesc || Connection.conn.sDesc || '```Description has been changed to```\n@desc').replace('@desc', groupUpdate.desc)
+		if (groupUpdate.subject) text = (chats.sSubject || this.sSubject || Connection.conn.sSubject || '```Subject has been changed to```\n@subject').replace('@subject', groupUpdate.subject)
+		if (groupUpdate.icon) text = (chats.sIcon || this.sIcon || Connection.conn.sIcon || '```Icon has been changed to```').replace('@icon', groupUpdate.icon)
+		if (groupUpdate.revoke) text = (chats.sRevoke || this.sRevoke || Connection.conn.sRevoke || '```Group link has been changed to```\n@revoke').replace('@revoke', groupUpdate.revoke)
+		if (!text) continue
+		await this.sendMessage(id, {
+			text,
+			mentions: this.parseMention(text)
+		})
+	}
+}
+
+/**
+ * @this {import('./lib/connection').Socket}
+ * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['messages.delete']} message 
+ */
 export async function deleteUpdate(message) {
-	try {
-		const {
-			fromMe,
-			id,
-			participant
-		} = message
-		if (fromMe)
-			return
-		let msg = this.serializeM(await this.loadMessage(id))
-		if (!msg)
-			return
-		let chat = global.db.data.chats[msg.chat] || {}
-		if (chat.delete)
-			return console.log(msg.message)
-		/*await this.reply(msg.chat, `
+	if (message.keys && Array.isArray(message.keys)) {
+		try {
+			for (const key of message.keys) {
+				if (key.fromMe) continue
+				const msg = Connection.store.loadMessage(key.id)
+				if (!msg) continue
+				let chat = db.data.chats[msg.key.remoteJid]
+				if (!chat || chat.delete) continue
+				const participant = msg.participant || msg.key.participant || msg.key.remoteJid
+				console.log(msg)
+				/*await this.reply(msg.key.remoteJid, `
 Terdeteksi @${participant.split`@`[0]} telah menghapus pesan
 Untuk mematikan fitur ini, ketik
 *.enable delete*
 `.trim(), msg, {
-            mentions: [participant]
-        })
-        this.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))*/
-	} catch (e) {
-		console.error(e)
+                    mentions: [participant]
+                })
+                this.copyNForward(msg.key.remoteJid, msg).catch(e => console.log(e, msg))*/
+			}
+		} catch (e) {
+			console.error(e)
+		}
 	}
 }
 
+
 global.dfail = (type, m, conn) => {
 	let msg = {
-		rowner: 'Perintah ini hanya dapat digunakan oleh _*OWWNER!1!1!*_',
-		owner: 'Perintah ini hanya dapat digunakan oleh _*Owner Bot*_!',
-		mods: 'Perintah ini hanya dapat digunakan oleh _*Moderator*_ !',
-		premium: 'Perintah ini hanya untuk member _*Premium*_ !',
-		group: 'Perintah ini hanya dapat digunakan di grup!',
-		private: 'Perintah ini hanya dapat digunakan di Chat Pribadi!',
-		admin: 'Perintah ini hanya untuk *Admin* grup!',
-		botAdmin: 'Jadikan bot sebagai *Admin* untuk menggunakan perintah ini!',
-		unreg: 'Silahkan daftar untuk menggunakan fitur ini dengan cara mengetik:\n\n*#daftar nama.umur*\n\nContoh: *#daftar Manusia.16*',
-		restrict: 'Fitur ini di *disable*!'
+		rowner: '```Oɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴀᴄᴄᴇꜱꜱ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ!!```',
+		owner: '```Oɴʟʏ ᴏᴡɴᴇʀ ʙᴏᴛ ᴄᴀɴ ᴀᴄᴄᴇꜱꜱ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ!!!```',
+		mods: '```Oɴʟʏ ᴍᴏᴅᴇʀᴀᴛᴏʀ ᴄᴀɴ ᴀᴄᴄᴇꜱꜱ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ!!```',
+		premium: 'Pᴇʀɪɴᴛᴀʜ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ ᴍᴇᴍʙᴇʀ _*Pʀᴇᴍɪᴜᴍ*_ !',
+		group: '```Pᴇʀɪɴᴛᴀʜ ɪɴɪ ʜᴀɴʏᴀ ᴅᴀᴘᴀᴛ ᴅɪɢᴜɴᴀᴋᴀɴ ᴅɪ ɢʀᴜᴘ!```',
+		private: '```Pᴇʀɪɴᴛᴀʜ ɪɴɪ ʜᴀɴʏᴀ ᴅᴀᴘᴀᴛ ᴅɪɢᴜɴᴀᴋᴀɴ ᴅɪ Cʜᴀᴛ Pʀɪʙᴀᴅɪ!```',
+		admin: 'Pᴇʀɪɴᴛᴀʜ ɪɴɪ ʜᴀɴʏᴀ ᴜɴᴛᴜᴋ *Aᴅᴍɪɴ* ɢʀᴜᴘ!',
+		botAdmin: 'Jᴀᴅɪᴋᴀɴ ʙᴏᴛ ꜱᴇʙᴀɢᴀɪ *Aᴅᴍɪɴ* ᴜɴᴛᴜᴋ ᴍᴇɴɢɢᴜɴᴀᴋᴀɴ ᴘᴇʀɪɴᴛᴀʜ ɪɴɪ!',
+		unreg: 'Sɪʟᴀʜᴋᴀɴ ᴅᴀғᴛᴀʀ ᴜɴᴛᴜᴋ ᴍᴇɴɢɢᴜɴᴀᴋᴀɴ ғɪᴛᴜʀ ɪɴɪ ᴅᴇɴɢᴀɴ ᴄᴀʀᴀ ᴍᴇɴɢᴇᴛɪᴋ:\n\n*#ᴅᴀғᴛᴀʀ ɴᴀᴍᴀ.ᴜᴍᴜʀ*\n\nCᴏɴᴛᴏʜ: *#ᴅᴀғᴛᴀʀ Mᴀɴᴜꜱɪᴀ.16*',
+		restrict: 'Fɪᴛᴜʀ ɪɴɪ ᴅɪ *ᴅɪꜱᴀʙʟᴇ*!'
 	} [type]
 	if (msg) return m.reply(msg)
 }
 
-
-let file = global.__filename(
+let file = Helper.__filename(
 	import.meta.url, true)
-const watcher = watch(file, async () => {
-	watcher.close()
+watchFile(file, async () => {
+	unwatchFile(file)
 	console.log(chalk.redBright("Update 'handler.js'"))
-	if (global.reloadHandler) console.log(await global.reloadHandler())
+	if (Connection.reload) console.log(await Connection.reload(await Connection.conn))
 })

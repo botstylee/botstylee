@@ -1,4 +1,4 @@
-# BOTSTYLEE-MD
+# wabot-bsbt
 <a href="https://github.com/botstylee/botstylee/network/members"><img title="Forks" src="https://img.shields.io/github/forks/botstylee/botstylee?label=Forks&color=blue&style=flat-square"></a>
 <a href="https://github.com/botstylee/botstylee/watchers"><img title="Watchers" src="https://img.shields.io/github/watchers/botstylee/botstylee?label=Watchers&color=green&style=flat-square"></a>
 <a href="https://github.com/botstylee/botstylee/stargazers"><img title="Stars" src="https://img.shields.io/github/stars/botstylee/botstylee?label=Stars&color=yellow&style=flat-square"></a>
@@ -10,15 +10,19 @@
 
 ## Cara Memakai Botstylee
 [`Link YouTube`](https://youtube.com/channel/UCrNO1yUYW0i3xsJp4NGBh4Q)
-## Join Grup Wa Kalau Mau Bertanya
+## Join Group Bot
 [`Group Whatsapp`](https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip)
 ### FOR TERMUX USER
 ```bash
 > pkg update && pkg upgrade
-> pkg install git ffmpeg imagemagick nodejs nano mc -y
+> pkg install git -y
+> pkg install nodejs -y
+> pkg install ffmpeg -y
+> pkg install imagemagick -y
 > git clone https://github.com/botstylee/botstylee
 > cd botstylee
-> npm install -g npm@6.14.14 && npm install
+> npm install -g npm@6.14.14
+> npm install
 ```
 ###### Run
 ```bash
@@ -43,17 +47,17 @@
 ```
 --------------
 
-### Original Source
-[`BochilGeming`](https://github.com/BochilGaming/games-wabot-md)
-
 ### Thanks To 
 [`Nurutomo`](https://github.com/Nurutomo)
 
 [`BENNIISMAEL`](https://github.com/botstylee)
 
-[`Contributor`](https://github.com/findme-19)
+[`BochilGaming`](https://github.com/BochilGaming)
+
+
+[`RR018|RIZKI`](https://github.com/rizkiramadhan4617)
 
 [`xteam`](https://api.xteam.xyz)
 
 
-[`bsbt`](https://rest-beni.herokuapp.com)
+[`bsbt`](https://bsbt-api-rest.herokuapp.com)

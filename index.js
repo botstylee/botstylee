@@ -6,7 +6,7 @@ import {
 } from 'path'
 import {
 	createRequire
-} from "module";
+} from 'module'
 import {
 	fileURLToPath
 } from 'url'
@@ -22,8 +22,6 @@ import cfonts from 'cfonts';
 import {
 	createInterface
 } from 'readline'
-import yargs from 'yargs'
-
 // https://stackoverflow.com/a/50052194
 const __dirname = dirname(fileURLToPath(
 	import.meta.url))
@@ -36,8 +34,8 @@ const {
 	say
 } = cfonts
 const rl = createInterface(process.stdin, process.stdout)
-
-say(`BOTSTYLEE`, {
+import yargs from 'yargs';
+say(`BOTSTYLE`, {
 	font: 'shade',
 	align: 'center',
 	gradient: ['#12c2e9', '#c471ed'],
@@ -92,6 +90,7 @@ function start(file) {
 			start(file)
 		})
 	})
+
 	let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 	if (!opts['test'])
 		if (!rl.listenerCount()) rl.on('line', line => {
