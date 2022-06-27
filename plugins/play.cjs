@@ -5,7 +5,7 @@ let { youtubeSearch, youtubedl, youtubedlv2, youtubedlv3 } = require('@bochiltea
 let fs = require('fs')
 let handler = async (m, { conn, args, isPrems, isOwner, command, text, usedPrefix }) => {
 if (!text) throw 'Cari apa?'
-let chat = global.db.data.chats[m.chat]
+let chat = db.data.chats[m.chat]
 let vid = (await youtubeSearch(text)).video[0] 
 if (!vid) throw 'Video/Audio Tidak ditemukan'
 let { videoId } = vid
