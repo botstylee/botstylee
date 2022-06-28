@@ -1,5 +1,7 @@
 const uploadFile = require('../lib/uploadFile.cjs');
-
+const {
+	webp2png
+} = require('../lib/webp2mp4.cjs');
 async function handler(m, {
 	conn,
 	text,
@@ -13,7 +15,9 @@ async function handler(m, {
 		let img = await q.download?.()
 		if (!img) throw `balas gambar/stiker dengan perintah ${usedPrefix + command}`
 		try {
-			let out = await uploadFile(img)
+			let out
+			if (/image/g.test(mime)) out = await uploadFile(img)
+			if ('image/webp'.includes(mime)) out = await webp2png(img)
 			var a = (await axios.get(API('beni', 'api/canvas/sepia', {
 				url: out
 			}), {
@@ -22,7 +26,7 @@ async function handler(m, {
 			conn.sendFile(m.chat, a, '', 'nih bang', m)
 		} catch (e) {
 			if (e.response) {
-				log(e.response.data.statusText)
+				log(e.response.statusText)
 				throw 'server error'
 			} else {
 				throw 'ada yang gak beres nih'

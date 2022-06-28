@@ -18,7 +18,7 @@ handler.before = async function(m, {
 			const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`
 			if (m.text.includes(linkThisGroup)) throw !0
 		}
-		conn.reply(m.chat, 'bang ada yang kirim link grup tuh\n'+listAdmin, m, false, {mentions: [...groupAdmins.map(v => v.id)]})
+		conn.reply(m.chat, 'bang ada yang kirim link grup tuh\n'+listAdmin, m, {mentions: [...groupAdmins.map(v => v.id)]})
 	}
 	return !0
 }

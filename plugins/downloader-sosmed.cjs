@@ -253,7 +253,7 @@ async function handler(m, {
 				}
 			}
 		} else if (rx.test(args[0])) {
-			if (!args[1]) return resolve(m.reply(`*untuk link youtube gunakan format command seperti ini*\n*${p+command} link type*\n\n*contoh: ${p+command} ${args[0]} mp3*\n*Accepted type: mp3, mp4*`))
+			if (!args[1]) return resolve(m.reply(`*untuk link youtube gunakan format command seperti ini*\n*${_p+command} link type*\n\n*contoh: ${_p+command} ${args[0]} mp3*\n*Accepted type: mp3, mp4*`))
 			if (!['mp3', 'mp4'].includes(args[1])) return resolve(m.reply(`invalid type\nOnly Accepted mp3 or mp4`))
 			try {
 				a = (await axios.get(API('ghst', 'api/sosmed', {
@@ -270,10 +270,23 @@ async function handler(m, {
 								m.reply(work)
 								await delay(2000)
 								return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp3', "", m, null, {
-									asDocument: true
+									asDocument: true,
+									contextInfo: {
+										externalAdReply: {
+											mediaType: 2,
+											description: 'anu',
+											title: a.data.details.title,
+											mediaUrl: data.url,
+											body: author,
+											thumbnail: await getbuffer(a.data.details.thumbnail.url),
+											sourceUrl: "",
+											showAdAttribution: true, // false
+											//renderLargerThumbnail: true // false
+										}
+									}
 								}))
 							} else {
-								return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE*: 30mb\n*USER PREMIUM*: 99mb\n📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
+								return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
 							}
 						}
 					} else {
@@ -287,16 +300,42 @@ async function handler(m, {
 									m.reply(work)
 									await delay(2000)
 									return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
-										asDocument: true
+										asDocument: true,
+										contextInfo: {
+										externalAdReply: {
+											mediaType: 2,
+											description: 'anu',
+											title: a.data.details.title,
+											mediaUrl: data.url,
+											body: author,
+											thumbnail: await getbuffer(a.data.details.thumbnail.url),
+											sourceUrl: "",
+											showAdAttribution: true, // false
+											//renderLargerThumbnail: true // false
+										}
+									}
 									}))
 								} else {
-									return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE*: 30mb\n*USER PREMIUM*: 99mb\n📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
+									return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
 								}
 							} else {
 								m.reply(work)
 								await delay(2000)
 								return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
-									asDocument: true
+									asDocument: true,
+									contextInfo: {
+										externalAdReply: {
+											mediaType: 2,
+											description: 'anu',
+											title: a.data.details.title,
+											mediaUrl: data.url,
+											body: author,
+											thumbnail: await getbuffer(a.data.details.thumbnail.url),
+											sourceUrl: "",
+											showAdAttribution: true, // false
+											//renderLargerThumbnail: true // false
+										}
+									}
 								}))
 							}
 						} else {
@@ -306,10 +345,23 @@ async function handler(m, {
 								m.reply(work)
 								await delay(2000)
 								return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
-									asDocument: true
+									asDocument: true,
+									contextInfo: {
+										externalAdReply: {
+											mediaType: 2,
+											description: 'anu',
+											title: a.data.details.title,
+											mediaUrl: data.url,
+											body: author,
+											thumbnail: await getbuffer(a.data.details.thumbnail.url),
+											sourceUrl: "",
+											showAdAttribution: true, // false
+											//renderLargerThumbnail: true // false
+										}
+									}
 								}))
 							} else {
-								return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE*: 30mb\n*USER PREMIUM*: 99mb\n📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
+								return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
 							}
 						}
 					}
@@ -346,7 +398,7 @@ async function handler(m, {
 				} else {
 					isLimit = (isPrems || isOwner ? 99 : 30) * 1048576 < (await axios.get(encodeURIComponent(a.url))).headers['content-length']
 					if (isLimit) {
-						return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE*: 30mb\n*USER PREMIUM*: 99mb\n*📍Title:* ${a.name}\n*🔗Link:* ${a.url}`))
+						return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.name}\n*🔗Link:* ${a.url}`))
 					} else {
 						m.reply(work)
 						await delay(2000)

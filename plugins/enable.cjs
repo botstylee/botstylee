@@ -79,7 +79,7 @@ let handler = async (m, {
 			} else if (bot.self && isEnable == false) {
 				throw "public telah matikan pada bot ini."
 			} else {
-				bot.self = isEnable
+				bot.self = !isEnable
 			}
 			break
 		case 'restrict':

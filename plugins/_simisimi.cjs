@@ -1,5 +1,6 @@
 let handler = m => m
 handler.all = async function(m) {
+	log(m)
 	let chat = db.data.chats[m.chat]
 	let user = db.data.users[m.sender]
 	var serror = "simi error :("
