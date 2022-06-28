@@ -35,7 +35,7 @@ let handler = async (m, {
 • *Pulsa:* [082114499086]
 • *Dana:* [082114499086]
 • *OVO:* [082114499086]
-• *Gopay:* [0821144990]
+• *Gopay:* [082114499086]
 
 –––––– *🐾 Kebijakan* ––––––
 🗣️: Kak, point buat apa?
@@ -119,7 +119,7 @@ let handler = async (m, {
 	const listMessage = {
 		text: info,
 		footer: `𝗧 𝗜 𝗠 𝗘 : ${time}`,
-		title: "ANTI BOT",
+		title: "BOTSTYLEEw",
 		buttonText: "Click Here!",
 		sections
 	}
