@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "version": "",
+  "name": "ok",
+  "version": "1.0.0",
   "description": "Customizable WhatsApp Bot",
   "main": "index.js",
   "type": "module",
@@ -17,10 +17,10 @@
   "keywords": [
     "heko"
   ],
-  "author": "benniismael",
+  "author": "gweh",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "^4.1.0",
+    "@adiwajshing/baileys": "^4.2.0",
     "@bochilteam/scraper": "^2.0.0",
     "awesome-phonenumber": "^2.70.0",
     "axios": "^0.26.1",

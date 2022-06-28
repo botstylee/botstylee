@@ -154,7 +154,16 @@ async function expired() {
 					users.premium = false
 					users.expired = 0
 					users.limitjoin = 0
+					conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${nomorown}`, null, {
+						mentions: [nomorown + '@s.whatsapp.net']
+					})
 					resolve(console.log(`masa premium ${name} sudah habis`))
+				}
+			}
+			if (users.sewa) {
+				if (users.limitjoin == 0) {
+					users.sewa = false
+					users.limitjoin = 1
 				}
 			}
 		}
@@ -165,6 +174,11 @@ async function expired() {
 					if (Date.now() >= chats.expired) {
 						chats.groupexpired = false
 						chats.expired = 0
+						await conn.reply(id, `masa menetap di ${await conn.getName(id)} sudah habis.\nBot sebentar lagi akan keluar.\nterima kasih telah menggunakan bot kami.\nChat owner kami jika ingin menyewa lagi :)\nowner: @${nomorown}`, null, {
+							mentions: [nomorown + '@s.whatsapp.net']
+						})
+						await delay(3000)
+						await conn.groupLeave(id)
 						resolve(console.log(`masa menetap di ${await conn.getName(id)} sudah habis`))
 					}
 				}

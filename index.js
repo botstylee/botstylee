@@ -35,14 +35,14 @@ const {
 } = cfonts
 const rl = createInterface(process.stdin, process.stdout)
 import yargs from 'yargs';
-say(`BOTSTYLE`, {
+say(`ANTI-BOT`, {
 	font: 'shade',
 	align: 'center',
 	gradient: ['#12c2e9', '#c471ed'],
 	transitionGradient: true,
 	letterSpacing: 3,
 });
-say(`'BOTSTYLEE' Coded By BENNIISMAIL`, {
+say(`'ANTI' Coded By Ghost19-UI`, {
 	font: 'console',
 	align: 'center',
 	gradient: ['#DCE35B', '#45B649'],

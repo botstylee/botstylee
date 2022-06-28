@@ -468,16 +468,12 @@ export async function handler(chatUpdate) {
 			return
 		if(m.chat == 'status@broadcast')
 			return
-		if(db.data.users[m.sender].banned)
-			return
 		if (typeof m.text !== 'string')
 			m.text = ''
 		const isROwner = [this.decodeJid(this.user.id), ...global.owner.map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 		const isOwner = isROwner || m.fromMe
 		let settinge = db.data.settings[this.user.jid]
 		if (!isOwner && settinge.self)
-			return
-		if (settinge.pconly && m.chat.endsWith('g.us') && !isOwner)
 			return
 		const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 		const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || db.data.users[m.sender].premium
@@ -641,12 +637,15 @@ export async function handler(chatUpdate) {
 				if (!isAccept)
 					continue
 				m.plugin = name
-				if (m.chat in db.data.chats || m.sender in db.data.users) {
+				if (m.chat in db.data.chats || m.sender in db.data.users || this.user.jid in db.data.settings) {
 					let chat = db.data.chats[m.chat]
 					let user = db.data.users[m.sender]
-					if (!['owner-unbanchat.cjs', 'group-info.cjs', 'owner-exec.cjs', 'owner-exec2.cjs', 'tool-delete.cjs'].includes(name) && chat?.isBanned)
+					let settings = db.data.settings[this.user.jid]
+					if (!['owner-unbanchat.cjs', 'group-info.cjs', 'owner-exec.cjs', 'owner-exec2.cjs', 'tool-delete.cjs', 'info-runtime.cjs', 'exp-ceksn.cjs', 'exp-daftar.cjs', 'exp-my.cjs', 'exp-unreg.cjs', 'group-link.cjs', 'enable.cjs', 'user-profile.cjs'].includes(name) && chat?.isBanned)
 						return // Except this
-					if (name != 'owner-unbanuser.cjs' && user?.banned)
+					if (!['owner-unbanuser.cjs', 'user-profile.cjs', 'info-runtime.cjs'].includes(name) && user?.banned)
+						return
+					if (!['owner-unbanchat.cjs', 'user-profile.cjs', 'info-runtime.cjs', 'group-info.cjs', 'enable.cjs', 'owner-exec.cjs', 'owner-exec2.cjs'].includes(name) && settings?.pconly && m.isGroup && !isOwner)
 						return
 				}
 				if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { // Both Owner
@@ -731,7 +730,7 @@ export async function handler(chatUpdate) {
 				} catch (e) {
 					// Error occured
 					m.error = e
-					console.error({e})
+					console.error({e: await e})
 					if (e) {
 						let text = format(e)
 						for (let key of Object.values(global.APIKeys))
@@ -900,7 +899,8 @@ export async function groupsUpdate(groupsUpdate) {
  * @this {import('./lib/connection').Socket}
  * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['messages.delete']} message 
  */
-export async function deleteUpdate(message) {
+export async function deleteUpdate({message}) {
+log(message)
 	if (message.keys && Array.isArray(message.keys)) {
 		try {
 			for (const key of message.keys) {
