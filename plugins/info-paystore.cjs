@@ -119,7 +119,7 @@ let handler = async (m, {
 	const listMessage = {
 		text: info,
 		footer: `𝗧 𝗜 𝗠 𝗘 : ${time}`,
-		title: "BOTSTYLEEw",
+		title: "BOTSTYLEE",
 		buttonText: "Click Here!",
 		sections
 	}
