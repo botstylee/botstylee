@@ -13,7 +13,7 @@ let handler = async (m, {
 	hl[0] = no(hl[0]) + "@s.whatsapp.net"
 	hl[1] = text.split('|')[1].toLowerCase()
 
-	if (!text) return conn.reply(m.chat, `*❏ GET NUMBER*\n\n• ${usedPrefix+command} number|amount\n*Example:* ${usedPrefix+command} 62823310391919|2\n\n• ${usedPrefix+command} @tag|amount\n*Example:* ${usedPrefix+command} @6282331033919|2\n*INFO*\nfor amount max is 5`, m)
+	if (!text) return conn.reply(m.chat, `*❏ GET NUMBER*\n\n• ${usedPrefix+command} number|amount\n*Example:* ${usedPrefix+command} 62895368900456|2\n\n• ${usedPrefix+command} @tag|amount\n*Example:* ${usedPrefix+command} @62895368900456|2\n*INFO*\nfor amount max is 5`, m)
 	let user = db.data.users[hl[0]]
 	if (!(hl[0] in db.data.users)) return m.reply(`User ${hl[0]} not in database`)
 	if (!('sewa' in user)) {
