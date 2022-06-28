@@ -32,10 +32,10 @@ let handler = async (m, {
 ╰═┅═━––––––๑
 
 *⫹⫺ PAYMENT:*
-• *Pulsa:* [082114499086]
-• *Dana:* [082114499086]
-• *OVO:* [082114499086]
-• *Gopay:* [082114499086]
+• *Pulsa:* [082331033919]
+• *Dana:* [082331033919]
+• *OVO:* [082331033919]
+• *Gopay:* [082331033919]
 
 –––––– *🐾 Kebijakan* ––––––
 🗣️: Kak, point buat apa?
@@ -119,7 +119,7 @@ let handler = async (m, {
 	const listMessage = {
 		text: info,
 		footer: `𝗧 𝗜 𝗠 𝗘 : ${time}`,
-		title: "BOTSTYLEE",
+		title: "ANTI BOT",
 		buttonText: "Click Here!",
 		sections
 	}

@@ -1,8 +1,9 @@
 let handler = async (m, {
 	conn
 }) => {
-	m.reply(await tiny('selamat tinggal semuanya 😊'))
+	await m.reply(await tiny('selamat tinggal semuanya 😊'))
 	db.data.chats[m.chat] = {}
+	await delay(1500)
 	await conn.groupLeave(m.chat)
 }
 handler.help = ['exit']

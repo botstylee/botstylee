@@ -3,7 +3,8 @@ let handler = async (m, {
 	participants,
 	groupMetadata
 }) => {
-	const pp = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || './src/avatar_contact.png'
+	const _p = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || profil
+	var pp = /^https?:\/\//.test(_p) ? await getbuffer(_p) : _p
 	const {
 		isBanned,
 		welcome,
@@ -50,7 +51,7 @@ Bye: ${sBye}
 Promote: ${sPromote}
 Demote: ${sDemote}
 `.trim()
-	conn.reply(m.chat, text , m, false, {
+	conn.reply(m.chat, await tiny(text), m, {
 		mentions: [...groupAdmins.map(v => v.id), owner],
 		contextInfo: {
 			externalAdReply: {

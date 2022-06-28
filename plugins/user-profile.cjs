@@ -4,14 +4,15 @@ let handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
-	let pp = './src/avatar_contact.png'
+	let _p = profil
 	let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.quoted ? m.quoted.sender : m.sender
 	try {
-		pp = await conn.profilePictureUrl(who, 'image')
+		_p = await conn.profilePictureUrl(who, 'image')
 	} catch (e) {
 
 	} finally {
 		let about = (await conn.fetchStatus(who).catch(console.error) || {}).status || ''
+		var pp = /^https?:\/\//.test(_p) ? await getbuffer(_p) : _p
 		if (typeof db.data.users[who] == "undefined") {
 			db.data.users[who] = {
 				exp: 0,
@@ -71,7 +72,7 @@ Terdaftar: ${registered ? 'Ya (' + new Date(regTime).toLocaleString() + ')' : 'T
 Pasangan: ${jodoh}
 `.trim()
 		let mentions = pasangan ? [who, pasangan] : [who]
-		conn.reply(m.chat, banned ? 'jiakh ke banned' : str, m, false, {
+		conn.reply(m.chat, banned ? 'jiakh ke banned' : str, m, {
 			mentions,
 			contextInfo: {
 				externalAdReply: {
@@ -80,9 +81,7 @@ Pasangan: ${jodoh}
 					title: await tiny('hai' + username),
 					mediaUrl: yt,
 					body: '𓃗𓅜',
-					thumbnail: await axios.get(pp, {
-						responseType: 'arraybuffer'
-					}),
+					thumbnail: pp,
 					sourceUrl: gc,
 					showAdAttribution: true, // false
 					//renderLargerThumbnail: true // false

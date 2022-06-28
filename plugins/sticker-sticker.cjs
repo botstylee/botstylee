@@ -21,7 +21,7 @@ let handler = async (m, {
 			if (/video/g.test(mime))
 				if ((q.msg || q).seconds > 11) return m.reply('Maksimal 10 detik!')
 			let img = await q.download?.()
-			if (!img) throw `balas gambar/video/stiker dengan perintah ${usedPrefix + command}`
+			if (!img) return m.reply(`balas gambar/video/stiker dengan perintah ${usedPrefix + command}`)
 			let out
 			try {
 				if (/webp/g.test(mime)) out = await webp2png(img)

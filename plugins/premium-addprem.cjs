@@ -40,7 +40,7 @@ let handler = async (m, {
 		timeStyle: 'long'
 	}).format(user.expired))
 	await delay(2000)
-	conn.reply(hl[0], `*hai ${await conn.getName(hl[0])}*\nowner @${m.sender.split`@`[0]} baru saja menambah kamu menjadi user premium\n\n╭⚅\t\t\t\t\t\t\t\t\t\t*PREMIUM*\t\t\t\t\t\t\t\t\t\t⚅\n⎸\n ⎸limitjoin: ${user.limitjoin}\n ⎸expired: ${msToDate(user.expired - new Date() * 1)}\n⎸\n╰⚅`, null,null, {mentions:[hl[0],m.sender]})
+	conn.reply(hl[0], `*hai ${await conn.getName(hl[0])}*\nowner @${m.sender.split`@`[0]} baru saja menambah kamu menjadi user premium\n\n╭⚅\t\t\t\t\t\t\t*PREMIUM*\t\t\t\t\t\t\t⚅\n ⎸\n ⎸limitjoin: ${user.limitjoin}\n ⎸expired: ${msToDate(user.expired - new Date() * 1)}\n ⎸\n╰⚅`, null, {mentions:[hl[0],m.sender]})
 }
 handler.help = ['addprem *@user|expired*']
 handler.tags = ['owner', 'premium']
@@ -60,6 +60,6 @@ function msToDate(ms) {
 	minutes = Math.floor((hoursms) / (60 * 1000));
 	minutesms = ms % (60 * 1000);
 	sec = Math.floor((minutesms) / (1000));
-	return days + " Hari " + minutes + " Menit";
+	return days + " Hari " + hours + " Jam " + minutes + " Menit";
 	// +minutes+":"+sec;
 }
