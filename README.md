@@ -1,13 +1,13 @@
-# Games_AntiBot
+# BOTSTYLEE _ GAMES
 
-<a href="https://github.com/findme-19/antibot_md/network/members"><img title="Forks" src="https://img.shields.io/github/forks/findme-19/antibot_md?label=Forks&color=blue&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/watchers"><img title="Watchers" src="https://img.shields.io/github/watchers/findme-19/antibot_md?label=Watchers&color=green&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/stargazers"><img title="Stars" src="https://img.shields.io/github/stars/findme-19/antibot_md?label=Stars&color=yellow&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/graphs/contributors"><img title="Contributors" src="https://img.shields.io/github/contributors/findme-19/antibot_md?label=Contributors&color=blue&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/issues"><img title="Issues" src="https://img.shields.io/github/issues/findme-19/antibot_md?label=Issues&color=success&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/issues?q=is%3Aissue+is%3Aclosed"><img title="Issues" src="https://img.shields.io/github/issues-closed/findme-19/antibot_md?label=Issues&color=red&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/pulls"><img title="Pull Request" src="https://img.shields.io/github/issues-pr/findme-19/antibot_md?label=PullRequest&color=success&style=flat-square"></a>
-<a href="https://github.com/findme-19/antibot_md/pulls?q=is%3Apr+is%3Aclosed"><img title="Pull Request" src="https://img.shields.io/github/issues-pr-closed/findme-19/antibot_md?label=PullRequest&color=red&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/network/members"><img title="Forks" src="https://img.shields.io/github/forks/findme-19/antibot_md?label=Forks&color=blue&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/watchers"><img title="Watchers" src="https://img.shields.io/github/watchers/findme-19/antibot_md?label=Watchers&color=green&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/stargazers"><img title="Stars" src="https://img.shields.io/github/stars/findme-19/antibot_md?label=Stars&color=yellow&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/graphs/contributors"><img title="Contributors" src="https://img.shields.io/github/contributors/findme-19/antibot_md?label=Contributors&color=blue&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/issues"><img title="Issues" src="https://img.shields.io/github/issues/findme-19/antibot_md?label=Issues&color=success&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/issues?q=is%3Aissue+is%3Aclosed"><img title="Issues" src="https://img.shields.io/github/issues-closed/findme-19/antibot_md?label=Issues&color=red&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/pulls"><img title="Pull Request" src="https://img.shields.io/github/issues-pr/findme-19/antibot_md?label=PullRequest&color=success&style=flat-square"></a>
+<a href="https://github.com/botstylee/botstylee/pulls?q=is%3Apr+is%3Aclosed"><img title="Pull Request" src="https://img.shields.io/github/issues-pr-closed/findme-19/antibot_md?label=PullRequest&color=red&style=flat-square"></a>
 
 
 #### Deploy to Heroku
