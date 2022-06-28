@@ -39,7 +39,7 @@ global.zippy = (await import('./lib/zippy.cjs')).zippy
 global.tiny = (await import('./lib/tiny.cjs')).default
 global.gc = "https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip"
 global.gh = "https://github.com/botstylee"
-global.yt = "https://youtu.be/iik25wqIuFo"
+global.yt = "https://youtube.com/channel/UCrNO1yUYW0i3xsJp4NGBh4Q"
 function ucapan() {
 	const time = moment.tz('Asia/Jakarta').format('HH')
 	var res
@@ -107,9 +107,9 @@ global.APIKeys = { // APIKey Here
 	'https://ghostui-api.herokuapp.com/': 'salahlo'
 }
 // Sticker WM
-global.packname = 'I ʜᴏᴘᴇ Yᴏᴜ\'ʀᴇ ғɪɴᴇ'
+global.packname = 'ig : Beni_230\'Benniismael''
 global.author = '©ᴡᴜɪꜱ'
-global.nomorown = '6282331033919'
+global.nomorown = '62895368900456'
 global.multiplier = 69 // The higher, The harder levelup
 global.titlebot = `⫹⫺ RPG BOT Whatsapp | By ${author}`
 global.rpg = {
