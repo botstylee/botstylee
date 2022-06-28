@@ -24,7 +24,7 @@
 ```sh
 $ pkg upgrade && pkg update && pkg install git nodejs ffmpeg imagemagick nano bash mc -y
 $ git clone https://github.com/botstylee/botstylee
-$ cd antibot_md
+$ cd botstylee
 $ npm i 
 $ node .
 ```
@@ -64,7 +64,7 @@ ubuntu
 curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
 apt install -y nodejs gcc g++ make
 git clone https://github.com/botstylee/botstylee
-cd antibot_md
+cd botstylee
 npm install
 npm update
 ```
@@ -79,8 +79,8 @@ npm update
 * Download And Install ImageMagick [`Click Here`](https://imagemagick.org/script/download.php)
 
 ```bash
-git clone https://github.com/findme-19/antibot_md
-cd antibot_md
+git clone https://github.com/botstylee/botstylee
+cd botstylee
 npm install
 npm update
 ```
