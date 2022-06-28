@@ -11,7 +11,7 @@
 
 
 #### Deploy to Heroku
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/findme-19/antibot_md)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/botstylee/botstylee)
 
 #### Heroku Buildpack
 | BuildPack | LINK |
@@ -23,7 +23,7 @@
 1. Type mentioned below given commands one by one in Termux.
 ```sh
 $ pkg upgrade && pkg update && pkg install git nodejs ffmpeg imagemagick nano bash mc -y
-$ git clone https://github.com/findme-19/antibot_md
+$ git clone https://github.com/botstylee/botstylee
 $ cd antibot_md
 $ npm i 
 $ node .
@@ -63,7 +63,7 @@ apt install wget curl git ffmpeg imagemagick build-essential libcairo2-dev libpa
 ubuntu
 curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
 apt install -y nodejs gcc g++ make
-git clone https://github.com/findme-19/antibot_md
+git clone https://github.com/botstylee/botstyleee
 cd antibot_md
 npm install
 npm update
