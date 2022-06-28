@@ -35,7 +35,7 @@ const {
 } = cfonts
 const rl = createInterface(process.stdin, process.stdout)
 import yargs from 'yargs';
-say(`BOTSTYLE`, {
+say(`BOTSTYLEE`, {
 	font: 'shade',
 	align: 'center',
 	gradient: ['#12c2e9', '#c471ed'],
