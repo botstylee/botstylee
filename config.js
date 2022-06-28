@@ -34,11 +34,11 @@ global.botdate = `⫹⫺ 𝗗𝗮𝘁𝗲: ${week} ${date}\n⫹⫺ 𝗧𝗶𝗺�
 global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${wktuwib}`
 global.work = `*Sᴜᴄᴄᴇꜱꜱ Fᴇᴛᴄʜɪɴɢ Dᴀᴛᴀ*\n*Sᴇɴᴅɪɴɢ Fɪʟᴇ...*`
 global.error = `*Cᴀɴ\'ᴛ Fᴇᴛᴄʜɪɴɢ Dᴀᴛᴀ*`
-global.profil = fs.readFileSync("./src/profil.jpg")
+global.profil = fs.readFileSync("./src/botstyle.jpg")
 global.zippy = (await import('./lib/zippy.cjs')).zippy
 global.tiny = (await import('./lib/tiny.cjs')).default
 global.gc = "https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip"
-global.gh = "https://github.com/findme-19"
+global.gh = "https://github.com/botstylee"
 global.yt = "https://youtu.be/iik25wqIuFo"
 function ucapan() {
 	const time = moment.tz('Asia/Jakarta').format('HH')
@@ -91,7 +91,7 @@ global.owner = [
 	//  ['6281234288573'],
 	//['12546153210'],
 	//['62895368900456'],
-	['6282331033919', 'need me?', true]
+	['62895368900456', 'Benniismael', true]
 	// [number, dia creator/owner?, dia developer?]
 ] // Put your number here
 global.mods = [] // Want some help?
