@@ -153,7 +153,8 @@ async function expired() {
 				if (Date.now() >= users.expired) {
 					users.premium = false
 					users.expired = 0
-					users.limitjoin = 0
+					users.limitjoinprem = 0
+					users.limitjoinfree = 0
 					conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${nomorown}`, null, {
 						mentions: [nomorown + '@s.whatsapp.net']
 					})
@@ -161,18 +162,18 @@ async function expired() {
 				}
 			}
 			if (users.sewa) {
-				if (users.limitjoin == 0) {
+				if (users.limitjoinprem == 0) {
 					users.sewa = false
-					users.limitjoin = 1
+					users.limitjoinfree = 1
 				}
 			}
 		}
 		for (let id of chat) {
 			if (id.endsWith('g.us')) {
 				var chats = db.data.chats[id]
-				if (chats.groupexpired) {
+				if (chats.grouprental) {
 					if (Date.now() >= chats.expired) {
-						chats.groupexpired = false
+						chats.grouprental = false
 						chats.expired = 0
 						await conn.reply(id, `masa menetap di ${await conn.getName(id)} sudah habis.\nBot sebentar lagi akan keluar.\nterima kasih telah menggunakan bot kami.\nChat owner kami jika ingin menyewa lagi :)\nowner: @${nomorown}`, null, {
 							mentions: [nomorown + '@s.whatsapp.net']

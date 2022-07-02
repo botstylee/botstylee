@@ -277,8 +277,10 @@ export async function handler(chatUpdate) {
 				}
 				if (!('sewa' in user))
 					user.sewa = false
-				if (!isNumber(user.limitjoin))
-					user.limitjoin = 1
+				if (!isNumber(user.limitjoinprem))
+					user.limitjoinprem = 0
+				if (!isNumber(user.limitjoinfree))
+					user.limitjoinfree = 1
 				if (!('pasangan' in user))
 					user.pasangan = ''
 			} else
@@ -388,7 +390,8 @@ export async function handler(chatUpdate) {
 					ayam: 0,
 					premium: false,
 					expired: 0,
-					limitjoin: 0,
+					limitjoinfree: 1,
+					limitjoinprem: 0,
 					sewa: false,
 					pasangan: ''
 				}
