@@ -496,7 +496,7 @@ export async function handler(chatUpdate) {
 		let usedPrefix
 		let _user = db.data && db.data.users && db.data.users[m.sender]
 
-		const groupMetadata = (m.isGroup ? await Connection.store.fetchGroupMetadata(m.chat, this.groupMetadata) : {}) || {}
+		const groupMetadata = (m.isGroup ? await this.groupMetadata(m.chat).catch(_ => null) : {}) || {}
 		const participants = (m.isGroup ? groupMetadata.participants : []) || []
 		const user = (m.isGroup ? participants.find(u => this.decodeJid(u.id) === m.sender) : {}) || {} // User Data
 		const bot = (m.isGroup ? participants.find(u => this.decodeJid(u.id) == this.user.jid) : {}) || {} // Your Data
@@ -504,6 +504,7 @@ export async function handler(chatUpdate) {
 		const isAdmin = isRAdmin || user?.admin == 'admin' || false // Is User Admin?
 		const isBotAdmin = bot?.admin || false // Are you Admin?
 		const enable = db.data.chats[m.chat]
+                const users = db.data.users[m.sender]
 		let stp = m.messageStubType ? WAMessageStubType[m.messageStubType] : ''
 		let settinges = db.data.settings[this.user.jid]
 		if (settinges.restrict && enable.nofirtek && !m.fromMe && m.isGroup && isBotAdmin) {
@@ -838,7 +839,7 @@ export async function participantsUpdate({
 		case 'add':
 		case 'remove':
 			if (chat.welcome) {
-				let groupMetadata = await Connection.store.fetchGroupMetadata(id, this.groupMetadata)
+				let groupMetadata = await this.groupMetadata(id)
 				for (let user of participants) {
 					let pp = './src/avatar_contact.png'
 					try {
