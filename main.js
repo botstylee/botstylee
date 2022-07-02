@@ -35,7 +35,7 @@ import axios from 'axios';
 import former from 'form-data';
 import cheri from 'cheerio';
 import fetch from 'node-fetch';
-import Helper from './lib/helper.js'
+import Helper from './lib/helper.js';
 global.fetch = fetch
 global.fs = fs
 global.axios = axios
@@ -140,10 +140,10 @@ async function _quickTest() {
 }
 async function expired() {
 	return new Promise(async (resolve, reject) => {
-		let user = Object.keys(global.db.data.users)
-		let chat = Object.keys(global.db.data.chats)
+		let user = Object.keys(db.data.users)
+		let chat = Object.keys(db.data.chats)
 		for (let jid of user) {
-			var users = global.db.data.users[jid]
+			var users = db.data.users[jid]
 			var {
 				name,
 				premium,
