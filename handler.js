@@ -186,6 +186,14 @@ export async function handler(chatUpdate) {
 					user.fishingrod = 0
 				if (!isNumber(user.fishingroddurability))
 					user.fishingroddurability = 0
+				if (!isNumber(user.bow))
+ 					user.bow = 0
+   		                if (!isNumber(user.bowdurability))
+ 					user.bowdurability = 0
+   		                if (!isNumber(user.axe))
+					 user.axe = 0
+   		                if (!isNumber(user.axedurability))
+ 					user.axedurability = 0
 
 				if (!isNumber(user.lastclaim))
 					user.lastclaim = 0
@@ -337,6 +345,10 @@ export async function handler(chatUpdate) {
 					pickaxedurability: 0,
 					fishingrod: 0,
 					fishingroddurability: 0,
+					bow: 0,
+        		                bowdurability: 0,
+        		                axe: 0,
+       		                        axedurability: 0,
 
 					lastclaim: 0,
 					lastadventure: 0,
