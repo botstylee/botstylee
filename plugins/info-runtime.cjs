@@ -18,9 +18,9 @@ let handler = async (m, {
 		contextInfo: {
 			externalAdReply: {
 				mediaType: 2,
-				description: 'anu',
+				description: 'BOTSTYLEE',
 				title: bottime,
-				mediaUrl: 'https://youtu.be/jNQXAC9IVRw', 
+				mediaUrl: 'https://youtube.com/channel/UCrNO1yUYW0i3xsJp4NGBh4Q', 
 				body: '𓃗𓅜',
 				thumbnail: profil,
 				sourceUrl: 'https://chat.whatsapp.com/KihEAYjKr04LI4uUrbiiip',
