@@ -6,6 +6,51 @@ const items = {
 		potion: {
 			money: 1250,
 		},
+		gold: {
+			money: 2000
+		},
+		string: {
+			money: 500
+		},
+		rock: {
+			money: 500
+		},
+		wood: {
+			money: 500
+		},
+		iron: {
+			money: 800
+		},
+		potion: {
+			money: 250
+		},
+		diamond: {
+			money: 3000
+		},
+		common: {
+			money: 200
+		},
+		uncommon: {
+			money: 600
+		},
+		mythic: {
+			money: 2500
+		},
+		legendary: {
+			money: 7500
+		},
+		horse: {
+			gold: 200
+		},
+		cat: {
+			gold: 200
+		},
+		fox: {
+			gold: 200
+		},
+		dog: {
+			gold: 200
+		},
 		trash: {
 			money: 4,
 		}
@@ -13,6 +58,39 @@ const items = {
 	sell: {
 		potion: {
 			money: 125,
+		},
+		gold: {
+			money: 1500
+		},
+		string: {
+			money: 250
+		},
+		rock: {
+			money: 250
+		},
+		wood: {
+			money: 250
+		},
+		iron: {
+			money: 500
+		},
+		potion: {
+			money: 100
+		},
+		diamond: {
+			money: 2000
+		},
+		common: {
+			money: 100
+		},
+		uncommon: {
+			money: 400
+		},
+		mythic: {
+			money: 2000
+		},
+		legendary: {
+			money: 5000
 		},
 		trash: {
 			money: 2
