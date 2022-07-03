@@ -3,9 +3,6 @@ const items = {
 		limit: {
 			exp: 1000
 		},
-		potion: {
-			money: 1250,
-		},
 		gold: {
 			money: 2000
 		},

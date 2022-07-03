@@ -1,38 +1,29 @@
 const {
-	spawn
-} = require('child_process');
+	fs
+} = require('fs');
+owo = fs.readFileSync('./src/gambar/l.jpg')
 const {
-	format
-} = require('util');
-
+	webp2png
+} = require('../lib/webp2mp4.cjs');
 let handler = async (m, {
 	conn,
 	usedPrefix,
 	command
 }) => {
-	if (!global.support.convert &&
-		!global.support.magick &&
-		!global.support.gm) return handler.disabled = true // Disable if doesnt support
-	const notStickerMessage = `Reply sticker with command *${usedPrefix + command}*`
-	if (!m.quoted) throw notStickerMessage
-	let q = m.quoted
-	if (/sticker/.test(q.mediaType)) {
-		let sticker = await q.download()
-		if (!sticker) throw sticker
-		let bufs = []
-		const [_spawnprocess, ..._spawnargs] = [...(global.support.gm ? ['gm'] : global.support.magick ? ['magick'] : []), 'convert', 'webp:-', 'png:-']
-		let im = spawn(_spawnprocess, _spawnargs)
-		im.on('error', e => m.reply(format(e)))
-		im.stdout.on('data', chunk => bufs.push(chunk))
-		im.stdin.write(sticker)
-		im.stdin.end()
-		im.on('exit', () => {
-			conn.sendFile(m.chat, Buffer.concat(bufs), 'image.png', author, m)
-		})
-	} else throw notStickerMessage
+  if (!m.quoted) throw `balas stiker dengan caption *${usedPrefix + command}*`
+  let mime = m.quoted.mimetype || ''
+  if (!/webp/.test(mime)) throw `balas stiker dengan caption *${usedPrefix + command}*`
+  let media = await m.quoted.download()
+  let out = owo
+  if (/webp/.test(mime)) {
+    out = await webp2png(media)
+  }
+  await conn.sendFile(m.chat, out, 'out.jpeg', '*kemlar*', m, false, {
+    thumbnail: fs.readFileSync('./src/gambar/l.jpg')
+  })
 }
 handler.help = ['toimg (reply)']
 handler.tags = ['sticker']
-handler.command = /^toimg$/i
+handler.command = ['toimg']
 
 module.exports = handler
