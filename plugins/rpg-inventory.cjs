@@ -62,7 +62,48 @@ const inventory = {
 			'10': 'Netherite Pickaxe',
 			'11': 'Hacker Pickaxe'
 		},
-		fishingrod: true,
+		axe: {
+			'0': '❌',
+			'1': 'Wooden Axe',
+			'2': 'Stone Axe',
+			'3': 'Iron Axe',
+			'4': 'Gold Axe',
+			'5': 'Copper Axe',
+			'6': 'Diamond Axe',
+			'7': 'Emerald Axe',
+			'8': 'Obsidian Axe',
+			'9': 'Netherite Axe',
+			'10': 'Modern War Axe',
+			'11': 'Hacker Axe'
+		},
+		bow: {
+			'0': '❌',
+			'1': 'Wooden Bow',
+			'2': 'Stone Bow',
+			'3': 'Iron Bow',
+			'4': 'Gold Bow',
+			'5': 'Copper Bow',
+			'6': 'Diamond Bow',
+			'7': 'Emerald Bow',
+			'8': 'Obsidian Bow',
+			'9': 'Netherite Bow',
+			'10': 'Quick Blood Bow',
+			'11': 'Hacker Bow'
+		},
+		fishingrod: {
+			'0': '❌',
+			'1': 'Wooden Fising Rod',
+			'2': 'Stone Fising Rod',
+			'3': 'Iron Fising Rod',
+			'4': 'Gold Fising Rod',
+			'5': 'Copper Fising Rod',
+			'6': 'Diamond Fising Rod',
+			'7': 'Emerald Fising Rod',
+			'8': 'Obsidian Fising Rod',
+			'9': 'Netherite Fising Rod',
+			'10': 'Pull Everything Fising Rod',
+			'11': 'Hacker Fising Rod'
+		},
 
 	},
 	crates: {
