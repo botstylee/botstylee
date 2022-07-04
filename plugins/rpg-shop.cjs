@@ -91,6 +91,76 @@ const items = {
 		},
 		trash: {
 			money: 2
+		},
+		/*=========| SELL HASIL BERBURU |==============*/
+	kepiting: {
+			money:20000
+		}, 
+	lobster: {
+			money:20000
+		}, 
+	udang: {
+			money:20000
+		}, 
+	cumi: {
+			money:20000
+		}, 
+	gurita: {
+			money:2000
+		}, 
+	buntal: {
+			money:2000
+		}, 
+	dory: {
+			money:2000
+		}, 
+	orca: {
+			money:2000
+		}, 
+	lumba: {
+			money:2000
+		}, 
+	paus: {
+			money:2000
+		}, 
+	hiu: {
+			money:2000
+		}, 
+	banteng: {
+			money:2000
+		}, 
+	harimau: {
+			money:2000
+		}, 
+	gajah: {
+			money:2000
+		}, 
+	kambing: {
+			money:2000
+		}, 
+	panda: {
+			money:2000
+		}, 
+	buaya: {
+			money:2000
+		}, 
+	kerbau: {
+			money:2000
+		}, 
+	sapi: {
+			money:2000
+		}, 
+	monyet: {
+			money:2000
+		}, 
+	babihutan: {
+			money:2000
+		}, 
+	babi: {
+			money:2000
+		}, 
+	ayam: {
+			money:2000
 		}
 	}
 }

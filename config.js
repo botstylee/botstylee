@@ -145,7 +145,31 @@ global.rpg = {
 			petFood: '🍖',
 			iron: '⛓️',
 			gold: '👑',
-			emerald: '💚'
+			emerald: '💚',
+/*=====| Hasil berburu |========*/
+			kepiting: '🦀',
+			lobster: '🦞',
+			udang: '🦐',
+			cumi: '🦑', 
+			gurita: '🐙', 
+			buntal: '🐡', 
+			dory: '🐠', 
+			orca: '🐟', 
+			lumba: '🐬', 
+			paus: '🐳', 
+			hiu: '🦈', 
+			banteng: '🐂', 
+			harimau: '🐅', 
+			gajah: '🐘', 
+			kambing: '🐐', 
+			panda: '🐼', 
+			buaya: '🐊', 
+			kerbau: '🐃', 
+			sapi: '🐮', 
+			monyet: '🐒', 
+			babihutan: '🐗', 
+			babi: '🐖', 
+			ayam: '🐓'
 		}
 		let results = Object.keys(emot).map(v => [v, new RegExp(v, 'gi')]).filter(v => v[1].test(string))
 		if (!results.length) return ''
