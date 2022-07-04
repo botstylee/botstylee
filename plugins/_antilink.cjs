@@ -18,7 +18,12 @@ handler.before = async function(m, {
 			const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`
 			if (m.text.includes(linkThisGroup)) throw !0
 		}
-		conn.reply(m.chat, 'bang ada yang kirim link grup tuh\n'+listAdmin, m, {mentions: [...groupAdmins.map(v => v.id)]})
+		/*conn.reply(m.chat, 'bang ada yang kirim link grup tuh\n' + listAdmin, m, {
+			mentions: [...groupAdmins.map(v => v.id)]
+		})*/
+		if (isBotAdmin && bot.restrict) {
+			await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+		} else if (!bot.restrict) return m.reply('Owner disable auto kick!')
 	}
 	return !0
 }
