@@ -291,6 +291,8 @@ export async function handler(chatUpdate) {
 					user.lastgojek = 0
                                 if (!isNumber(user.lastdagang))
 					user.lastdagang = 0
+				if (!isNumber(user.lastlumber))
+					user.lastlumber = 0
 				
 				//makanan
 				if (!isNumber(user.ganja))
@@ -600,6 +602,7 @@ export async function handler(chatUpdate) {
 					lastgrab: 0,
                                         lastgojek: 0,
                                         lastdagang: 0,
+					lastlumber: 0,
 					
 					//hasil berburu
 					as: 0,
