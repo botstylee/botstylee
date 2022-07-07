@@ -43,13 +43,64 @@ const items = {
 			gold: 200
 		},
 		fox: {
-			gold: 200
+			gold: 400
+		},
+		wolf: {
+			gold: 650
+		},
+		rhinoceros: {
+			gold: 650
+		},
+		lion: {
+			gold: 650
+		},
+		phonix: {
+			gold: 1000
+		},
+		centaur: {
+			gold: 1000
+		},
+		griffin: {
+			gold: 1000
+		},
+		naga: {
+			gold: 1000
+		},
+		foodPet: {
+			money: 1000
 		},
 		dog: {
 			gold: 200
 		},
 		trash: {
 			money: 4,
+		},
+		seedkangkung: {
+			money: 50
+		},
+		seedwortel: {
+			money: 50
+		},
+		seedtomat: {
+			money: 50
+		},
+		seedbrokoli: {
+			money: 50
+		}, 
+		seedlabu: {
+			money: 50
+		},
+		seedkentang: {
+			money: 50
+		}, 
+		seedjagung: {
+			money: 50
+		},
+		seedbayam: {
+			money: 50
+		},
+		seedkubis: {
+			money: 50
 		}
 	},
 	sell: {
@@ -89,77 +140,104 @@ const items = {
 		legendary: {
 			money: 5000
 		},
+		kangkung: {
+			money: 500
+		},
+		wortel: {
+			money: 500
+		},
+		tomat: {
+			money: 500
+		},
+		brokoli: {
+			money: 500
+		}, 
+		labu: {
+			money: 500
+		},
+		kentang: {
+			money: 500
+		}, 
+		jagung: {
+			money: 500
+		},
+		bayam: {
+			money: 500
+		},
+		kubis: {
+			money: 500
+		},
 		trash: {
 			money: 2
 		},
 		/*=========| SELL HASIL BERBURU |==============*/
-	kepiting: {
+		kepiting: {
 			money:20000
 		}, 
-	lobster: {
+		lobster: {
 			money:20000
 		}, 
-	udang: {
+		udang: {
 			money:20000
 		}, 
-	cumi: {
+		cumi: {
 			money:20000
 		}, 
-	gurita: {
+		gurita: {
 			money:2000
 		}, 
-	buntal: {
+		buntal: {
 			money:2000
 		}, 
-	dory: {
+		dory: {
 			money:2000
 		}, 
-	orca: {
+		orca: {
 			money:2000
 		}, 
-	lumba: {
+		lumba: {
 			money:2000
 		}, 
-	paus: {
+		paus: {
 			money:2000
 		}, 
-	hiu: {
+		hiu: {
 			money:2000
 		}, 
-	banteng: {
+		banteng: {
 			money:2000
 		}, 
-	harimau: {
+		harimau: {
 			money:2000
 		}, 
-	gajah: {
+		gajah: {
 			money:2000
 		}, 
-	kambing: {
+		kambing: {
 			money:2000
 		}, 
-	panda: {
+		panda: {
 			money:2000
 		}, 
-	buaya: {
+		buaya: {
 			money:2000
 		}, 
-	kerbau: {
+		kerbau: {
 			money:2000
 		}, 
-	sapi: {
+		sapi: {
 			money:2000
 		}, 
-	monyet: {
+		monyet: {
 			money:2000
 		}, 
-	babihutan: {
+		babihutan: {
 			money:2000
 		}, 
-	babi: {
+		babi: {
 			money:2000
 		}, 
-	ayam: {
+		ayam: {
 			money:2000
 		}
 	}
