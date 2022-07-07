@@ -280,7 +280,7 @@ ${Object.keys(listItems).map((v) => {
 handler.help = ['buy', 'sell'].map(v => v + ' *item count*')
 handler.tags = ['rpg']
 handler.command = /^(buy|sell)$/i
-
+handler.register = true
 handler.disabled = false
 
 module.exports = handler
