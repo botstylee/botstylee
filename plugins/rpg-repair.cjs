@@ -47,176 +47,239 @@ let handler = async (m, {
     let type = (args[0] || '').toLowerCase()
     let _type = (args[1] || '').toLowerCase()
     let jualbeli = (args[0] || '').toLowerCase()
+    const sections = [{
+					title: "List Featured",
+					rows: [{
+				title: "UPGRADE PICKAXE ⛏️",
+				rowId: ".upgrade pickaxe",
+				description: "Upgrade Pickaxe"
+			},{
+				title: "UPGRADE AXE 🪓",
+				rowId: ".upgrade axe",
+				description: "Upgrade Axe"
+			},{
+				title: "UPGRADE SWORD ⚔️",
+				rowId: ".upgrade sword",
+				description: "Upgrade Sword"
+			},{
+				title: "UPGRADE BOW ⚔️",
+				rowId: ".upgrade bow",
+				description: "Upgrade Bow"
+			},{
+				title: "UPGRADE FISHING ROD 🎣",
+				rowId: ".upgrade fishingrod",
+				description: "Upgrade Fishing Rod"
+			},{
+				title: "UPGRADE ARMOR 🥼",
+				rowId: ".upgrade stick",
+				description: "Craft Stick"
+			},
+		]
+	}, {
+		title: `-------✦ REPAIR ✦-------`,
+		rows: [{
+				title: "REPAIR PICKAXE ⛏️",
+				rowId: ".repair pickaxe",
+				description: "Repair Pickaxe"
+			},{
+				title: "REPAIR AXE 🪓",
+				rowId: ".repair axe",
+				description: "Repair Axe"
+			},{
+				title: "REPAIR SWORD ⚔️",
+				rowId: ".repair sword",
+				description: "Repair Sword"
+			},{
+				title: "REPAIR BOW ⚔️",
+				rowId: ".repair bow",
+				description: "Repair Bow"
+			},{
+				title: "REPAIR FISHING ROD 🎣",
+				rowId: ".repair fishingrod",
+				description: "Repair Fishing Rod"
+			}
+					]
+				}]
     const list = `
-*🎒 REPAIR*
-╭───────────
-│┏━━━━━━━━━━━━━━━━
-│┃ *🔨 Upgrade & Repair | 💲 Harga*
-│┗━━━━━━━━━━━━━━━━
-│⬡ *◪ Upgrade ⏫*
-│
-│⬡ *🥼 Armor:* ${uparmor} 💎 ${_armor == 0 ? '(Belum memiliki)' : _armor == 5 ? '( *Level max* )' : ''}
-│
-│⬡ *🎣 Fishingrod:* ${upfishingrod} 💎
-│⬡  *Durability:* ${durfishingrod} ${_fishingrod == 0 ? '(Belum memiliki)' : _fishingrod == 5 ? '( *Level max* )' : ''}
-│
-│⬡ *⛏️ Pickaxe:* ${uppickaxe} 💎
-│⬡  *Durability:* ${durpickaxe} ${_pickaxe == 0 ? '(Belum memiliki)' : _pickaxe == 5 ? '( *Level max* )' : ''}
-│
-│⬡ *🗡️ Sword:* ${upsword} 💎
-│⬡  *Durability:* ${dursword} ${_sword == 0 ? '(Belum memiliki)' : _sword == 5 ? '( *Level max* )' : ''}
-│
-│⬡ *🏹 Bow:* ${upbow} 💎
-│⬡  *Durability:* ${durbow} ${_bow == 0 ? '(Belum memiliki)' : _bow == 5 ? '( *Level max* )' : ''}
-╰───────────
-╭───────────
-│┏━━━━━━━━━━━━
-│┃*◪ Repair 🔨*
-│┗━━━━━━━━━━━━
-│⬡ *🎣 Fishingrod:* ${refishingrod} 💹 ${_fishingrod == 0 ? '(Belum memiliki)' : _fishingrod == 5 ? '( *Level max* )' : ''}
-│⬡  + ${drefishingrod} Durability 
-│
-│⬡ *⛏️ Pickaxe:* ${repickaxe} 💹 ${_pickaxe == 0 ? '(Belum memiliki)' : _pickaxe == 5 ? '( *Level max* )' : ''}
-│⬡  + ${drepickaxe} Durability
-│
-│⬡ *🗡️ Sword:* ${resword} 💹 ${_sword == 0 ? '(Belum memiliki)' : _sword == 5 ? '( *Level max* )' : ''}
-│⬡  + ${dresword} Durability
-│
-│⬡ *🗡️ bow:* ${rebow} 💹 ${_bow == 0 ? '(Belum memiliki)' : _bow == 5 ? '( *Level max* )' : ''}
-│⬡  + ${drebow} Durability
-╰───────────
+▧ *🥼 Armor:* ${uparmor} 💎 ${_armor == 0 ? '(Belum memiliki)' : _armor == 12 ? '( *Level max* )' : ''}
+▧ *🎣 Fishingrod:* ${upfishingrod} 💎
+〉  *Durability:* ${durfishingrod} ${_fishingrod == 0 ? '(Belum memiliki)' : _fishingrod == 12 ? '( *Level max* )' : ''}
+▧ *⛏️ Pickaxe:* ${uppickaxe} 💎
+〉  *Durability:* ${durpickaxe} ${_pickaxe == 0 ? '(Belum memiliki)' : _pickaxe == 12 ? '( *Level max* )' : ''}
+▧ *🪓Axe:* ${upaxe} 💎
+〉  *Durability:* ${duraxe} ${_axe == 0 ? '(Belum memiliki)' : _axe == 12 ? '( *Level max* )' : ''}
+▧ *🗡️ Sword:* ${upsword} 💎
+〉  *Durability:* ${dursword} ${_sword == 0 ? '(Belum memiliki)' : _sword == 12 ? '( *Level max* )' : ''}
+▧ *🏹 Bow:* ${upbow} 💎
+〉  *Durability:* ${durbow} ${_bow == 0 ? '(Belum memiliki)' : _bow == 12 ? '( *Level max* )' : ''}
+
+
+「 *R E P A I R* 」
+
+▧ *🎣 Fishingrod:* ${refishingrod} 💹 ${_fishingrod == 0 ? '(Belum memiliki)' : _fishingrod == 12 ? '( *Level max* )' : ''}
+〉  + ${drefishingrod} Durability 
+▧ *⛏️ Pickaxe:* ${repickaxe} 💹 ${_pickaxe == 0 ? '(Belum memiliki)' : _pickaxe == 12 ? '( *Level max* )' : ''}
+〉  + ${drepickaxe} Durability
+▧ *🪓 axe:* ${reaxe} 💹 ${_axe == 0 ? '(Belum memiliki)' : _axe == 12 ? '( *Level max* )' : ''}
+〉  + ${dreaxe} Durability
+▧ *🗡️ Sword:* ${resword} 💹 ${_sword == 0 ? '(Belum memiliki)' : _sword == 12 ? '( *Level max* )' : ''}
+〉  + ${dresword} Durability
+▧ *🏹 bow:* ${rebow} 💹 ${_bow == 0 ? '(Belum memiliki)' : _bow == 12 ? '( *Level max* )' : ''}
+〉  + ${drebow} Durability
 `.trim()
     //try {
     if (/repair/i.test(command)) {
       const count = args[1] && args[1].length > 0 ? Math.min(99999999, Math.max(parseInt(args[1]), 1)) : !args[1] || args.length < 3 ? 1 : Math.min(1, count)
         switch (type) {
           case 'fishingrod':
-                            if (user.fishingroddurability == 80) return conn.reply(m.chat, 'your fishingrod not have damage', m)
-                            if (user.fishingrod == 0) return conn.reply(m.chat, 'You don't have fishingrod', m)
+                            if (user.fishingroddurability == 80) return conn.reply(m.chat, 'fishingrodan mu belum ada kerusakan', m)
+                            if (user.fishingrod == 0) return conn.reply(m.chat, 'Kamu belum mempunyai fishingrodan', m)
                             if (user.diamond > refishingrod) {
                                 user.fishingrod += 1
                                 user.diamond -= refishingrod * 1
                                 user.fishingroddurability += drefishingrod
-                                conn.reply(m.chat, `✔️ Success repair Fishingrod 🎣  worth ${refishingrod} Diamond 💎\n➕ ${drefishingrod} Durability` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Repair Fishingrod 🎣  worth ${refishingrod} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengrepair Fishingrod 🎣  Seharga ${refishingrod} Diamond 💎\n➕ ${drefishingrod} Durability` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Merepair Fishingrod 🎣  Seharga ${refishingrod} Diamond 💎`, m)
                         break
                         case 'bow':
-                            if (user.bowdurability == 80) return conn.reply(m.chat, 'Your bow mu not have damage', m)
-                            if (user.bow == 0) return conn.reply(m.chat, 'You don't have bow', m)
+                            if (user.bowdurability == 80) return conn.reply(m.chat, 'bowan mu belum ada kerusakan', m)
+                            if (user.bow == 0) return conn.reply(m.chat, 'Kamu belum mempunyai bowan', m)
                             if (user.diamond > rebow) {
                                 user.bow += 1
                                 user.diamond -= rebow * 1
                                 user.bowdurability += drebow
-                                conn.reply(m.chat, `✔️ Success repair bow 🏹  worth ${rebow} Diamond 💎\n➕ ${drebow} Durability` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Repair bow 🏹  worth ${rebow} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengrepair bow 🏹  Seharga ${rebow} Diamond 💎\n➕ ${drebow} Durability` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Merepair bow 🏹  Seharga ${rebow} Diamond 💎`, m)
                         break
                         case 'armor':
-                            if (user.armordurability == 80) return conn.reply(m.chat, 'your armor not have damage', m)
-                            if (user.armor == 0) return conn.reply(m.chat, 'You don't have armor', m)
+                            if (user.armordurability == 80) return conn.reply(m.chat, 'armoran mu belum ada kerusakan', m)
+                            if (user.armor == 0) return conn.reply(m.chat, 'Kamu belum mempunyai armoran', m)
                             if (user.diamond > rearmor) {
                                 user.armor += 1
                                 user.diamond -= rearmor * 1
                                 user.armordurability += drearmor
-                                conn.reply(m.chat, `✔️ Success repair armor 🥼  worth ${rearmor} Diamond 💎\n➕ ${drearmor} Durability` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Repair armor 🥼  worth ${rearmor} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengrepair armor 🥼  Seharga ${rearmor} Diamond 💎\n➕ ${drearmor} Durability` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Merepair armor 🥼  Seharga ${rearmor} Diamond 💎`, m)
                         break
                         case 'pickaxe':
-                            if (user.pickaxedurability == 80) return conn.reply(m.chat, 'Your pickaxe not have damage', m)
-                            if (user.pickaxe == 0) return conn.reply(m.chat, 'You don't have Pickaxe', m)
+                            if (user.pickaxedurability == 80) return conn.reply(m.chat, 'Pickaxe mu belum ada kerusakan', m)
+                            if (user.pickaxe == 0) return conn.reply(m.chat, 'Kamu belum mempunyai Pickaxe', m)
                             if (user.diamond > repickaxe) {
                                 user.pickaxe += 1
                                 user.diamond -= repickaxe * 1
                                 user.pickaxedurability += drepickaxe
-                                conn.reply(m.chat, `✔️ Success repair Pickaxe ⛏️ worth ${repickaxe} Diamond 💎\n➕ ${drepickaxe} Durability` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Repair Pickaxe ⛏️  worth ${repickaxe} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengrepair Pickaxe ⛏️ Seharga ${repickaxe} Diamond 💎\n➕ ${drepickaxe} Durability` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Merepair Pickaxe ⛏️  Seharga ${repickaxe} Diamond 💎`, m)
+                        break
+						case 'axe':
+                            if (user.axedurability == 80) return conn.reply(m.chat, 'axe mu belum ada kerusakan', m)
+                            if (user.axe == 0) return conn.reply(m.chat, 'Kamu belum mempunyai axe', m)
+                            if (user.diamond > reaxe) {
+                                user.axe += 1
+                                user.diamond -= reaxe * 1
+                                user.axedurability += dreaxe
+                                conn.reply(m.chat, `✔️ Sukses Mengrepair axe 🪓 Seharga ${reaxe} Diamond 💎\n➕ ${dreaxe} Durability` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Merepair axe 🪓  Seharga ${reaxe} Diamond 💎`, m)
                         break
                             case 'sword':
-                            if (user.sworddurability == 80) return conn.reply(m.chat, 'Your sword not have damage', m)
-                            if (user.sword == 0) return conn.reply(m.chat, 'You don't have Sword', m)
+                            if (user.sworddurability == 80) return conn.reply(m.chat, 'Sword mu belum ada kerusakan', m)
+                            if (user.sword == 0) return conn.reply(m.chat, 'Kamu belum mempunyai Sword', m)
                             if (user.diamond > resword) {
                                 user.sword += 1
                                 user.diamond -= resword * 1
                                 user.sworddurability += dresword
-                                conn.reply(m.chat, `✔️ Success repair Sword 🗡️ worth ${resword} Diamond 💎\n➕ ${dresword} Durability` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Repair Sword 🗡️  worth ${resword} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengrepair Sword 🗡️ Seharga ${resword} Diamond 💎\n➕ ${dresword} Durability` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Merepair Sword 🗡️  Seharga ${resword} Diamond 💎`, m)
                         break
-          default:
-          return conn.reply(m.chat, list,m)
+                        default:
+                        await conn.sendMessage(m.chat, {
+				text: list,
+				footer: author,
+				title: '「 *U P G R A D E* 」',
+				buttonText: "R E P A I R",
+				sections
+			})
         }
     } else if (/upgrade/i.test(command)) {
       const count = args[2] && args[2].length > 0 ? Math.min(99999999, Math.max(parseInt(args[2]), 1)) : !args[2] || args.length < 4 ? 1 :Math.min(1, count)
       switch (_type) {
         case 'armor':
-                            if (user.armor == 5) return conn.reply(m.chat, 'Your armor already *Level Max*', m)
-                            if (user.armor == 0) return conn.reply(m.chat, 'You don't have Armor', m)
+                            if (user.armor == 5) return conn.reply(m.chat, 'Armormu sudah *Level Max*', m)
+                            if (user.armor == 0) return conn.reply(m.chat, 'Kamu belum mempunyai Armor', m)
                             if (user.diamond > uparmor) {
                                 user.armor += 1
                                 user.diamond -= uparmor * 1
-                                conn.reply(m.chat, `✔️ Sukses upgrade Armor 🥼 worth ${uparmor} Money` ,m)
-                            } else conn.reply(m.chat, `Uang Mu Tidak Cukup Untuk upgrade Armor 🥼 worth ${uparmor} Money 💹`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade Armor 🥼 Seharga ${uparmor} Money` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade Armor 🥼 Seharga ${uparmor} Diamond 💎`, m)
                         break
                         case 'fishingrod':
-                            if (user.fishingrod == 4) return conn.reply(m.chat, 'Your fishingrod already *Level Max*', m)
-                            if (user.fishingrod == 0) return conn.reply(m.chat, 'You don't have fishingrod', m)
+                            if (user.fishingrod == 4) return conn.reply(m.chat, 'fishingrodan mu udah *Level Max*', m)
+                            if (user.fishingrod == 0) return conn.reply(m.chat, 'Kamu belum mempunyai fishingrodan', m)
                             if (user.diamond > upfishingrod) {
                                 user.fishingrod += 1
                                 user.diamond -= upfishingrod * 1
                                 user.fishingroddurability = durfishingrod
-                                conn.reply(m.chat, `✔️ Sukses upgrade Fishingrod 🎣  worth ${upfishingrod} Diamond 💎` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Upgrade Fishingrod 🎣  worth ${upfishingrod} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade Fishingrod 🎣  Seharga ${upfishingrod} Diamond 💎` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade Fishingrod 🎣  Seharga ${upfishingrod} Diamond 💎`, m)
                         break
                         case 'armor':
-                            if (user.armor == 4) return conn.reply(m.chat, 'Your armor already *Level Max*', m)
-                            if (user.armor == 0) return conn.reply(m.chat, 'You don't have armor', m)
+                            if (user.armor == 4) return conn.reply(m.chat, 'armoran mu udah *Level Max*', m)
+                            if (user.armor == 0) return conn.reply(m.chat, 'Kamu belum mempunyai armoran', m)
                             if (user.diamond > uparmor) {
                                 user.armor += 1
                                 user.diamond -= uparmor * 1
                                 user.armordurability = durarmor
-                                conn.reply(m.chat, `✔️ Sukses upgrade armor 🥼  worth ${uparmor} Diamond 💎` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Upgrade armor 🥼  worth ${uparmor} Diamond 💎`, m)
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade armor 🥼  Seharga ${uparmor} Diamond 💎` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade armor 🥼  Seharga ${uparmor} Diamond 💎`, m)
                         break
                         case 'bow':
-                            if (user.bow == 4) return conn.reply(m.chat, 'Your bow already *Level Max*', m)
-                            if (user.bow == 0) return conn.reply(m.chat, 'You don't have bowan', m)
+                            if (user.bow == 4) return conn.reply(m.chat, 'bowan mu udah *Level Max*', m)
+                            if (user.bow == 0) return conn.reply(m.chat, 'Kamu belum mempunyai bowan', m)
                             if (user.diamond > upbow) {
                                 user.bow += 1
                                 user.diamond -= upbow * 1
                                 user.bowdurability = durbow
-                                conn.reply(m.chat, `✔️ Sukses upgrade bow 🏹  worth ${upbow} Diamond 💎` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Upgrade bow 🏹  worth ${upbow} Diamond 💎`, m)
-                        
-                        break
-                        
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade bow 🏹  Seharga ${upbow} Diamond 💎` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade bow 🏹  Seharga ${upbow} Diamond 💎`, m)
+                         break
                             case 'sword':
-                            if (user.sword == 5) return conn.reply(m.chat, 'Your word already *Level Max*', m)
-                            if (user.sword == 0) return conn.reply(m.chat, 'You don't have Sword', m)
+                            if (user.sword == 5) return conn.reply(m.chat, 'Sword mu udah *Level Max*', m)
+                            if (user.sword == 0) return conn.reply(m.chat, 'Kamu belum mempunyai Sword', m)
                             if (user.diamond > upsword) {
                                 user.sword += 1
                                 user.diamond -= upsword * 1
                                 user.sworddurability = dursword
-                                conn.reply(m.chat, `✔️ Sukses upgrade Sword 🗡️ worth ${upsword} Diamond 💎` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Upgrade Sword 🗡️ worth ${upsword} Diamond 💎`, m)
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade Sword 🗡️ Seharga ${upsword} Diamond 💎` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade Sword 🗡️ Seharga ${upsword} Diamond 💎`, m)
                             break
                             case 'pickaxe':
-                            if (user.pickaxe == 5) return conn.reply(m.chat, 'Your pickaxe already *Level Max*', m)
-                            if (user.pickaxe == 0) return conn.reply(m.chat, 'You don't have Pickaxe', m)
+                            if (user.pickaxe == 5) return conn.reply(m.chat, 'Pickaxe mu udah *Level Max*', m)
+                            if (user.pickaxe == 0) return conn.reply(m.chat, 'Kamu belum mempunyai Pickaxe', m)
                             if (user.diamond > uppickaxe) {
                                 user.pickaxe += 1
                                 user.diamond -= uppickaxe * 1
                                 user.pickaxedurability = durpickaxe
-                                conn.reply(m.chat, `✔️ Sukses upgrade Pickaxe ⛏️ worth ${uppickaxe} Diamond 💎` ,m)
-                            } else conn.reply(m.chat, `Your Diamonds Are Not Enough To Upgrade Pickaxe ⛏️  worth ${uppickaxe} Diamond 💎`, m)
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade Pickaxe ⛏️ Seharga ${uppickaxe} Diamond 💎` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade Pickaxe ⛏️  Seharga ${uppickaxe} Diamond 💎`, m)
+                            break
+                            case 'axe':
+                            if (user.axe == 5) return conn.reply(m.chat, 'axe mu udah *Level Max*', m)
+                            if (user.axe == 0) return conn.reply(m.chat, 'Kamu belum mempunyai axe', m)
+                            if (user.diamond > upaxe) {
+                                user.axe += 1
+                                user.diamond -= upaxe * 1
+                                user.axedurability = duraxe
+                                conn.reply(m.chat, `✔️ Sukses Mengupgrade axe 🪓 Seharga ${upaxe} Diamond 💎` ,m)
+                            } else conn.reply(m.chat, `Diamond Mu Tidak Cukup Untuk Mengupgrade axe 🪓  Seharga ${upaxe} Diamond 💎`, m)
                             break
                             default:
-                           return conn.reply(m.chat, list,m)
+                             await conn.sendMessage(m.chat, {
+				text: list,
+				footer: author,
+				title: '「 *U P G R A D E* 」',
+				buttonText: "R E P A I R",
+				sections
+			})
          }
                             
         console.log(e)
@@ -230,7 +293,7 @@ let handler = async (m, {
 
 handler.help = ['repair','upgrade']
 handler.tags = ['rpg']
-    
+handler.register = true
 handler.command = /^(up|upgrade|repair)$/i
 module.exports = handler
 
