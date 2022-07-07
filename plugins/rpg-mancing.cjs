@@ -1,11 +1,16 @@
 let handler = async (m, {
-	conn
+	conn,
+	usedPrefix
 }) => {
-	let __timers = (new Date - db.data.users[m.sender].as)
+	let __timers = (new Date - db.data.users[m.sender].lastfishing)
 	let _timers = (500000 - __timers)
 	let timers = clockString(_timers)
 	let user = db.data.users[m.sender]
-	if (new Date - db.data.users[m.sender].as > 500000) {
+	if (user.fishingrod < 1) return m.reply('*Kamu tidak memiliki fishingrod*\n*Silahkan membeli fishingrod si shop dengan mengetik _${usedPrefix}buy fishingrod_ atau _${usedPrefix}craft fishingrod_ agar kamu bisa mancing*')
+    if (user.fishingroddurability < 5) return m.reply('Durability fishingrod anda kurang\nSilahkan repair fishingrod agar bisa mancing dengan menggunakan command _${usedPrefix}repair fishingrod_')
+    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _#eat_')
+    if (user.stamina < 10) return m.reply('Sepertinya stamina anda kurang untuk memancing\nSilahkan isi stamina dengan cara ${usedPrefix}eat')
+	if (new Date - db.data.users[m.sender].lastfishing > 500000) {
 		let randomaku1 = `${Math.floor(Math.random() * 10)}`
 		let randomaku2 = `${Math.floor(Math.random() * 10)}`
 		let randomaku4 = `${Math.floor(Math.random() * 10)}`
@@ -49,13 +54,14 @@ let handler = async (m, {
 		hsl = `
 *《 Hasil Memancing Kali Ini 》*
 
- *🦀 = [ ${wuis1} ]*			*🐠 = [ ${wuis7} ]*
+ *🦀 = [ ${wuis1} ]*		 	*🐠 = [ ${wuis7} ]*
  *🦞 = [ ${wuis2} ]*			 *🐟 = [ ${wuis8} ]*
  *🦐 = [ ${wuis3} ]*			 *🐬 = [ ${wuis9} ]*
  *🦑 = [ ${wuis4} ]*			 *🐳 = [ ${wuis10} ]*
  *🐙 = [ ${wuis5} ]*			 *🦈 = [ ${wuis11} ]*
- *🐡 = [ ${wuis6} ]*			*🐋 = [${wuis12} ]*
+ *🐡 = [ ${wuis6} ]*		 	*🐋 = [${wuis12} ]*
 
+Stamina anda berkurang -20
 `
 		db.data.users[m.sender].paus += rbrb1
 		db.data.users[m.sender].kepiting += rbrb2
@@ -69,6 +75,7 @@ let handler = async (m, {
 		db.data.users[m.sender].udang += rbrb10
 		db.data.users[m.sender].ikan += rbrb11
 		db.data.users[m.sender].orca += rbrb12
+		db.data.users[m.sender].stamina -=20
 
 		setTimeout(() => {
 			m.reply(`${hsl}`)
@@ -89,7 +96,9 @@ let handler = async (m, {
 		setTimeout(() => {
 			m.reply('OTW tengah laut')
 		}, 0)
-		user.as = new Date * 1
+		user.lastfishing = new Date * 1
+		user.fishingroddurability -= 5
+		user.stamina -= 10
 	} else conn.sendButton(m.chat, `\n*Sepertinya Anda Sudah Kecapekan*\n*Silahkan Istirahat Dulu sekitar ${timers}*\n*Untuk bisa melanjutkan Memancing*\n`, author, null, [
 		['Kolam', 'kolam']
 	], m)
@@ -97,7 +106,7 @@ let handler = async (m, {
 handler.help = ['mancing']
 handler.tags = ['berburu']
 handler.command = /^(mancing)$/i
-
+handler.register = true
 module.exports = handler
 
 function clockString(ms) {
