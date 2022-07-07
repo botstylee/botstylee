@@ -285,6 +285,12 @@ export async function handler(chatUpdate) {
 					user.lastmonthly = 0
 				if (!isNumber(user.lastbunga))
 					user.lastbunga = 0
+				if (!isNumber(user.lastgrab))
+					user.lastgrab = 0
+				if (!isNumber(user.lastgojek))
+					user.lastgojek = 0
+                                if (!isNumber(user.lastdagang))
+					user.lastdagang = 0
 				
 				//makanan
 				if (!isNumber(user.ganja))
@@ -591,6 +597,9 @@ export async function handler(chatUpdate) {
 					lastweekly: 0,
 					lastmonthly: 0,
 					lastbunga: 0,
+					lastgrab: 0,
+                                        lastgojek: 0,
+                                        lastdagang: 0,
 					
 					//hasil berburu
 					as: 0,
