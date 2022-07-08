@@ -4,9 +4,7 @@ let handler = async (m, {
 	usedPrefix, 
 	command 
 }) => {
-    let type = (args[0] 
-▧
-▧ '').toLowerCase()
+    let type = (args[0] || '').toLowerCase()
     let wm = global.wm
 	let linkgc = global.gc
 	let pp = global.thumb
