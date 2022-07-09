@@ -1,10 +1,11 @@
 let handler = async (m, { 
 conn 
 }) => {
+    let user = db.data.users[m.sender]
+    let wm = global.wm
     let __timers = (new Date - user.lastgrab)
     let _timers = (10800000 - __timers)
     let timers = clockString(_timers) 
-    let user = db.data.users[m.sender]
     
     if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _#eat_')
     if (user.lastgrab > 10800000) throw m.reply('Kamu masih kelelahan untuk bekerja\nHarap tunggu ${timers} lagi untuk kerja taxy')
