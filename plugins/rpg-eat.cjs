@@ -10,24 +10,25 @@ let handler = async (m, {
     let _type = (args[1] || '').toLowerCase()
     let jualbeli = (args[0] || '').toLowerCase()
     const list = `
-╭──『 ғᴏᴏᴅ 』
-│⬡typing command↓
-│   ${usedPrefix + command } rendang
-│
-│⬡ 🍖 *Ayambakar*
-│⬡ 🍗 *Ayamgoreng*
-│⬡ 🥘 *Rendang*
-│⬡ 🥩 *Steak*
-│⬡ 🥠 *Babipanggang*
-│⬡ 🍲 *Gulaiayam*
-│⬡ 🍜 *Oporayam*
-│⬡ 🍷 *Vodka*
-│⬡ 🍣 *Sushi*
-│⬡ 💉 *Bandage*
-│⬡ ☘️ *Ganja*
-│⬡ 🍺 *Soda*
-│⬡  🍞 *Roti*
-╰───────────────
+▧ 🍖 *Ayambakar*
+▧ 🍗 *Ayamgoreng*
+▧ 🥘 *Rendang*
+▧ 🥩 *Steak*
+▧ 🥠 *Babipanggang*
+▧ 🍲 *Gulaiayam*
+▧ 🍜 *Oporayam*
+▧ 🍷 *Vodka*
+▧ 🍣 *Sushi*
+▧ 💉 *Bandage*
+▧ ☘️ *Ganja*
+▧ 🍺 *Soda*
+▧ 🍞 *Roti*
+▧ 🥗 *Gado Gado*
+▧ 🌽 *Jagung Bakar*
+▧ 🍟 *Kentang Goreng*
+▧ 🥣 *Sup Labu*
+▧ 🥗 *Tumis Kangkung* 
+▧ 🍿 *Pop Corn*
 `.trim()
     //try {
     if (/makan|eat/i.test(command)) {
@@ -141,7 +142,6 @@ let handler = async (m, {
                             } else conn.reply(m.chat, ` Sushi kamu kurang` ,m)
         } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
         break
-        break
         case 'roti':
         if (user.stamina < 100) {
         	if (user.roti >= count * 1) {
@@ -149,6 +149,60 @@ let handler = async (m, {
                             user.stamina += 20 * count
                             conn.reply(m.chat, `Nyam nyam`, m)
                             } else conn.reply(m.chat, ` Roti kamu kurang` ,m)
+        } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
+        break
+	case 'gadogado':
+        if (user.stamina < 100) {
+        	if (user.gadogado >= count * 1) {
+                            user.gadogado -= count * 1
+                            user.stamina += 50 * count
+                            conn.reply(m.chat, `Nyam nyam`, m)
+                            } else conn.reply(m.chat, ` gadogado kamu kurang` ,m)
+        } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
+        break
+        case 'jagungbakar':
+        if (user.stamina < 100) {
+        	if (user.jagungbakar >= count * 1) {
+                            user.jagungbakar -= count * 1
+                            user.stamina += 20 * count
+                            conn.reply(m.chat, `Nyam nyam`, m)
+                            } else conn.reply(m.chat, ` jagungbakar kamu kurang` ,m)
+        } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
+        break
+        case 'kentanggoreng':
+        if (user.stamina < 100) {
+        	if (user.kentanggoreng >= count * 1) {
+                            user.kentanggoreng -= count * 1
+                            user.stamina += 20 * count
+                            conn.reply(m.chat, `Nyam nyam`, m)
+                            } else conn.reply(m.chat, ` kentanggoreng kamu kurang` ,m)
+        } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
+        break
+        case 'suplabu':
+        if (user.stamina < 100) {
+        	if (user.suplabu >= count * 1) {
+                            user.suplabu -= count * 1
+                            user.stamina += 20 * count
+                            conn.reply(m.chat, `Nyam nyam`, m)
+                            } else conn.reply(m.chat, ` suplabu kamu kurang` ,m)
+        } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
+        break
+        case 'tumiskangkung':
+        if (user.stamina < 100) {
+        	if (user.tumiskangkung >= count * 1) {
+                            user.tumiskangkung -= count * 1
+                            user.stamina += 20 * count
+                            conn.reply(m.chat, `Nyam nyam`, m)
+                            } else conn.reply(m.chat, ` tumiskangkung kamu kurang` ,m)
+        } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
+        break
+        case 'popcorn':
+        if (user.stamina < 100) {
+        	if (user.popcorn >= count * 1) {
+                            user.popcorn -= count * 1
+                            user.stamina += 20 * count
+                            conn.reply(m.chat, `Nyam nyam`, m)
+                            } else conn.reply(m.chat, ` popcorn kamu kurang` ,m)
         } else conn.reply( m.chat, `Stamina kamu sudah penuh`, m)
         break
           default:
@@ -211,6 +265,30 @@ let handler = async (m, {
 				title: "Vodka 🍷",
 				rowId: ".eat vodka",
 				description: "Meminum Vodka +25 Stamina"
+			},{
+				title: "Gado Gado🥗",
+				rowId: ".eat gadogado",
+				description: "Memakan Gado Gado +50 Stamina"
+			},{
+				title: "Kentang Goreng🍟",
+				rowId: ".eat kentanggoreng",
+				description: "Memakan Kentang Goreng +20 Stamina"
+			},{
+				title: "Pop Corn🍿",
+				rowId: ".eat popcorn",
+				description: "Memakan Pop Corn +20 Stamina"
+			},{
+				title: "Sup Labu 🥣",
+				rowId: ".eat suplabu",
+				description: "Memakan Sup Labu +20 Stamina"
+			},{
+				title: "Jagung Bakar🌽",
+				rowId: ".eat jagungbakar",
+				description: "Memakan Jagung Bakar +20 Stamina"
+			},{
+				title: "Tumis Kangkung 🥗",
+				rowId: ".eat tumiskangkung",
+				description: "Memakan Tumis Kangkung +20 Stamina"
 			}
 					]
 				}]
