@@ -6,9 +6,8 @@ let handler = async (m, {
 	let _timers = (500000 - __timers)
 	let timers = clockString(_timers)
 	let user = db.data.users[m.sender]
-	if (user.fishingrod < 1) return m.reply('*Kamu tidak memiliki fishingrod*\n*Silahkan membeli fishingrod si shop dengan mengetik _${usedPrefix}buy fishingrod_ atau _${usedPrefix}craft fishingrod_ agar kamu bisa mancing*')
+	if (user.fishingrod < 1) return m.reply('*Kamu tidak memiliki fishingrod*\n*Silahkan membeli fishingrod si shop dengan mengetik atau _${usedPrefix}craft fishingrod_ agar kamu bisa mancing*')
     if (user.fishingroddurability < 5) return m.reply('Durability fishingrod anda kurang\nSilahkan repair fishingrod agar bisa mancing dengan menggunakan command _${usedPrefix}repair fishingrod_')
-    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _#eat_')
     if (user.stamina < 10) return m.reply('Sepertinya stamina anda kurang untuk memancing\nSilahkan isi stamina dengan cara ${usedPrefix}eat')
 	if (new Date - db.data.users[m.sender].lastfishing > 500000) {
 		let randomaku1 = `${Math.floor(Math.random() * 10)}`
