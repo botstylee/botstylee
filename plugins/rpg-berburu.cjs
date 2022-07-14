@@ -7,8 +7,8 @@ let handler = async (m, {
     let _timers = (500000 - __timers)
     let timers = clockString(_timers) 
      
-    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _${usedPrefix}eat_')
-    if (user.sword < 1) return m.reply('*Kamu tidak memiliki sword*\n*Silahkan membeli sword si shop dengan mengetik _${usedPrefix}buy sword_ atau _${usedPrefix}craft sword_ agar kamu bisa berburu*')
+    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk berburu\nharap isi stamina anda dengan _${usedPrefix}eat_')
+    if (user.sword < 1) return m.reply('*Kamu tidak memiliki sword*\n*Silahkan membeli sword si shop dengan mengetik _${usedPrefix}craft sword_ agar kamu bisa berburu*')
     if (user.sworddurability < 10) return m.reply('Durability sword anda kurang\nSilahkam repair sword agar bisa berburu dengan menggunakan command _${usedPrefix}repair sword_')
     if (user.lasthunt > 500000) throw m.reply('Kamu masih kelelahan untuk berburu\nHarap tunggu ${timers} lagi untuk berburu')
 	
@@ -106,10 +106,9 @@ user.stamina -= 20
   
 }
 handler.help = ['berburu']
-handler.tags = ['rpg']
+handler.tags = ['berburu']
 handler.command = /^(berburu)$/i
 handler.register = true
-let wm = global.botwm
 module.exports = handler
 function clockString(ms) {
   let h = Math.floor(ms / 3600000)

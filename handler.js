@@ -124,6 +124,20 @@ export async function handler(chatUpdate) {
 				if (!isNumber(user.petFood))
 					user.petFood = 0
 				
+				//building
+				if (!isNumber(user.fortress))
+					user.fortress = 0
+				if (!isNumber(user.house))
+					user.house = 0
+				if (!isNumber(user.kastel))
+					user.kastel = 0
+				if (!isNumber(user.peternakan))
+					user.peternakan = 0
+				if (!isNumber(user.perkebunan))
+					user.perkebunan = 0
+				if (!isNumber(user.pertambangan))
+					user.pertambangan = 0
+				
 				//SDA
 				if (!isNumber(user.emerald))
 					user.emerald = 0
@@ -316,7 +330,7 @@ export async function handler(chatUpdate) {
 				if (!isNumber(user.jagungbakar))
 					user.jagungbakar = 0
 				if (!isNumber(user.gadodado))
-					user.gadodado = 0
+					user.gadogado = 0
 				if (!isNumber(user.sop))
 					user.sop = 0
 				if (!isNumber(user.gulai))
@@ -476,6 +490,14 @@ export async function handler(chatUpdate) {
 					stick: 0,
 					string: 0,
 					
+					//building
+					fortress: 0,
+					kastel: 0,
+					house: 0,
+					peternakan: 0,
+					perkebunan: 0,
+					pertambangan: 0,
+					
 					//makanan
 					gulai: 0,
 					rendang: 0,
@@ -484,7 +506,7 @@ export async function handler(chatUpdate) {
 					pepesikan: 0,
 					babipanggang: 0,
 					sop: 0,
-					gadodado: 0,
+					gadogado: 0,
 					jagungbakar: 0,
 					kentanggoreng: 0,
 					suplabu: 0,

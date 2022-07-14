@@ -34,6 +34,7 @@ global.botdate = `⫹⫺ 𝗗𝗮𝘁𝗲: ${week} ${date}\n⫹⫺ 𝗧𝗶𝗺�
 global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${wktuwib}`
 global.work = `*Sᴜᴄᴄᴇꜱꜱ Fᴇᴛᴄʜɪɴɢ Dᴀᴛᴀ*\n*Sᴇɴᴅɪɴɢ Fɪʟᴇ...*`
 global.error = `*Cᴀɴ\'ᴛ Fᴇᴛᴄʜɪɴɢ Dᴀᴛᴀ*`
+global.thumb = fs.readFileSync("./src/baba.jpg")
 global.profil = fs.readFileSync("./src/botstyle.png")
 global.zippy = (await import('./lib/zippy.cjs')).zippy
 global.tiny = (await import('./lib/tiny.cjs')).default

@@ -68,7 +68,6 @@ hsl = `
  ➕ ✨ Exp = [ ${baba2} ] 		 
 
 Stamina anda berkurang -20
-${wm}
 `
 
 

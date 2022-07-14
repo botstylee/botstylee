@@ -6,9 +6,9 @@ let handler = async (m, {
     let __timers = (new Date - global.db.data.users[m.sender].lastlumber)
     let _timers = (10800000 - __timers)
     let timers = clockString(_timers) 
-    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _${usedPrefix} eat_')
-    if (user.axe < 1) return m.reply('*Kamu tidak memiliki pickaxe*\n*Silahkan membeli pancing si shop dengan mengetik _${usedPrefix}buy axe_ atau _${usedPrefix} craft axe_ agar kamu bisa menebang*')
-    if (user.axedurability < 10) return m.reply('Durability pancing anda kurang\nSilahkam repair axe agar bisa berburu dengan menggunakan command _${usedPrefix} repair axe_')
+    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk menebang\nharap isi stamina anda dengan _${usedPrefix} eat_')
+    if (user.axe < 1) return m.reply('*Kamu tidak memiliki axe*\n*Silahkan membeli axe di shop dengan mengetik atau _${usedPrefix} craft axe_ agar kamu bisa menebang*')
+    if (user.axedurability < 10) return m.reply('Durability axe anda kurang\nSilahkam repair axe agar bisa menebang dengan menggunakan command _${usedPrefix} repair axe_')
     if (user.lastlumber > 500000) throw m.reply('Kamu masih kelelahan untuk Menebang\nHarap tunggu ${timers} lagi untuk menebang')
 	user.axedurability -= 5
 	user.stamina -= 20
