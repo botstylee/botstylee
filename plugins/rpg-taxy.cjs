@@ -68,7 +68,6 @@ hsl = `
  ➕ 📦 Order Selesai = +1
 
 Dan stamina anda berkurang -20
-${wm}
 `
 user.money += rbrb1
 user.exp += rbrb2
