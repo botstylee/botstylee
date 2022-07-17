@@ -7,7 +7,8 @@ async function handler(m, {
 	isOwner,
 	args
 }) {
-	return new Promise(async (resolve, reject) => {
+	log(command)
+	if (command == 'download') {
 		if (!args[0]) return m.reply('linknya mana gan?')
 		var a
 		var rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
@@ -25,31 +26,30 @@ async function handler(m, {
 				console.log(a)
 				if (a.success) {
 					m.reply(work)
-					await delay(2000)
-					return resolve(await conn.sendFile(m.chat, a.video.nowm, "", require('util').format({
+					return (await conn.sendFile(m.chat, a.video.nowm, "", require('util').format({
 						author: a.author.nickname,
 						music: a.music,
 						nowatermark_hd: a.video.nowm_hd,
 						source: text
 					}), m))
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -65,31 +65,30 @@ async function handler(m, {
 				console.log(a)
 				if (a.status) {
 					m.reply(work)
-					await delay(2000)
-					return resolve(await conn.sendFile(m.chat, a.data.sd.url, "", require('util').format({
+					return (await conn.sendFile(m.chat, a.data.sd.url, "", require('util').format({
 						title: a.data.meta.title,
 						quality: 'SD',
 						hd_download: a.data.hd.url,
 						source: text
 					}), m))
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -105,34 +104,33 @@ async function handler(m, {
 				console.log(a)
 				if (a.status) {
 					m.reply(work)
-					await delay(2000)
-					for (let {
+					for (var {
 							url,
 							thumbnail
 						} of a.data) {
-						await delay(1500)
-						return resolve(await conn.sendFile(m.chat, url, "", "", m, 0, {
+						await delay(900)
+						conn.sendFile(m.sender, url, "", "", m, 0, {
 							asDocument: true
-						}))
+						})
 					}
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -148,28 +146,27 @@ async function handler(m, {
 				console.log(a)
 				if (a.status) {
 					m.reply(work)
-					await delay(2000)
-					return resolve(await conn.sendFile(m.chat, a.data.player.url, a.data.meta.title + ".mp3", "", m, null, {
+					return (await conn.sendFile(m.chat, a.data.player.url, a.data.meta.title + ".mp3", "", m, null, {
 						asDocument: true
 					}))
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -185,29 +182,28 @@ async function handler(m, {
 				console.log(a)
 				if (a.status) {
 					m.reply(work)
-					await delay(2000)
-					return resolve(await conn.sendFile(m.chat, a.data.url[0].url, "", require('util').format({
+					return (await conn.sendFile(m.chat, a.data.url[0].url, "", require('util').format({
 						title: a.data.meta.title,
 						source: text
 					}), m))
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -223,28 +219,27 @@ async function handler(m, {
 				console.log(a)
 				if (a.status) {
 					m.reply(work)
-					await delay(2000)
-					return resolve(await conn.sendFile(m.chat, a.data.link, a.data.nama, "", m, null, {
+					return (await conn.sendFile(m.chat, a.data.link, a.data.nama, "", m, null, {
 						asDocument: true
 					}))
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -253,85 +248,98 @@ async function handler(m, {
 				}
 			}
 		} else if (rx.test(args[0])) {
-			if (!args[1]) return resolve(m.reply(`*untuk link youtube gunakan format command seperti ini*\n*${_p+command} link type*\n\n*contoh: ${_p+command} ${args[0]} mp3*\n*Accepted type: mp3, mp4*`))
-			if (!['mp3', 'mp4'].includes(args[1])) return resolve(m.reply(`invalid type\nOnly Accepted mp3 or mp4`))
+			if (!args[1]) return (m.reply(`*untuk link youtube gunakan format command seperti ini*\n*${_p+command} link type*\n\n*contoh: ${_p+command} ${args[0]} mp3*\n*Accepted type: mp3, mp4*`))
+			if (!['mp3', 'mp4'].includes(args[1])) return (m.reply(`invalid type\nOnly Accepted mp3 or mp4`))
 			try {
 				a = (await axios.get(API('ghst', 'api/sosmed', {
 					url: args[0]
 				}, 'key'))).data
-				console.log(a)
-				var data, isLimit
+				//console.log(a.data.result)
+				var data, isLimit, data2
 				if (a.status) {
 					if (args[1].includes('mp3')) {
 						if (a.data.result.audio_length > 1) {
-							data = a.data.result.audio.slice(1)[0]
-							isLimit = (isPrems || isOwner ? 99 : 30) * 1048576 < data.fileLength
+							data = a.data.result.audio.shift()
+							isLimit = data.fileLength > (isPrems || isOwner ? 99 : 20) * 1048576
+							log(isLimit)
 							if (!isLimit) {
 								m.reply(work)
-								await delay(2000)
-								return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp3', "", m, null, {
+								log({
+									data
+								})
+								return (await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp3', "", m, null, {
 									asDocument: true,
 									contextInfo: {
 										externalAdReply: {
 											mediaType: 2,
 											description: 'anu',
 											title: a.data.details.title,
-											mediaUrl: data.url,
+											mediaUrl: args[0],
 											body: author,
 											thumbnail: await getbuffer(a.data.details.thumbnail.url),
-											sourceUrl: "",
+											sourceUrl: gc,
 											showAdAttribution: true, // false
 											//renderLargerThumbnail: true // false
 										}
 									}
 								}))
 							} else {
-								return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
+								log({
+									data
+								})
+								return (m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 20mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}\n*🔗Link:* ${data.url}\n*quality:* ${data.quality}\n${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }`))
 							}
 						}
 					} else {
 						if (a.data.result.video_length > 1) {
-							data = a.data.result.video.slice(-1)[0]
-							isLimit = (isPrems || isOwner ? 99 : 30) * 1048576 < (data.fileLength !== null) ? data.fileLength : (await axios.get(data.url)).headers['content-length']
+							data = a.data.result.video.pop()
+							isLimit = (data.fileLength !== null) ? data.fileLength : (await axios.get(data.url)).headers['content-length'] > (isPrems || isOwner ? 99 : 20) * 1048576
 							if (isLimit) {
-								data = a.data.result.video.slice(1)[0]
-								isLimit = (isPrems || isOwner ? 99 : 30) * 1048576 < (data.fileLength !== null) ? data.fileLength : (await axios.get(data.url)).headers['content-length']
+								data2 = a.data.result.video.shift()
+								isLimit = (data2.fileLength !== null) ? data2.fileLength : (await axios.get(data2.url)).headers['content-length'] > (isPrems || isOwner ? 99 : 20) * 1048576
 								if (!isLimit) {
 									m.reply(work)
-									await delay(2000)
-									return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
+									log({
+										data2
+									})
+									return (await conn.sendFile(m.chat, data2.url, a.data.details.title + '.mp4', "", m, null, {
 										asDocument: true,
 										contextInfo: {
-										externalAdReply: {
-											mediaType: 2,
-											description: 'anu',
-											title: a.data.details.title,
-											mediaUrl: data.url,
-											body: author,
-											thumbnail: await getbuffer(a.data.details.thumbnail.url),
-											sourceUrl: "",
-											showAdAttribution: true, // false
-											//renderLargerThumbnail: true // false
+											externalAdReply: {
+												mediaType: 2,
+												description: 'anu',
+												title: a.data.details.title,
+												mediaUrl: args[0],
+												body: author,
+												thumbnail: await getbuffer(a.data.details.thumbnail.url),
+												sourceUrl: gc,
+												showAdAttribution: true, // false
+												//renderLargerThumbnail: true // false
+											}
 										}
-									}
 									}))
 								} else {
-									return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
+									log({
+										data2
+									})
+									return (m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 20mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}\n*🔗Link:* ${data2.url}\n*quality:* ${data2.quality}\n${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }`))
 								}
 							} else {
 								m.reply(work)
-								await delay(2000)
-								return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
+								log({
+									data
+								})
+								return (await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
 									asDocument: true,
 									contextInfo: {
 										externalAdReply: {
 											mediaType: 2,
 											description: 'anu',
 											title: a.data.details.title,
-											mediaUrl: data.url,
+											mediaUrl: args[0],
 											body: author,
 											thumbnail: await getbuffer(a.data.details.thumbnail.url),
-											sourceUrl: "",
+											sourceUrl: gc,
 											showAdAttribution: true, // false
 											//renderLargerThumbnail: true // false
 										}
@@ -339,50 +347,55 @@ async function handler(m, {
 								}))
 							}
 						} else {
-							data = a.data.result.video[0]
-							isLimit = (isPrems || isOwner ? 99 : 30) * 1048576 < (data.fileLength !== null) ? data.fileLength : (await axios.get(data.url)).headers['content-length']
+							data = a.data.result.video.shift()
+							isLimit = (data.fileLength !== null) ? data.fileLength : (await axios.get(data.url)).headers['content-length'] > (isPrems || isOwner ? 99 : 20) * 1048576
 							if (!isLimit) {
 								m.reply(work)
-								await delay(2000)
-								return resolve(await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
+								log({
+									data
+								})
+								return (await conn.sendFile(m.chat, data.url, a.data.details.title + '.mp4', "", m, null, {
 									asDocument: true,
 									contextInfo: {
 										externalAdReply: {
 											mediaType: 2,
 											description: 'anu',
 											title: a.data.details.title,
-											mediaUrl: data.url,
+											mediaUrl: args[0],
 											body: author,
 											thumbnail: await getbuffer(a.data.details.thumbnail.url),
-											sourceUrl: "",
+											sourceUrl: gc,
 											showAdAttribution: true, // false
 											//renderLargerThumbnail: true // false
 										}
 									}
 								}))
 							} else {
-								return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n*🔗Link:* ${data.url}`))
+								log({
+									data
+								})
+								return (m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 20mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.data.details.title}\n*🔗Link:* ${data.url}\n*quality:* ${data.quality}\n${!(a.data.details.shortDescription) ? "": "\n*📜Description:* " + a.data.details.shortDescription }\n`))
 							}
 						}
 					}
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -394,22 +407,21 @@ async function handler(m, {
 			try {
 				var a = await zippy(args[0])
 				if (a.error) {
-					return resolve(m.reply(require('util').format(a)))
+					return (m.reply(require('util').format(a)))
 				} else {
-					isLimit = (isPrems || isOwner ? 99 : 30) * 1048576 < (await axios.get(encodeURIComponent(a.url))).headers['content-length']
+					isLimit = (await axios.get(encodeURIComponent(a.url))).headers['content-length'] > (isPrems || isOwner ? 99 : 20) * 1048576
 					if (isLimit) {
-						return resolve(m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 30mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.name}\n*🔗Link:* ${a.url}`))
+						return (m.reply(`File Melebihi limit user free\n\t\t\t*Limit*\n*USER FREE:* 20mb\n*USER PREMIUM:* 99mb\n*📍Title:* ${a.name}\n*🔗Link:* ${a.url}`))
 					} else {
 						m.reply(work)
-						await delay(2000)
-						return resolve(await conn.sendFile(m.chat, a.url, a.name, "", m, null, {
+						return (await conn.sendFile(m.chat, a.url, a.name, "", m, null, {
 							asDocument: true
 						}))
 					}
 				}
 			} catch (e) {
 				log(e)
-				return resolve(m.reply(require('util').format({
+				return (m.reply(require('util').format({
 					status: 500,
 					msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 				}), null, {
@@ -417,14 +429,14 @@ async function handler(m, {
 				}))
 			}
 		} else {
-			let [query, format] = text.split(/[&|.]/i)
-			if (!format) {
+			var [query, format] = text.split(/[&|.]/i)
+			/*if (!format) {
 				m.reply('default search: mp3\ngunakan format seperti ini jika ingin menggunakan format mp3 atau mp4\n' + _p + command + ' query|format\ncontoh: ' + _p + command + ' ya sudahlah LHNTRX|mp4')
-			}
-			await delay(3000)
-			if (!format) {
+			}*/
+			await delay(2000)
+			/*if (!format) {
 				format = 'mp3'
-			}
+			}*/
 			try {
 				a = (await axios.get(API('ghst', 'api/sosmed', {
 					url: query
@@ -433,21 +445,17 @@ async function handler(m, {
 				if (a.status) {
 					var rows = []
 					for (var i of a.data) {
-						if (format.includes('mp4')) {
-							rows.push({
-								title: i.title,
-								description: `Cʜᴀɴɴᴇʟ: ${i.owner.channel} | Vɪᴇᴡꜱ: ${i.views}`,
-								rowId: _p + command + " " + i.browse + " mp4"
-							})
-						} else {
-							rows.push({
-								title: i.title,
-								description: `Cʜᴀɴɴᴇʟ: ${i.owner.channel} | Dᴜʀᴀᴛɪᴏɴꜱ: ${i.duration}`,
-								rowId: _p + command + " " + i.browse + " mp3"
-							})
-						}
+						rows.push({
+							title: i.title,
+							description: `*[ MP3 - Cʜᴀɴɴᴇʟ: ${i.owner.channel} - Vɪᴇᴡꜱ: ${i.views} ]*`,
+							rowId: _p + command + " " + i.browse + " mp3"
+						}, {
+							title: i.title,
+							description: `*[ MP4 - Cʜᴀɴɴᴇʟ: ${i.owner.channel} - Vɪᴇᴡꜱ: ${i.views} ]*`,
+							rowId: _p + command + " " + i.browse + " mp4"
+						})
 					}
-					const sendMsg = await conn.sendMessage(m.chat, {
+					var sendMsg = await conn.sendMessage(m.chat, {
 						text: '*Aᴠᴀɪʟᴀʙʟᴇ Rᴇꜱᴜʟᴛ:* *' + a.data_length + '*',
 						footer: author,
 						title: '```' + 'Hᴀꜱɪʟ Pᴇɴᴄᴀʀɪᴀɴ Dᴀʀɪ``` *' + query + '*\n',
@@ -458,27 +466,27 @@ async function handler(m, {
 						}]
 					})
 					await delay(60000)
-					return resolve(await conn.sendMessage(m.chat, {
+					return (await conn.sendMessage(m.chat, {
 						delete: sendMsg.key
 					}))
 				} else if (a.status == 403) {
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 403,
 						msg: 'invalid Key'
 					})))
 				} else {
-					return resolve(m.reply(error))
+					return (m.reply(error))
 				}
 			} catch (e) {
 				if (e.response) {
 					console.log(e.response.data)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: e.response.status,
 						msg: e.response.statusText
 					})))
 				} else {
 					console.log(e)
-					return resolve(m.reply(require('util').format({
+					return (m.reply(require('util').format({
 						status: 500,
 						msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 					}), null, {
@@ -487,9 +495,68 @@ async function handler(m, {
 				}
 			}
 		}
-	})
+	} else {
+		var query = text
+		try {
+			a = (await axios.get(API('ghst', 'api/sosmed', {
+				url: query
+			}, 'key'))).data
+			console.log(a)
+			if (a.status) {
+				var rows = []
+				for (var i of a.data) {
+					rows.push({
+						title: i.title,
+						description: `*[ MP3 - Cʜᴀɴɴᴇʟ: ${i.owner.channel} - Vɪᴇᴡꜱ: ${i.views} ]*`,
+						rowId: _p + "download " + i.browse + " mp3"
+					}, {
+						title: i.title,
+						description: `*[ MP4 - Cʜᴀɴɴᴇʟ: ${i.owner.channel} - Vɪᴇᴡꜱ: ${i.views} ]*`,
+						rowId: _p + "download " + i.browse + " mp4"
+					})
+				}
+				var sendMsg = await conn.sendMessage(m.chat, {
+					text: '*Aᴠᴀɪʟᴀʙʟᴇ Rᴇꜱᴜʟᴛ:* *' + a.data_length + '*',
+					footer: author,
+					title: '```' + 'Hᴀꜱɪʟ Pᴇɴᴄᴀʀɪᴀɴ Dᴀʀɪ``` *' + query + '*\n',
+					buttonText: "ꜱᴇᴀʀᴄʜ ʜᴇʀᴇ!",
+					sections: [{
+						title: "Hᴀꜱɪʟ Pᴇɴᴄᴀʀɪᴀɴ",
+						rows
+					}]
+				})
+				await delay(60000)
+				return (await conn.sendMessage(m.chat, {
+					delete: sendMsg.key
+				}))
+			} else if (a.status == 403) {
+				return (m.reply(require('util').format({
+					status: 403,
+					msg: 'invalid Key'
+				})))
+			} else {
+				return (m.reply(error))
+			}
+		} catch (e) {
+			if (e.response) {
+				console.log(e.response.data)
+				return (m.reply(require('util').format({
+					status: e.response.status,
+					msg: e.response.statusText
+				})))
+			} else {
+				console.log(e)
+				return (m.reply(require('util').format({
+					status: 500,
+					msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
+				}), null, {
+					mentions: [nomorown + `@s.whatsapp.net`]
+				}))
+			}
+		}
+	}
 }
-handler.help = ['download *url*']
+handler.help = ['download *url* or *query*', 'play *query*', 'ytplay *query*', 'ytsearch *query*']
 handler.tags = ['downloader']
-handler.command = /^download$/i
+handler.command = ['download', 'play', 'ytplay', 'ytsearch']
 module.exports = handler
