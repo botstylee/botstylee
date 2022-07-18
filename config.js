@@ -79,6 +79,37 @@ global.getbuffer = async function getBuffer(url, options) {
 		console.log(`Error : ${e}`)
 	}
 }
+const COUNT_FORMATS = [{ // 0 - 999
+		letter: '',
+		limit: 1e3
+	},
+	{ // 1,000 - 999,999
+		letter: ' ribu',
+		limit: 1e6
+	},
+	{ // 1,000,000 - 999,999,999
+		letter: ' juta',
+		limit: 1e9
+	},
+	{ // 1,000,000,000 - 999,999,999,999
+		letter: ' miliar',
+		limit: 1e12
+	},
+	{ // 1,000,000,000,000 - 999,999,999,999,999
+		letter: ' triliun',
+		limit: 1e15
+	}
+];
+
+// Format Method:
+global.formatnum = function formatnum(value) {
+	const format = COUNT_FORMATS.find(format => (value < format.limit));
+
+	value = (1000 * value / format.limit);
+	value = Math.round(value * 10) / 10; // keep one decimal number, only if needed
+
+	return ('' + value + format.letter);
+}
 global.log = async function log(data, data2, data3) {
 	if (!(data2 || data3)) {
 		return console.log(data)
