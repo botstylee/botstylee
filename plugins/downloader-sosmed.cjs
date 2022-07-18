@@ -495,6 +495,51 @@ async function handler(m, {
 				}
 			}
 		}
+	} else if (command == 'play') {
+		if (m.isGroup) {
+			return m.reply('gunakan di private chat aja')
+		}
+		var query = text
+		try {
+			a = (await axios.get(API('ghst', 'api/sosmed', {
+				url: query
+			}, 'key'))).data
+			console.log(a)
+			if (a.status) {
+				var rnd = a.data[Math.floor(Math.random() * a.data.length)]
+				var sendMsg = await conn.sendButton(m.chat, `𓅜 *Y T  P L A Y* 𓅜\n\n*t i t l e*: ${rnd.title}\n*s o u r c e*: ${rnd.browse}\n*p u b l i s h e d*: ${rnd.published}\n*v i e w s*: ${rnd.views}\n*d u r a t i o n*: ${rnd.duration}\n*c h a n n e l*: ${rnd.owner.channel}`, `𓅜 *y t  p l a y* 𓅜`, rnd.thumbnail.url, [
+					['audio', '.download ' + rnd.browse + ' mp3'],
+					['video', '.download ' + rnd.browse + ' mp4']
+				], m)
+				await delay(60000)
+				return (await conn.sendMessage(m.chat, {
+					delete: sendMsg.key
+				}))
+			} else if (a.status == 403) {
+				return (m.reply(require('util').format({
+					status: 403,
+					msg: 'invalid Key'
+				})))
+			} else {
+				return (m.reply(error))
+			}
+		} catch (e) {
+			if (e.response) {
+				console.log(e.response.data)
+				return (m.reply(require('util').format({
+					status: e.response.status,
+					msg: e.response.statusText
+				})))
+			} else {
+				console.log(e)
+				return (m.reply(require('util').format({
+					status: 500,
+					msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
+				}), null, {
+					mentions: [nomorown + `@s.whatsapp.net`]
+				}))
+			}
+		}
 	} else {
 		var query = text
 		try {
