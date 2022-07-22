@@ -132,10 +132,12 @@ global.APIs = { // API Prefix
 	// name: 'https://website'
 	nrtm: 'https://nurutomo.herokuapp.com/',
 	ghst: 'https://ghostui-api.herokuapp.com/',
+        botstyle: 'https://botstyle-api.herokuapp.com',
 	beni: 'https://rest-beni.herokuapp.com/'
 }
 global.APIKeys = { // APIKey Here
 	// 'https://website': 'apikey'
+        'https://botstyle-api.herokuapp.com': 'iAEzm9gH',
 	'https://ghostui-api.herokuapp.com/': 'OC2eTK'
 }
 // Sticker WM
