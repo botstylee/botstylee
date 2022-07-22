@@ -8,7 +8,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!res.status) throw eror
   let json = await res.json()
   // if (!json.status) throw json
-  await m.reply(json)
+  await m.reply('Tunggu Sebentar...')
   await conn.sendFile(m.chat, json.result.nowm, '', `\n\nBOTSTYLE`, m)
 
 }
