@@ -20,7 +20,7 @@
   "author": "gweh",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://github.com/what-zit-tooyaa/baileys.git",
+    "@adiwajshing/baileys": "4.3.0",
     "@bochilteam/scraper": "^2.0.0",
     "awesome-phonenumber": "^2.70.0",
     "axios": "^0.26.1",
