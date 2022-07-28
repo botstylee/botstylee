@@ -36,7 +36,7 @@ let handler = async (m, {
 }) => {
 	let tags
 	let teks = `${args[0]}`.toLowerCase()
-	let arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
+	let arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'anime', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
 	if (!arrayMenu.includes(teks)) teks = '404'
 	if (teks == 'all') tags = {
 		'main': 'Main',
@@ -57,6 +57,7 @@ let handler = async (m, {
 		'anonymous': 'Anonymous Chat',
 		'downloader': 'Downloader',
 		'tools': 'Tools',
+                'anime': 'Anime',
 		'fun': 'Fun',
 		'database': 'Database',
 		'vote': 'Voting',
@@ -117,6 +118,9 @@ let handler = async (m, {
 	}
 	if (teks == 'tools') tags = {
 		'tools': 'Tools'
+	}
+        if (teks == 'anime') tags = {
+		'anime': 'Anime'
 	}
 	if (teks == 'database') tags = {
 		'database': 'Database'
@@ -263,6 +267,10 @@ let handler = async (m, {
 						{
 							title: "Tools",
 							rowId: _p + `? tools`
+                                                },
+						{
+							title: "Anime",
+							rowId: _p + `? anime`
 						},
 						{
 							title: "Database",
