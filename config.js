@@ -241,7 +241,6 @@ global.rpg = {
 		if (!results.length) return ''
 		else return emot[results[0][0]]
 	},
-	,
 	// inspired from https://github.com/Fokusdotid/Family-MD/blob/main/plugins/_role.js
 	// https://github.com/BochilGaming/games-wabot/issues/389
 	// https://github.com/BochilGaming/games-wabot/issues/32

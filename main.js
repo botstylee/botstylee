@@ -66,7 +66,6 @@ filesInit(pluginFolder, pluginFilter, conn).then(_ => console.log(Object.keys(pl
 
 Object.freeze(reload)
 
-
 if (!opts['test']) {
 	setInterval(async () => {
 		await Promise.allSettled([

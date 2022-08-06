@@ -1,6 +1,4 @@
-var {
-	fs
-} = require('fs');
+var fs = require('fs');
 owo = fs.readFileSync('./src/gambar/l.jpg')
 var {
 	webp2png
