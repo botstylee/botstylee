@@ -1,6 +1,4 @@
-var axios = require("axios");
-
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	command,

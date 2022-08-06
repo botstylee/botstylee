@@ -1,8 +1,8 @@
-const daily = require('./rpg-daily.cjs');
-const monthly = require('./rpg-monthly.cjs');
-const adventure = require('./rpg-adventure.cjs');
+var daily = require('./rpg-daily.cjs');
+var monthly = require('./rpg-monthly.cjs');
+var adventure = require('./rpg-adventure.cjs');
 
-const inventory = {
+var inventory = {
 	others: {
 		health: true,
 		money: true,
@@ -134,19 +134,19 @@ const inventory = {
 		}
 	}
 }
-let handler = async (m, {
+var handler = async (m, {
 	conn
 }) => {
-	let user = db.data.users[m.sender]
-	const tools = Object.keys(inventory.tools).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${typeof inventory.tools[v] === 'object' ? inventory.tools[v][user[v]?.toString()] : `Level(s) ${user[v]}`}`).filter(v => v).join('\n').trim()
-	const items = Object.keys(inventory.items).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n').trim()
-	const crates = Object.keys(inventory.crates).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n').trim()
-	const pets = Object.keys(inventory.pets).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v] >= inventory.pets[v] ? 'Max Levels' : `Level(s) ${user[v]}`}`).filter(v => v).join('\n').trim()
-	const cooldowns = Object.entries(inventory.cooldowns).map(([cd, {
+	var user = db.data.users[m.sender]
+	var tools = Object.keys(inventory.tools).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${typeof inventory.tools[v] === 'object' ? inventory.tools[v][user[v]?.toString()] : `Level(s) ${user[v]}`}`).filter(v => v).join('\n').trim()
+	var items = Object.keys(inventory.items).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n').trim()
+	var crates = Object.keys(inventory.crates).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n').trim()
+	var pets = Object.keys(inventory.pets).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v] >= inventory.pets[v] ? 'Max Levels' : `Level(s) ${user[v]}`}`).filter(v => v).join('\n').trim()
+	var cooldowns = Object.entries(inventory.cooldowns).map(([cd, {
 		name,
 		time
 	}]) => cd in user && `*⌛${name}*: ${new Date() - user[cd] >= time ? '✅' : '❌'}`).filter(v => v).join('\n').trim()
-	const caption = `
+	var caption = `
 Inventory *${conn.getName(m.sender)}*
 
 ${Object.keys(inventory.others).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n')}${tools ? `

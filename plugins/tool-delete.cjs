@@ -1,6 +1,6 @@
-let handler = function(m) {
+var handler = function(m) {
 	if (!m.quoted) throw false
-	let {
+	var {
 		chat,
 		fromMe,
 		isBaileys

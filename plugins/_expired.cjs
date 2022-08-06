@@ -1,8 +1,8 @@
-let handler = m => m
+var handler = m => m
 handler.all = async function(m) {
 	if (!m.isGroup)
 		return
-	let chats = global.db.data.chats[m.chat]
+	var chats = global.db.data.chats[m.chat]
 	if (!chats.expired)
 		return !0
 	if (+new Date() > chats.expired) {

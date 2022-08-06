@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	usedPrefix,
@@ -14,7 +14,7 @@ let handler = async (m, {
 	hl[1] = text.split('|')[1].toLowerCase()
 
 	if (!text) return conn.reply(m.chat, `*❏ GET NUMBER*\n\n• ${usedPrefix+command} number|amount\n*Example:* ${usedPrefix+command} 62895368900456|2\n\n• ${usedPrefix+command} @tag|amount\n*Example:* ${usedPrefix+command} @62895368900456|2\n*INFO*\nfor amount max is 5`, m)
-	let user = db.data.users[hl[0]]
+	var user = db.data.users[hl[0]]
 	if (!(hl[0] in db.data.users)) return m.reply(`User ${hl[0]} not in database`)
 	if (!('sewa' in user)) {
 		user.sewa = false
@@ -32,4 +32,4 @@ handler.tags = ['owner', 'premium']
 handler.command = /^(add|tambah|\+)(sewa|point|poin)?$/i
 handler.owner = true
 module.exports = handler
-const isNumber = (x) => (x = parseInt(x), typeof x === 'number' && !isNaN(x))
+var isNumber = (x) => (x = parseInt(x), typeof x === 'number' && !isNaN(x))

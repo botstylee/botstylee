@@ -1,16 +1,16 @@
-let linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})( [0-9]{1,3})?/i
+var linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})( [0-9]{1,3})?/i
 
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	isOwner,
 	isPrems
 }) => {
-	let [_, code, expired] = text.match(linkRegex) || []
+	var [_, code, expired] = text.match(linkRegex) || []
 	if (!code) throw 'Link invalid'
-	let users = db.data.users[m.sender]
+	var users = db.data.users[m.sender]
 	if (!isOwner && users.limitjoin == 0) throw 'limit join kamu sudah habis, silahkan upgrade premium untuk mendapatkan 3 tambahan limit'
-	let res = await conn.groupAcceptInvite(code)
+	var res = await conn.groupAcceptInvite(code)
 	if (isOwner) {
 		m.reply(`Berhasil join grup ${res}`)
 		await delay(1500)
@@ -20,7 +20,7 @@ let handler = async (m, {
 	} else if (users.premium || users.sewa) {
 		users.limitjoin -= 1
 		expired = 30
-		let chats = db.data.chats[res]
+		var chats = db.data.chats[res]
 		if (!chats) chats = db.data.chats[res] = {}
 		if (expired) chats.expired = +new Date() + expired * 1000 * 60 * 60 * 24
 		chats.groupexpired = true
@@ -32,7 +32,7 @@ let handler = async (m, {
 	} else {
 		users.limitjoin -= 1
 		expired = 1.5
-		let chats = db.data.chats[res]
+		var chats = db.data.chats[res]
 		if (!chats) chats = db.data.chats[res] = {}
 		if (expired) chats.expired = +new Date() + expired * 1000 * 60 * 60 * 24
 		chats.groupexpired = true
@@ -50,7 +50,7 @@ handler.command = /^join$/i
 
 module.exports = handler
 
-const isNumber = (x) => (x = parseInt(x), typeof x === 'number' && !isNaN(x))
+var isNumber = (x) => (x = parseInt(x), typeof x === 'number' && !isNaN(x))
 
 function msToDate(ms) {
 	temp = ms

@@ -5,7 +5,7 @@ https://github.com/hairullana
 
 /*/ ///////////////////////////////*/
 
-let handler = async (m, {
+var handler = async (m, {
 	conn
 }) => {
 	ayg = db.data.users[m.sender]

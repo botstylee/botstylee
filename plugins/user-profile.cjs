@@ -1,17 +1,17 @@
-let PhoneNumber = require('awesome-phonenumber')
-let levelling = require('../lib/levelling.cjs')
-let handler = async (m, {
+var PhoneNumber = require('awesome-phonenumber')
+var levelling = require('../lib/levelling.cjs')
+var handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
-	let _p = profil
-	let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.quoted ? m.quoted.sender : m.sender
+	var _p = profil
+	var who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.quoted ? m.quoted.sender : m.sender
 	try {
 		_p = await conn.profilePictureUrl(who, 'image')
 	} catch (e) {
 
 	} finally {
-		let about = (await conn.fetchStatus(who).catch(console.error) || {}).status || ''
+		var about = (await conn.fetchStatus(who).catch(console.error) || {}).status || ''
 		var pp = /^https?:\/\//.test(_p) ? await getbuffer(_p) : _p
 		if (typeof db.data.users[who] == "undefined") {
 			db.data.users[who] = {
@@ -30,7 +30,7 @@ let handler = async (m, {
 				autolevelup: false
 			}
 		}
-		let {
+		var {
 			name,
 			limit,
 			exp,
@@ -44,14 +44,14 @@ let handler = async (m, {
 			pasangan,
 			premium
 		} = db.data.users[who]
-		let {
+		var {
 			min,
 			xp,
 			max
 		} = levelling.xpRange(level, global.multiplier)
-		let username = conn.getName(who)
-		let math = max - xp
-		let jodoh
+		var username = conn.getName(who)
+		var math = max - xp
+		var jodoh
 		if (pasangan == "") {
 			jodoh = `Gak punya`
 		} else if (db.data.users[db.data.users[who].pasangan].pasangan != who) {
@@ -59,7 +59,7 @@ let handler = async (m, {
 		} else {
 			jodoh = `@${pasangan.split('@')[0]}`
 		}
-		let str = `
+		var str = `
 Nama: ${username} ${registered ? '(' + name + ') ' : ''}(@${who.replace(/@.+/, '')})${about != 401 ? '\nInfo: ' + about : ''}
 Nomor: ${PhoneNumber('+' + who.replace('@s.whatsapp.net', '')).getNumber('international')}
 Link: https://wa.me/${who.split`@`[0]}${registered ? '\nUmur: ' + age : ''}
@@ -71,7 +71,7 @@ Premium: ${premium ? 'Ya' : 'Tidak'}
 Terdaftar: ${registered ? 'Ya (' + new Date(regTime).toLocaleString() + ')' : 'Tidak'}${lastclaim > 0 ? '\nTerakhir Klaim: ' + new Date(lastclaim).toLocaleString() : ''}
 Pasangan: ${jodoh}
 `.trim()
-		let mentions = pasangan ? [who, pasangan] : [who]
+		var mentions = pasangan ? [who, pasangan] : [who]
 		conn.reply(m.chat, banned ? 'jiakh ke banned' : str, m, {
 			mentions,
 			contextInfo: {

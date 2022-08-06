@@ -1,21 +1,21 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
-	let banteng = db.data.users[m.sender].banteng
-	let harimau = db.data.users[m.sender].harimau
-	let gajah = db.data.users[m.sender].gajah
-	let kambing = db.data.users[m.sender].kambing
-	let panda = db.data.users[m.sender].panda
-	let buaya = db.data.users[m.sender].buaya
-	let kerbau = db.data.users[m.sender].kerbau
-	let sapi = db.data.users[m.sender].sapi
-	let monyet = db.data.users[m.sender].monyet
-	let babihutan = db.data.users[m.sender].babihutan
-	let babi = db.data.users[m.sender].babi
-	let ayam = db.data.users[m.sender].ayam
+	var banteng = db.data.users[m.sender].banteng
+	var harimau = db.data.users[m.sender].harimau
+	var gajah = db.data.users[m.sender].gajah
+	var kambing = db.data.users[m.sender].kambing
+	var panda = db.data.users[m.sender].panda
+	var buaya = db.data.users[m.sender].buaya
+	var kerbau = db.data.users[m.sender].kerbau
+	var sapi = db.data.users[m.sender].sapi
+	var monyet = db.data.users[m.sender].monyet
+	var babihutan = db.data.users[m.sender].babihutan
+	var babi = db.data.users[m.sender].babi
+	var ayam = db.data.users[m.sender].ayam
 
-	let ndy = `
+	var ndy = `
 *《 KANDANG MU 》*
     
  *➡️   ️ 🐂 = [ ${banteng} ] Ekor Banteng*
@@ -31,7 +31,7 @@ let handler = async (m, {
  *➡️   ️ 🐖 = [ ${babi} ] Ekor Babi*
  *➡️   ️ 🐓 = [ ${ayam} ] Ekor Ayam*
  
- *${author}*    
+ *${author}*
  `.trim()
 	conn.reply(m.chat, ndy, m)
 }
@@ -41,5 +41,5 @@ handler.command = new RegExp
 
 module.exports = handler
 
-const more = String.fromCharCode(8206)
-const readMore = more.repeat(4001)
+var more = String.fromCharCode(8206)
+var readMore = more.repeat(4001)

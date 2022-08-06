@@ -1,18 +1,18 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args,
 	usedPrefix
 }) => {
-	let user = Object.entries(db.data.users).filter(user => user[1].premium).map(([key, value]) => {
+	var user = Object.entries(db.data.users).filter(user => user[1].premium).map(([key, value]) => {
 		return {
 			...value,
 			jid: key
 		}
 	})
-	let premTime = db.data.users[m.sender].expired
-	let prem = db.data.users[m.sender].premium
-	let sortedP = user.map(toNumber('expired')).sort(sort('expired'))
-	let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)
+	var premTime = db.data.users[m.sender].expired
+	var prem = db.data.users[m.sender].premium
+	var sortedP = user.map(toNumber('expired')).sort(sort('expired'))
+	var len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 10)) : Math.min(10, sortedP.length)
 	await conn.sendButton(m.chat, `\t\t\t\t\t\t° *PREMIUM* °
 ${prem ? `\t\t\t\t\t\t*My Premium Time*\n*Name:* ${conn.getName(m.sender)}\n*Expired:* ${msToDate(premTime - new Date() * 1)}` : ''}
 

@@ -1,8 +1,8 @@
-let syntaxerror = require('syntax-error')
-let util = require('util')
+var syntaxerror = require('syntax-error')
+var util = require('util')
 
-let handler = async (m, _2) => {
-	let {
+var handler = async (m, _2) => {
+	var {
 		conn,
 		usedPrefix,
 		command,
@@ -11,23 +11,23 @@ let handler = async (m, _2) => {
 		args,
 		groupMetadata
 	} = _2
-	let _return
-	let _syntax = ''
-	let _text = (/^=/.test(usedPrefix) ? 'return ' : '') + noPrefix
-	let old = m.exp * 1
+	var _return
+	var _syntax = ''
+	var _text = (/^=/.test(usedPrefix) ? 'return ' : '') + noPrefix
+	var old = m.exp * 1
 	try {
-		let i = 15
-		let f = {
+		var i = 15
+		var f = {
 			exports: {}
 		}
-		let exec = new(async () => {}).constructor('print', 'm', 'handler', 'require', 'conn', 'Array', 'process', 'args', 'groupMetadata', 'module', 'exports', 'argument', _text)
+		var exec = new(async () => {}).constructor('print', 'm', 'handler', 'require', 'conn', 'Array', 'process', 'args', 'groupMetadata', 'module', 'exports', 'argument', _text)
 		_return = await exec.call(conn, (...args) => {
 			if (--i < 1) return
 			console.log(...args)
 			return conn.reply(m.chat, util.format(...args), m)
 		}, m, handler, require, conn, CustomArray, process, args, groupMetadata, f, f.exports, [conn, _2])
 	} catch (e) {
-		let err = await syntaxerror(_text, 'Execution Function', {
+		var err = await syntaxerror(_text, 'Execution Function', {
 			allowReturnOutsideFunction: true,
 			allowAwaitOutsideFunction: true
 		})

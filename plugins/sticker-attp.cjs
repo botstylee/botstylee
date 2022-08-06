@@ -1,8 +1,8 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text
 }) => {
-	let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
+	var teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
 	conn.sendFile(m.chat, global.API('xteam', '/attp', {
 		file: '',
 		text: teks

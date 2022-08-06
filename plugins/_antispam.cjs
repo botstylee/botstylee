@@ -1,4 +1,4 @@
-let handler = m => m
+var handler = m => m
 
 handler.all = async function(m) {
 	if (!m.message)

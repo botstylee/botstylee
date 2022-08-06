@@ -1,14 +1,14 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	participants,
 	usedPrefix
 }) => {
 	if (!text) throw `contoh:\n${usedPrefix}paling cantik`
-	let member = participants.map(u => u.id)
-	let cakep = member[Math.floor(Math.random() * member.length)]
-	let jawab = `Sipaling ${text} disini adalah @${cakep.replace(/@.+/, '')}`.trim()
-	let mentions = [cakep]
+	var member = participants.map(u => u.id)
+	var cakep = member[Math.floor(Math.random() * member.length)]
+	var jawab = `Sipaling ${text} disini adalah @${cakep.replace(/@.+/, '')}`.trim()
+	var mentions = [cakep]
 	conn.reply(m.chat, jawab, m, {
 		mentions
 	})

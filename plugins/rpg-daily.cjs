@@ -1,14 +1,14 @@
-const rewards = {
+var rewards = {
 	exp: 10000,
 	money: 5000,
 	potion: 5,
 }
-const cooldown = 86400000
-let handler = async (m) => {
-	let user = db.data.users[m.sender]
+var cooldown = 86400000
+var handler = async (m) => {
+	var user = db.data.users[m.sender]
 	if (new Date - user.lastclaim < cooldown) throw `You have already claimed this daily claim!, wait for *${((user.lastclaim + cooldown) - new Date()).toTimeString()}*`
-	let text = ''
-	for (let reward of Object.keys(rewards)) {
+	var text = ''
+	for (var reward of Object.keys(rewards)) {
 		if (!(reward in user)) continue
 		user[reward] += rewards[reward]
 		text += `*+${rewards[reward]}* ${global.rpg.emoticon(reward)}${reward}\n`

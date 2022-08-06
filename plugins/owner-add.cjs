@@ -1,10 +1,10 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	participants
 }) => {
-	let _participants = participants.map(user => user.id)
-	let users = (await Promise.all(
+	var _participants = participants.map(user => user.id)
+	var users = (await Promise.all(
 		text.split(',')
 		.map(v => v.replace(/[^0-9]/g, ''))
 		.filter(v => v.length > 4 && v.length < 20 && !_participants.includes(v + '@s.whatsapp.net'))
@@ -13,7 +13,7 @@ let handler = async (m, {
 			await conn.onWhatsApp(v + '@s.whatsapp.net')
 		])
 	)).filter(v => v[1][0]?.exists).map(v => v[0] + '@c.us')
-	const response = await conn.query({
+	var response = await conn.query({
 		tag: 'iq',
 		attrs: {
 			type: 'set',

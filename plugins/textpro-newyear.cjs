@@ -1,9 +1,9 @@
 var tp = require("../lib/textpro.cjs")
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args
 }) => {
-	let txt = args.join` `
+	var txt = args.join` `
 	if (!txt) return conn.reply(m.chat, 'harap masukan teksnya!!!', m)
 	if (txt.length > 15) return conn.reply(m.chat, 'maksimal 15', m)
 	var a = await tp("https://textpro.me/happ-new-year-card-firework-gif-959.html", txt)

@@ -1,35 +1,35 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
-	let __timers = (new Date - user.lastmining)
-	let _timers = (500000 - __timers)
-	let timers = clockString(_timers)
-	let user = db.data.users[m.sender]
+	var __timers = (new Date - user.lastmining)
+	var _timers = (500000 - __timers)
+	var timers = clockString(_timers)
+	var user = db.data.users[m.sender]
 	if (user.pickaxe < 1) return m.reply('*Kamu tidak memiliki Pickaxe*\n*Silahkan membeli Pickaxe si shop dengan mengetik _${usedPrefix}buy pickaxe_ atau _${usedPrefix}craft pickaxe_ agar kamu bisa nambang*')
-    if (user.pickaxedurability < 10) return m.reply('Durability pickaxe anda kurang\nSilahkan repair pickaxe agar bisa nambang dengan menggunakan command _${usedPrefix}repair pickaxe_')
-    if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _#eat_')
+	if (user.pickaxedurability < 10) return m.reply('Durability pickaxe anda kurang\nSilahkan repair pickaxe agar bisa nambang dengan menggunakan command _${usedPrefix}repair pickaxe_')
+	if (user.stamina < 20) return m.reply('Stamina anda tidak cukup untuk bekerja\nharap isi stamina anda dengan _#eat_')
 	if (new Date - user.lastmining > 500000) {
-		let randomaku1 = `${Math.floor(Math.random() * 5)}`
-		let randomaku2 = `${Math.floor(Math.random() * 10)}`
-		let randomaku4 = `${Math.floor(Math.random() * 7)}`
-		let randomaku3 = `${Math.floor(Math.random() * 4)}`
-		let randomaku5 = `${Math.floor(Math.random() * 200)}`
-		let randomaku6 = `${Math.floor(Math.random() * 200)}`
-		let randomaku7 = `${Math.floor(Math.random() * 20)}`
-		let randomaku8 = `${Math.floor(Math.random() * 100)}`
-		let randomaku9 = `${Math.floor(Math.random() * 100)}`
+		var randomaku1 = `${Math.floor(Math.random() * 5)}`
+		var randomaku2 = `${Math.floor(Math.random() * 10)}`
+		var randomaku4 = `${Math.floor(Math.random() * 7)}`
+		var randomaku3 = `${Math.floor(Math.random() * 4)}`
+		var randomaku5 = `${Math.floor(Math.random() * 200)}`
+		var randomaku6 = `${Math.floor(Math.random() * 200)}`
+		var randomaku7 = `${Math.floor(Math.random() * 20)}`
+		var randomaku8 = `${Math.floor(Math.random() * 100)}`
+		var randomaku9 = `${Math.floor(Math.random() * 100)}`
 			.trim()
 
-		let rbrb1 = (randomaku1 * 1)
-		let rbrb2 = (randomaku2 * 1)
-		let rbrb3 = (randomaku3 * 1)
-		let rbrb4 = (randomaku4 * 1)
-		let rbrb5 = (randomaku5 * 1)
-		let rbrb6 = (randomaku6 * 1)
-		let rbrb7 = (randomaku7 * 1)
-		let rbrb8 = (randomaku8 * 1)
-		let rbrb9 = (randomaku9 * 1)
+		var rbrb1 = (randomaku1 * 1)
+		var rbrb2 = (randomaku2 * 1)
+		var rbrb3 = (randomaku3 * 1)
+		var rbrb4 = (randomaku4 * 1)
+		var rbrb5 = (randomaku5 * 1)
+		var rbrb6 = (randomaku6 * 1)
+		var rbrb7 = (randomaku7 * 1)
+		var rbrb8 = (randomaku8 * 1)
+		var rbrb9 = (randomaku9 * 1)
 
 		wuis1 = `${rbrb1}`
 		wuis2 = `${rbrb2}`
@@ -92,16 +92,16 @@ let handler = async (m, {
 		['Inventory', '/inv']
 	], m)
 }
-handler.help = ['mining','nambang']
+handler.help = ['mining', 'nambang']
 handler.tags = ['rpg']
 handler.command = /^(nambang|mining)$/i
 handler.register = true
 module.exports = handler
 
 function clockString(ms) {
-	let h = Math.floor(ms / 3600000)
-	let m = Math.floor(ms / 60000) % 60
-	let s = Math.floor(ms / 1000) % 60
+	var h = Math.floor(ms / 3600000)
+	var m = Math.floor(ms / 60000) % 60
+	var s = Math.floor(ms / 1000) % 60
 	console.log({
 		ms,
 		h,

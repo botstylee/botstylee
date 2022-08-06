@@ -15,11 +15,11 @@ var handler = async (m, {
 	if (!args[0]) return conn.reply(m.chat, 'Tidak ada url', m)
 	var url = /https?:\/\//.test(args[0]) ? args[0] : 'https://' + args[0]
 	try {
-	var ss = await (await fetch('https://shot.screenshotapi.net/screenshot?fresh=true&output=image&file_type=png&dark_mode=true&wait_for_event=load&delay=2000&url=' + encodeURIComponent(url) + '&full_page=false')).buffer()
-	conn.sendFile(m.chat, ss, 'screenshot.png', url, m)
+		var ss = await (await fetch('https://shot.screenshotapi.net/screenshot?fresh=true&output=image&file_type=png&dark_mode=true&wait_for_event=load&delay=2000&url=' + encodeURIComponent(url) + '&full_page=false')).buffer()
+		conn.sendFile(m.chat, ss, 'screenshot.png', url, m)
 	} catch (e) {
-   return e
-   }
+		return e
+	}
 }
 handler.help = ['ss', 'ssf'].map(v => v + ' *url*')
 handler.tags = ['internet']

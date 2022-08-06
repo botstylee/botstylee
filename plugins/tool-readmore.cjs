@@ -1,8 +1,8 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text
 }) => {
-	let [l, r] = text.split`|`
+	var [l, r] = text.split`|`
 	if (!l) l = ''
 	if (!r) r = ''
 	conn.reply(m.chat, l + readMore + r, m)
@@ -13,5 +13,5 @@ handler.command = /^(spoiler|hidetext|readmore|selengkapnya)$/i
 
 module.exports = handler
 
-const more = String.fromCharCode(8206)
-const readMore = more.repeat(4001)
+var more = String.fromCharCode(8206)
+var readMore = more.repeat(4001)

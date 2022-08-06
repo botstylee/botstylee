@@ -1,5 +1,5 @@
-const uploadFile = require('../lib/uploadFile.cjs');
-const {
+var uploadFile = require('../lib/uploadFile.cjs');
+var {
 	webp2png
 } = require('../lib/webp2mp4.cjs');
 async function handler(m, {
@@ -8,14 +8,14 @@ async function handler(m, {
 	usedPrefix: _p,
 	command
 }) {
-	let q = m.quoted ? m.quoted : m
-	let mime = (q.msg || q).mimetype || q.mediaType || ''
+	var q = m.quoted ? m.quoted : m
+	var mime = (q.msg || q).mimetype || q.mediaType || ''
 
 	if (/webp|image/g.test(mime)) {
-		let img = await q.download?.()
+		var img = await q.download?.()
 		if (!img) throw `balas gambar/stiker dengan perintah ${usedPrefix + command}`
 		try {
-			let out
+			var out
 			if (/image/g.test(mime)) out = await uploadFile(img)
 			if ('image/webp'.includes(mime)) out = await webp2png(img)
 			var a = (await axios.get(API('beni', '/api/canvas/wasted', {

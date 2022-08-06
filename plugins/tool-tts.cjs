@@ -1,27 +1,27 @@
-const gtts = require('node-gtts')
-const {
+var gtts = require('node-gtts')
+var {
 	readFileSync,
 	unlinkSync
 } = require('fs')
-const {
+var {
 	join
 } = require('path')
 
-const defaultLang = 'id'
-let handler = async (m, {
+var defaultLang = 'id'
+var handler = async (m, {
 	conn,
 	args
 }) => {
 
-	let lang = args[0]
-	let text = args.slice(1).join(' ')
+	var lang = args[0]
+	var text = args.slice(1).join(' ')
 	if ((args[0] || '').length !== 2) {
 		lang = defaultLang
 		text = args.join(' ')
 	}
 	if (!text && m.quoted && m.quoted.text) text = m.quoted.text
 
-	let res
+	var res
 	try {
 		res = await tts(text, lang)
 	} catch (e) {
@@ -41,8 +41,8 @@ function tts(text, lang = 'id') {
 	console.log(lang, text)
 	return new Promise((resolve, reject) => {
 		try {
-			let tts = gtts(lang)
-			let filePath = join(__dirname, '../tmp', (1 * new Date) + '.wav')
+			var tts = gtts(lang)
+			var filePath = join(__dirname, '../tmp', (1 * new Date) + '.wav')
 			tts.save(filePath, text, () => {
 				resolve(readFileSync(filePath))
 				unlinkSync(filePath)

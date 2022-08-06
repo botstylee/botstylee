@@ -1,4 +1,4 @@
-const uploadFile = require('../lib/uploadFile.cjs');
+var uploadFile = require('../lib/uploadFile.cjs');
 
 async function handler(m, {
 	conn,
@@ -6,15 +6,15 @@ async function handler(m, {
 	usedPrefix: _p,
 	command
 }) {
-	let q = m.quoted ? m.quoted : m
-	let mime = (q.msg || q).mimetype || q.mediaType || ''
+	var q = m.quoted ? m.quoted : m
+	var mime = (q.msg || q).mimetype || q.mediaType || ''
 
 	if (/webp|image/g.test(mime)) {
-		let img = await q.download?.()
+		var img = await q.download?.()
 		if (!img) throw `balas gambar/stiker dengan perintah ${usedPrefix + command}`
 		var [l1, l2, l3, l4] = text.split(/[&.|]/g)
 		try {
-			let out = await uploadFile(img)
+			var out = await uploadFile(img)
 			var a = (await axios.get(API('beni', '/api/canvas/spongebob', {
 				pp: out,
 				username:,

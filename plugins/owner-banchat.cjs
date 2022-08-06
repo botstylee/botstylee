@@ -1,10 +1,10 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	isOwner,
 	text,
 	isAdmin
 }) => {
-	let who
+	var who
 	if (m.isGroup) {
 		if (!(isAdmin || isOwner)) return dfail('admin', m, conn)
 		if (isOwner) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text ? text.replace(/[^0-9]/g, '') : m.chat

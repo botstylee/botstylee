@@ -1,7 +1,7 @@
-let {
+var {
 	spawn
 } = require('child_process');
-let handler = async (m, {
+var handler = async (m, {
 	conn
 }) => {
 	if (global.conn.user.jid == conn.user.jid) {

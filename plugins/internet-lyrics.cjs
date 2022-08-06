@@ -1,13 +1,18 @@
-const { 
-	lyrics, 
-	lyricsv2 
+var {
+	lyrics,
+	lyricsv2
 } = require('@bochilteam/scraper');
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
-    let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : ''
-    if (!teks) throw `Use example ${usedPrefix}${command} hallo`
-    const result = await lyricsv2(teks).catch(async _ => await lyrics(teks))
-    m.reply(`
+var handler = async (m, {
+	conn,
+	text,
+	usedPrefix,
+	command
+}) => {
+	var teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : ''
+	if (!teks) throw `Use example ${usedPrefix}${command} hallo`
+	var result = await lyricsv2(teks).catch(async _ => await lyrics(teks))
+	m.reply(`
 Lyrics *${result.title}*
 Author ${result.author}
 

@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	usedPrefix,
@@ -12,7 +12,7 @@ let handler = async (m, {
 	switch (text) {
 		case "on":
 		case "enable":
-			let cek = db.data.settings[conn.user.jid].pconly
+			var cek = db.data.settings[conn.user.jid].pconly
 			if (cek) return conn.reply(m.chat, `*pconly telah diaktifkan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
 			db.data.settings[conn.user.jid].pconly = true
@@ -20,7 +20,7 @@ let handler = async (m, {
 			break
 		case "off":
 		case "disable":
-			let ce = db.data.settings[conn.user.jid].pconly
+			var ce = db.data.settings[conn.user.jid].pconly
 			if (!ce) return conn.reply(m.chat, `*pconly telah dimatikan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
 			db.data.settings[conn.user.jid].pconly = false

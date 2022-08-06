@@ -1,8 +1,8 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text
 }) => {
-	if (!text) throw 'mau ngobrol apa?'
+	if (!text) throw 'Hai!!, saya robot. ada yang bisa saya bantu?. ketik pagar menu untuk melihat fitur🗿'
 	try {
 		a = (await axios.get(API('ghst', 'api/simsimi', {
 			pesan: text
@@ -15,24 +15,24 @@ let handler = async (m, {
 	} catch (e) {
 		if (e.response) {
 			console.log(e.response.data)
-			return resolve(m.reply(require('util').format({
+			return m.reply(require('util').format({
 				status: e.response.status,
-				msg: e.response.statusText
-			})))
+				msg: e.response.data.info ? e.response.data.info : e.response.data.message
+			}))
 		} else {
 			console.log(e)
-			return resolve(m.reply(require('util').format({
+			return m.reply(require('util').format({
 				status: 500,
 				msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
 			}), null, {
 				mentions: [nomorown + `@s.whatsapp.net`]
-			}))
+			})
 		}
 	}
 }
 
-handler.help = ['bot *teks*']
+handler.help = ['Bot *teks*']
 handler.tags = ['fun', 'game']
-handler.command = /^ot$/i
-
+handler.customPrefix = /Bot/
+handler.command = new RegExp
 module.exports = handler

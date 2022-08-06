@@ -1,24 +1,24 @@
-const {
+var {
 	proto,
 	generateWAMessage,
 	areJidsSameUser
 } = require('@adiwajshing/baileys')
 //var plugins = import('../lib/plugins.js').then(async({plugins}) { return new Promise(async(resolve,reject)=>{resolve(plugins)})})
-let handler = m => m
+var handler = m => m
 handler.all = async function(m, chatUpdate) {
-//console.log(plugins)
+	//console.log(plugins)
 	if (m.isBaileys)
 		return
 	if (!m.message)
 		return
 	if (!(m.message.buttonsResponseMessage || m.message.templateButtonReplyMessage || m.message.listResponseMessage))
 		return
-	let id = m.message.buttonsResponseMessage?.selectedButtonId || m.message.templateButtonReplyMessage?.selectedId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId
-	let text = m.message.buttonsResponseMessage?.selectedDisplayText || m.message.templateButtonReplyMessage?.selectedDisplayText || m.message.listResponseMessage?.title
-	let isIdMessage = false,
+	var id = m.message.buttonsResponseMessage?.selectedButtonId || m.message.templateButtonReplyMessage?.selectedId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId
+	var text = m.message.buttonsResponseMessage?.selectedDisplayText || m.message.templateButtonReplyMessage?.selectedDisplayText || m.message.listResponseMessage?.title
+	var isIdMessage = false,
 		usedPrefix
-	for (let name in global.plugins) {
-		let plugin = global.plugins[name]
+	for (var name in global.plugins) {
+		var plugin = global.plugins[name]
 		if (!plugin)
 			continue
 		if (plugin.disabled)
@@ -26,22 +26,22 @@ handler.all = async function(m, chatUpdate) {
 		if (!opts['restrict'])
 			if (plugin.tags && plugin.tags.includes('admin'))
 				continue
-		if(!db.data.settings[this.user.jid].restrict)
+		if (!db.data.settings[this.user.jid].restrict)
 			if (plugin.tags && plugin.tags.includes('admin'))
 				continue
 		if (typeof plugin !== 'function')
 			continue
 		if (!plugin.command)
 			continue
-		const str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-		let _prefix = plugin.customPrefix ? plugin.customPrefix : this.prefix ? this.prefix : global.prefix
-		let match = (_prefix instanceof RegExp ? // RegExp Mode?
+		var str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+		var _prefix = plugin.customPrefix ? plugin.customPrefix : this.prefix ? this.prefix : global.prefix
+		var match = (_prefix instanceof RegExp ? // RegExp Mode?
 			[
 				[_prefix.exec(id), _prefix]
 			] :
 			Array.isArray(_prefix) ? // Array?
 			_prefix.map(p => {
-				let re = p instanceof RegExp ? // RegExp in Array?
+				var re = p instanceof RegExp ? // RegExp in Array?
 					p :
 					new RegExp(str2Regex(p))
 				return [re.exec(id), re]
@@ -56,10 +56,10 @@ handler.all = async function(m, chatUpdate) {
 			]
 		).find(p => p[1])
 		if ((usedPrefix = (match[0] || '')[0])) {
-			let noPrefix = id.replace(usedPrefix, '')
-			let [command] = noPrefix.trim().split` `.filter(v => v)
+			var noPrefix = id.replace(usedPrefix, '')
+			var [command] = noPrefix.trim().split` `.filter(v => v)
 			command = (command || '').toLowerCase()
-			let isId = plugin.command instanceof RegExp ? // RegExp Mode?
+			var isId = plugin.command instanceof RegExp ? // RegExp Mode?
 				plugin.command.test(command) :
 				Array.isArray(plugin.command) ? // Array?
 				plugin.command.some(cmd => cmd instanceof RegExp ? // RegExp in Array?
@@ -75,7 +75,7 @@ handler.all = async function(m, chatUpdate) {
 		}
 
 	}
-	let messages = await generateWAMessage(m.chat, {
+	var messages = await generateWAMessage(m.chat, {
 		text: isIdMessage ? id : text,
 		mentions: m.mentionedJid
 	}, {
@@ -87,7 +87,7 @@ handler.all = async function(m, chatUpdate) {
 	messages.pushName = m.name
 	if (m.isGroup)
 		messages.key.participant = messages.participant = m.sender
-	let msg = {
+	var msg = {
 		...chatUpdate,
 		messages: [proto.WebMessageInfo.fromObject(messages)].map(v => (v.conn = this, v)),
 		type: 'append'

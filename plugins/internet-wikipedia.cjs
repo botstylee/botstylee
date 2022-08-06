@@ -1,15 +1,15 @@
-const {
-	 wikipedia 
- } = require('@bochilteam/scraper');
-let handler = async (m, { 
-	conn, 
-	text, 
-	usedPrefix, 
-	command 
+var {
+	wikipedia
+} = require('@bochilteam/scraper');
+var handler = async (m, {
+	conn,
+	text,
+	usedPrefix,
+	command
 }) => {
-  if (!text) throw `Contoh penggunaan ${usedPrefix}${command} Minecraft`
-  let json = await wikipedia(text)
-  m.reply(`
+	if (!text) throw `Contoh penggunaan ${usedPrefix}${command} Minecraft`
+	var json = await wikipedia(text)
+	m.reply(`
 *${json.title}*
 ${json.img}
 

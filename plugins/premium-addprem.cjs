@@ -1,5 +1,5 @@
-const toMs = require('ms');
-let handler = async (m, {
+var toMs = require('ms');
+var handler = async (m, {
 	conn,
 	text,
 	usedPrefix,
@@ -15,7 +15,7 @@ let handler = async (m, {
 	hl[1] = text.split('|')[1].toLowerCase()
 
 	if (!text) return conn.reply(m.chat, `*❏ GET NUMBER*\n\n• ${usedPrefix+command} number|expired\n*Example:* ${usedPrefix+command} 62895368900456|9m\n\n• ${usedPrefix+command} @tag|expired\n*Example:* ${usedPrefix+command} @62895368900456|9m\n*INFO expired*\n1m for 1minutes\n1d for 1days\n1w for 1week\n1y for 1years`, m)
-	let user = db.data.users[hl[0]]
+	var user = db.data.users[hl[0]]
 	if (!(hl[0] in db.data.users)) return m.reply(`User ${hl[0]} not in database`)
 	if (!('premium' in user)) {
 		user.premium = false
@@ -30,7 +30,7 @@ let handler = async (m, {
 	var expired = Date.now() + toMs(hl[1].replace(/[^0-9]/g, '') + hl[2])
 	user.expired += expired
 	user.premium = true
-	let format
+	var format
 	if (hl[2].match('d')) format = hl[2].replace('d', hl[1].replace(/[^0-9]/g, '') + ' Hari')
 	if (hl[2].match('w')) format = hl[2].replace('w', hl[1].replace(/[^0-9]/g, '') + ' Minggu')
 	if (hl[2].match('m')) format = hl[2].replace('m', hl[1].replace(/[^0-9]/g, '') + ' Menit')

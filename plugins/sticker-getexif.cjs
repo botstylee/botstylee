@@ -1,14 +1,14 @@
-const {
+var {
 	format
 } = require('util');
-const {
+var {
 	Image
 } = require('node-webpmux')
 
-let handler = async (m) => {
+var handler = async (m) => {
 	if (!m.quoted) return m.reply('Tag stikernya!')
 	if (/sticker/.test(m.quoted.mtype)) {
-		let img = new Image()
+		var img = new Image()
 		await img.load(await m.quoted.download())
 		m.reply(format(JSON.parse(img.exif.slice(22).toString())))
 	}

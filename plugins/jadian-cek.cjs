@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	usedPrefix,
 	text

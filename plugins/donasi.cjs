@@ -1,4 +1,4 @@
-let handler = async m => m.reply(`
+var handler = async m => m.reply(`
 ╭─「 Donasi 」
 │ • TELKOMSEL [08211499086]
 │ • DANA [08211499086]

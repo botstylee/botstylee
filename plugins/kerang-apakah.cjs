@@ -1,13 +1,11 @@
-let handler = async (m, { 
-	conn, 
-	text 
+var handler = async (m, {
+	conn,
+	text
 }) => {
-  conn.reply(m.chat, `${pickRandom(['Yap','Sepertinya Begitu','Kayaknya','Kayaknya nggak','Nggak','Nggak mungkin'])}
+	conn.reply(m.chat, `${pickRandom(['Yap','Sepertinya Begitu','Kayaknya','Kayaknya nggak','Nggak','Nggak mungkin'])}
 `.trim(), m, m.mentionedJid ? {
-  contextInfo: {
-    mentionedJid: m.mentionedJid
-  }
-} : {})
+		mentions: m.mentionedJid
+	} : {})
 }
 handler.help = ['apakah <teks>?']
 handler.tags = ['kerang']
@@ -17,5 +15,5 @@ handler.command = /^apakah$/i
 module.exports = handler
 
 function pickRandom(list) {
-  return list[Math.floor(Math.random() * list.length)]
+	return list[Math.floor(Math.random() * list.length)]
 }

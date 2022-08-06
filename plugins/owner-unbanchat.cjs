@@ -1,4 +1,4 @@
-let handler = async (m) => {
+var handler = async (m) => {
 	db.data.chats[m.chat].isBanned = false
 	m.reply('Done!')
 }

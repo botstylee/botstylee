@@ -1,15 +1,15 @@
-const {
+var {
 	generateWAMessageFromContent
 } = require('@adiwajshing/baileys');
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	participants
 }) => {
-	let users = participants.map(u => conn.decodeJid(u.id))
-	let q = m.quoted ? m.quoted : m
-	let c = m.quoted ? m.quoted : m.msg
-	const msg = conn.cMod(m.chat,
+	var users = participants.map(u => conn.decodeJid(u.id))
+	var q = m.quoted ? m.quoted : m
+	var c = m.quoted ? m.quoted : m.msg
+	var msg = conn.cMod(m.chat,
 		generateWAMessageFromContent(m.chat, {
 			[c.toJSON ? q.mtype : 'extendedTextMessage']: c.toJSON ? c.toJSON() : {
 				text: c || ''

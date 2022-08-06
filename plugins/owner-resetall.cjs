@@ -1,8 +1,8 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args
 }) => {
-	let list = Object.entries(db.data.users)
+	var list = Object.entries(db.data.users)
 	if (!args || !args[0]) {
 		var lim = 10
 	} else {

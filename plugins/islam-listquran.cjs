@@ -1,6 +1,8 @@
-let handler = async(m, { conn }) => {
-let gg = 'Here The List'
-let ya = `${gg}
+var handler = async (m, {
+	conn
+}) => {
+	var gg = 'Here The List'
+	var ya = `${gg}
 1: Al-Fatihah,
 2: Al-Baqarah,
 3: Ali 'Imran,
@@ -90,7 +92,7 @@ let ya = `${gg}
 87: Al-A’la,
 88: Al-Gasyiyah,
 89: Al-Fajr`
-conn.reply(m.chat, ya, m)
+	conn.reply(m.chat, ya, m)
 }
 handler.help = ['quran']
 handler.tags = ['islam']

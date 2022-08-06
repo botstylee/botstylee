@@ -1,12 +1,15 @@
-let handler = async (m, { conn, usedPrefix }) => {
-    let id = m.chat
-    conn.vote = conn.vote ? conn.vote : {}
-    if (!(id in conn.vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
+var handler = async (m, {
+	conn,
+	usedPrefix
+}) => {
+	var id = m.chat
+	conn.vote = conn.vote ? conn.vote : {}
+	if (!(id in conn.vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
 
-    let [reason, upvote, devote] = conn.vote[id]
-    let baba = [upvote, devote]
-    let name = await conn.getName(m.sender)
-    m.reply(`
+	var [reason, upvote, devote] = conn.vote[id]
+	var baba = [upvote, devote]
+	var name = await conn.getName(m.sender)
+	m.reply(`
 *「 VOTE 」*
 
 *Alasan:* ${reason}

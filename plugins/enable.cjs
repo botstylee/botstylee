@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	usedPrefix,
 	command,
@@ -7,14 +7,14 @@ let handler = async (m, {
 	isAdmin,
 	isROwner
 }) => {
-	let isEnable = /true|enable|(turn)?on|1/i.test(command)
-	let chat = db.data.chats[m.chat]
-	let user = db.data.users[m.sender]
-	let bot = db.data.settings[conn.user.jid]
-	let type = (args[0] || '').toLowerCase()
+	var isEnable = /true|enable|(turn)?on|1/i.test(command)
+	var chat = db.data.chats[m.chat]
+	var user = db.data.users[m.sender]
+	var bot = db.data.settings[conn.user.jid]
+	var type = (args[0] || '').toLowerCase()
 	log(isEnable)
-	let isAll = false
-	let isUser = false
+	var isAll = false
+	var isUser = false
 	switch (type) {
 		case 'welcome':
 			if (!m.isGroup) {

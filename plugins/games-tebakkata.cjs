@@ -1,6 +1,6 @@
-let timeout = 120000
-let poin = 5000
-let handler = async (m, {
+var timeout = 120000
+var poin = 5000
+var handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
@@ -8,13 +8,13 @@ let handler = async (m, {
 	var {
 		tebakkata
 	} = await import('@bochilteam/scraper');
-	let id = m.chat
+	var id = m.chat
 	if (id in conn.tebakkata) {
 		conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.tebakkata[id][0])
 		throw false
 	}
-	const json = await tebakkata()
-	let caption = `
+	var json = await tebakkata()
+	var caption = `
 ${json.soal}
 Timeout *${(timeout / 1000).toFixed(2)} detik*
 Ketik ${usedPrefix}teka untuk bantuan

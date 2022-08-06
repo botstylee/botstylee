@@ -1,12 +1,12 @@
-const {
+var {
 	promises
 } = require('fs');
-const {
+var {
 	join
 } = require('path');
-let levelling = require('../lib/levelling.cjs')
-let moment = require('moment-timezone')
-const defaultMenu = {
+var levelling = require('../lib/levelling.cjs')
+var moment = require('moment-timezone')
+var defaultMenu = {
 	before: `
 👋🏻 Halo kak %name
 
@@ -27,16 +27,16 @@ const defaultMenu = {
 	footer: '\n',
 	after: ``,
 }
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	usedPrefix: _p,
 	__dirname,
 	args,
 	command
 }) => {
-	let tags
-	let teks = `${args[0]}`.toLowerCase()
-	let arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'anime', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
+	var tags
+	var teks = `${args[0]}`.toLowerCase()
+	var arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'anime', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
 	if (!arrayMenu.includes(teks)) teks = '404'
 	if (teks == 'all') tags = {
 		'main': 'Main',
@@ -57,7 +57,7 @@ let handler = async (m, {
 		'anonymous': 'Anonymous Chat',
 		'downloader': 'Downloader',
 		'tools': 'Tools',
-                'anime': 'Anime',
+		'anime': 'Anime',
 		'fun': 'Fun',
 		'database': 'Database',
 		'vote': 'Voting',
@@ -70,7 +70,7 @@ let handler = async (m, {
 	}
 	if (teks == 'game') tags = {
 		'game': 'Games',
-		'fun': 'Fun', 
+		'fun': 'Fun',
 		'berburu': 'Berburu'
 	}
 	if (teks == 'textmaker') tags = {
@@ -119,7 +119,7 @@ let handler = async (m, {
 	if (teks == 'tools') tags = {
 		'tools': 'Tools'
 	}
-        if (teks == 'anime') tags = {
+	if (teks == 'anime') tags = {
 		'anime': 'Anime'
 	}
 	if (teks == 'database') tags = {
@@ -130,7 +130,7 @@ let handler = async (m, {
 		'advanced': 'Advanced'
 	}
 	if (teks == 'jadian') tags = {
-		'user': 'User', 
+		'user': 'User',
 		'jadian': 'Jadian'
 	}
 	if (teks == 'noktg') tags = {
@@ -139,46 +139,46 @@ let handler = async (m, {
 	}
 
 	try {
-		let _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
-		let {
+		var _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
+		var {
 			exp,
 			limit,
 			level,
 			role
 		} = db.data.users[m.sender]
-		let {
+		var {
 			min,
 			xp,
 			max
 		} = levelling.xpRange(level, global.multiplier)
-		let name = await conn.getName(m.sender)
-		let d = new Date(new Date + 3600000)
-		let locale = 'id'
+		var name = await conn.getName(m.sender)
+		var d = new Date(new Date + 3600000)
+		var locale = 'id'
 		// d.getTimeZoneOffset()
 		// Offset -420 is 18.00
 		// Offset    0 is  0.00
 		// Offset  420 is  7.00
-		let weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
-		let week = d.toLocaleDateString(locale, {
+		var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
+		var week = d.toLocaleDateString(locale, {
 			weekday: 'long'
 		})
-		let date = d.toLocaleDateString(locale, {
+		var date = d.toLocaleDateString(locale, {
 			day: 'numeric',
 			month: 'long',
 			year: 'numeric'
 		})
-		let dateIslamic = Intl.DateTimeFormat(locale + '-TN-u-ca-islamic', {
+		var dateIslamic = Intl.DateTimeFormat(locale + '-TN-u-ca-islamic', {
 			day: 'numeric',
 			month: 'long',
 			year: 'numeric'
 		}).format(d)
-		let time = d.toLocaleTimeString(locale, {
+		var time = d.toLocaleTimeString(locale, {
 			hour: 'numeric',
 			minute: 'numeric',
 			second: 'numeric'
 		})
-		let _uptime = process.uptime() * 1000
-		let _muptime
+		var _uptime = process.uptime() * 1000
+		var _muptime
 		if (process.send) {
 			process.send('uptime')
 			_muptime = await new Promise(resolve => {
@@ -186,11 +186,11 @@ let handler = async (m, {
 				setTimeout(resolve, 1000)
 			}) * 1000
 		}
-		let muptime = clockString(_muptime)
-		let uptime = clockString(_uptime)
-		let totalreg = Object.keys(db.data.users).length
-		let rtotalreg = Object.values(db.data.users).filter(user => user.registered == true).length
-		let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => {
+		var muptime = clockString(_muptime)
+		var uptime = clockString(_uptime)
+		var totalreg = Object.keys(db.data.users).length
+		var rtotalreg = Object.values(db.data.users).filter(user => user.registered == true).length
+		var help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => {
 			return {
 				help: Array.isArray(plugin.tags) ? plugin.help : [plugin.help],
 				tags: Array.isArray(plugin.tags) ? plugin.tags : [plugin.tags],
@@ -201,10 +201,10 @@ let handler = async (m, {
 			}
 		})
 		if (teks == '404') {
-			const sendMsg = await conn.sendMessage(m.chat, {
+			var sendMsg = await conn.sendMessage(m.chat, {
 				text: 'Sekarang Jam ' + time,
 				footer: author,
-				title: '```'+ ucapan() + name + '```\n*' + week + ' - ' + date + '*\n',
+				title: '```' + ucapan() + name + '```\n*' + week + ' - ' + date + '*\n',
 				buttonText: "Click",
 				sections: [{
 					title: "List Featured",
@@ -267,7 +267,7 @@ let handler = async (m, {
 						{
 							title: "Tools",
 							rowId: _p + `? tools`
-                                                },
+						},
 						{
 							title: "Anime",
 							rowId: _p + `? anime`
@@ -296,22 +296,22 @@ let handler = async (m, {
 				delete: sendMsg.key
 			}))
 		}
-		let groups = {}
-		for (let tag in tags) {
+		var groups = {}
+		for (var tag in tags) {
 			groups[tag] = []
-			for (let plugin of help)
+			for (var plugin of help)
 				if (plugin.tags && plugin.tags.includes(tag))
 					if (plugin.help) groups[tag].push(plugin)
-			// for (let tag of plugin.tags)
+			// for (var tag of plugin.tags)
 			//   if (!(tag in tags)) tags[tag] = tag
 		}
 		conn.menu = conn.menu ? conn.menu : {}
-		let before = conn.menu.before || defaultMenu.before
-		let header = conn.menu.header || defaultMenu.header
-		let body = conn.menu.body || defaultMenu.body
-		let footer = conn.menu.footer || defaultMenu.footer
-		let after = conn.menu.after || (conn.user.jid == global.conn.user.jid ? '' : `Powered by https://wa.me/${global.conn.user.jid.split`@`[0]}`) + defaultMenu.after
-		let _text = [
+		var before = conn.menu.before || defaultMenu.before
+		var header = conn.menu.header || defaultMenu.header
+		var body = conn.menu.body || defaultMenu.body
+		var footer = conn.menu.footer || defaultMenu.footer
+		var after = conn.menu.after || (conn.user.jid == global.conn.user.jid ? '' : `Powered by https://wa.me/${global.conn.user.jid.split`@`[0]}`) + defaultMenu.after
+		var _text = [
 			before,
 			...Object.keys(tags).map(tag => {
 				return header.replace(/%category/g, tags[tag]) + '\n' + [
@@ -328,8 +328,8 @@ let handler = async (m, {
 			}),
 			after
 		].join('\n')
-		let text = typeof conn.menu == 'string' ? conn.menu : typeof conn.menu == 'object' ? _text : ''
-		let replace = {
+		var text = typeof conn.menu == 'string' ? conn.menu : typeof conn.menu == 'object' ? _text : ''
+		var replace = {
 			'%': '%',
 			p: _p,
 			uptime,
@@ -357,7 +357,7 @@ let handler = async (m, {
 			readmore: readMore
 		}
 		text = await tiny(text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name]))
-		const pp = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => './src/avatar_contact.png')
+		var pp = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => './src/avatar_contact.png')
 		conn.sendHydrated(m.chat, text.trim(), 'BOT BY BENNIISMAEL & GHOST', pp, 'https://github.com/botstylee', 'Github', null, null, [
 			['Donate', '/donasi'],
 			['Speed', '/ping'],
@@ -376,18 +376,18 @@ handler.command = /^(menu|help|\?)$/i
 
 module.exports = handler
 
-const more = String.fromCharCode(8206)
-const readMore = more.repeat(4001)
+var more = String.fromCharCode(8206)
+var readMore = more.repeat(4001)
 
 function clockString(ms) {
-	let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
-	let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
-	let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
+	var h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
+	var m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
+	var s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
 	return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
 }
 
 function ucapan() {
-	const time = moment.tz('Asia/Jakarta').format('HH')
+	var time = moment.tz('Asia/Jakarta').format('HH')
 	res = "Selamat pagi "
 	if (time >= 4) {
 		res = "Selamat pagi "

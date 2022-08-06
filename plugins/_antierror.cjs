@@ -1,7 +1,7 @@
-let handler = m => m
+var handler = m => m
 
 handler.all = async function(m, {conn} ) {
-	let user = db.data.users[m.sender]
+	var user = db.data.users[m.sender]
 	if ((user.money * 1) > 99999998) {
 		user.money = 99999999
 	} else if ((user.money * 1) < 0) {

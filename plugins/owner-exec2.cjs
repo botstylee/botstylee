@@ -1,9 +1,9 @@
-let cp = require('child_process')
-let {
+var cp = require('child_process')
+var {
 	promisify
 } = require('util')
-let exec = promisify(cp.exec).bind(cp)
-let handler = async (m, {
+var exec = promisify(cp.exec).bind(cp)
+var handler = async (m, {
 	conn,
 	isOwner,
 	command,
@@ -11,13 +11,13 @@ let handler = async (m, {
 }) => {
 	if (global.conn.user.jid != conn.user.jid) return
 	m.reply('Executing...')
-	let o
+	var o
 	try {
 		o = await exec(command.trimStart() + ' ' + text.trimEnd())
 	} catch (e) {
 		o = e
 	} finally {
-		let {
+		var {
 			stdout,
 			stderr
 		} = o

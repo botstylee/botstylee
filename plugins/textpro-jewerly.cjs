@@ -1,13 +1,13 @@
 var tp = require("../lib/textpro.cjs")
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args
 }) => {
-	let txt = args.join` `
+	var txt = args.join` `
 	if (!txt) return conn.reply(m.chat, 'harap masukan teksnya!!!', m)
 	if (txt.length > 15) return conn.reply(m.chat, 'maksimal 15', m)
-	let items = [""];
-    let cewe = items[Math.floor(Math.random() * items.length)]
+	var items = [""];
+	var cewe = items[Math.floor(Math.random() * items.length)]
 	var a = await tp(cewe, txt)
 	log(a)
 	try {

@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	usedPrefix,
@@ -12,7 +12,7 @@ let handler = async (m, {
 	switch (text) {
 		case "on":
 		case "enable":
-			let cek = db.data.chats[m.chat].antiLink
+			var cek = db.data.chats[m.chat].antiLink
 			if (cek) return conn.reply(m.chat, `*Anti-Link telah aktif pada grup ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
 			db.data.chats[m.chat].antiLink = true
@@ -20,7 +20,7 @@ let handler = async (m, {
 			break
 		case "off":
 		case "disable":
-			let ce = db.data.chats[m.chat].antiLink
+			var ce = db.data.chats[m.chat].antiLink
 			if (!ce) return conn.reply(m.chat, `*Anti-Link belum aktif pada grup ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
 			db.data.chats[m.chat].antiLink = false

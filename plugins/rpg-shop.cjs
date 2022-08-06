@@ -1,4 +1,4 @@
-const items = {
+var items = {
 	buy: {
 		limit: {
 			exp: 1000
@@ -86,13 +86,13 @@ const items = {
 		},
 		seedbrokoli: {
 			money: 50
-		}, 
+		},
 		seedlabu: {
 			money: 50
 		},
 		seedkentang: {
 			money: 50
-		}, 
+		},
 		seedjagung: {
 			money: 50
 		},
@@ -151,13 +151,13 @@ const items = {
 		},
 		brokoli: {
 			money: 500
-		}, 
+		},
 		labu: {
 			money: 500
 		},
 		kentang: {
 			money: 500
-		}, 
+		},
 		jagung: {
 			money: 500
 		},
@@ -172,99 +172,99 @@ const items = {
 		},
 		/*=========| SELL HASIL BERBURU |==============*/
 		kepiting: {
-			money:20000
-		}, 
+			money: 20000
+		},
 		lobster: {
-			money:20000
-		}, 
+			money: 20000
+		},
 		udang: {
-			money:20000
-		}, 
+			money: 20000
+		},
 		cumi: {
-			money:20000
-		}, 
+			money: 20000
+		},
 		gurita: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		buntal: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		dory: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		orca: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		lumba: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		paus: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		hiu: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		banteng: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		harimau: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		gajah: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		kambing: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		panda: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		buaya: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		kerbau: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		sapi: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		monyet: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		babihutan: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		babi: {
-			money:2000
-		}, 
+			money: 2000
+		},
 		ayam: {
-			money:2000
+			money: 2000
 		}
 	}
 }
 
-let handler = async (m, {
+var handler = async (m, {
 	command,
 	usedPrefix,
 	args
 }) => {
-	let user = db.data.users[m.sender]
-	const listItems = Object.fromEntries(Object.entries(items[command.toLowerCase()]).filter(([v]) => v && v in user))
-	const info = `
+	var user = db.data.users[m.sender]
+	var listItems = Object.fromEntries(Object.entries(items[command.toLowerCase()]).filter(([v]) => v && v in user))
+	var info = `
 Use Format *${usedPrefix}${command} [crate] [count]*
 Usage example: *${usedPrefix}${command} potion 10*
     
 📍Items list: 
 ${Object.keys(listItems).map((v) => {
-        let paymentMethod = Object.keys(listItems[v]).find(v => v in user)
+        var paymentMethod = Object.keys(listItems[v]).find(v => v in user)
         return `${global.rpg.emoticon(v)}${v} | ${listItems[v][paymentMethod]} ${global.rpg.emoticon(paymentMethod)}${paymentMethod}`.trim()
     }).join('\n')}
 `.trim()
-	const item = (args[0] || '').toLowerCase()
-	const total = Math.floor(isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 1), Number.MAX_SAFE_INTEGER) : 1) * 1
+	var item = (args[0] || '').toLowerCase()
+	var total = Math.floor(isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 1), Number.MAX_SAFE_INTEGER) : 1) * 1
 	if (!listItems[item]) return m.reply(info)
 	if (command.toLowerCase() == 'buy') {
-		let paymentMethod = Object.keys(listItems[item]).find(v => v in user)
+		var paymentMethod = Object.keys(listItems[item]).find(v => v in user)
 		if (user[paymentMethod] < listItems[item][paymentMethod] * total) return m.reply(`You don't have enough ${global.rpg.emoticon(paymentMethod)}${paymentMethod} to buy *${total}* ${global.rpg.emoticon(item)}${item}. You need *${(listItems[item][paymentMethod] * total) - user[paymentMethod]}* more ${paymentMethod} to be able to buy`)
 		user[paymentMethod] -= listItems[item][paymentMethod] * total
 		user[item] += total

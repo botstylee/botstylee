@@ -1,9 +1,9 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args,
 	command
 }) => {
-	let _muptime
+	var _muptime
 	if (process.send) {
 		process.send('uptime')
 		_muptime = await new Promise(resolve => {
@@ -11,9 +11,9 @@ let handler = async (m, {
 			setTimeout(resolve, 1000)
 		}) * 1000
 	}
-	let muptime = msToDate(_muptime)
-	let bot = db.data.settings[conn.user.jid]
-	let status = `\t\t\t\t\t\t*S T A T U S*\n*self:* ${bot.self ? '✅' : '❎'}\n*restrict:* ${bot.restrict ? '✅' : '❎'}\n*onlypc:* ${bot.pconly ? '✅' : '❎'}`
+	var muptime = msToDate(_muptime)
+	var bot = db.data.settings[conn.user.jid]
+	var status = `\t\t\t\t\t\t*S T A T U S*\n*self:* ${bot.self ? '✅' : '❎'}\n*restrict:* ${bot.restrict ? '✅' : '❎'}\n*onlypc:* ${bot.pconly ? '✅' : '❎'}`
 	conn.reply(m.chat, await tiny(`\n*runtime*: ${muptime}\n\n${status}`), m, {
 		contextInfo: {
 			externalAdReply: {

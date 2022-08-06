@@ -1,8 +1,8 @@
-let handler  = async (m, { 
-	conn, 
+var handler = async (m, {
+	conn,
 	usedPrefix
 }) => {
-  conn.reply(m.chat, `
+	conn.reply(m.chat, `
 「 *Tutorial RPG Games BOTSTYLEE* 」
 *${usedPrefix}daily*
 ${usedPrefix}weekly*

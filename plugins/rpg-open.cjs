@@ -1,4 +1,4 @@
-const rewards = {
+var rewards = {
 	common: {
 		money: 101,
 		exp: 201,
@@ -61,14 +61,14 @@ const rewards = {
 	//     anjing: [],
 	// }
 }
-let handler = async (m, {
+var handler = async (m, {
 	command,
 	args,
 	usedPrefix
 }) => {
-	let user = db.data.users[m.sender]
-	let listCrate = Object.fromEntries(Object.entries(rewards).filter(([v]) => v && v in user))
-	let info = `
+	var user = db.data.users[m.sender]
+	var listCrate = Object.fromEntries(Object.entries(rewards).filter(([v]) => v && v in user))
+	var info = `
 Use Format *${usedPrefix}${command} [crate] [count]*
 Usage example: *${usedPrefix}${command} common 10*
 
@@ -77,8 +77,8 @@ ${Object.keys(listCrate).map((v) => `
 ${rpg.emoticon(v)}${v}
 `.trim()).join('\n')}
 `.trim()
-	let type = (args[0] || '').toLowerCase()
-	let count = Math.floor(isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 1), Number.MAX_SAFE_INTEGER) : 1) * 1
+	var type = (args[0] || '').toLowerCase()
+	var count = Math.floor(isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 1), Number.MAX_SAFE_INTEGER) : 1) * 1
 	if (!(type in listCrate)) return m.reply(info)
 	if (user[type] < count) return m.reply(`
 Your *${rpg.emoticon(type)}${type} crate* is not enough!, you only have ${user[type]} *${rpg.emoticon(type)}${type} crate*
@@ -86,11 +86,11 @@ type *${usedPrefix}buy ${type} ${count - user[type]}* to buy
 `.trim())
 	// TODO: add pet crate
 	// if (type !== 'pet')
-	let crateReward = {}
-	for (let i = 0; i < count; i++)
-		for (let [reward, value] of Object.entries(listCrate[type]))
+	var crateReward = {}
+	for (var i = 0; i < count; i++)
+		for (var [reward, value] of Object.entries(listCrate[type]))
 			if (reward in user) {
-				const total = value.getRandom()
+				var total = value.getRandom()
 				if (total) {
 					user[reward] += total * 1
 					crateReward[reward] = (crateReward[reward] || 0) + (total * 1)
@@ -103,7 +103,7 @@ ${Object.keys(crateReward).filter(v => v && crateReward[v] && !/legendary|pet|my
 *${global.rpg.emoticon(reward)}${reward}:* ${crateReward[reward]}
 `.trim()).join('\n')}
 `.trim())
-	let diamond = crateReward.diamond,
+	var diamond = crateReward.diamond,
 		mythic = crateReward.mythic,
 		pet = crateReward.pet,
 		legendary = crateReward.legendary,

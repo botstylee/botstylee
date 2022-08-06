@@ -1,6 +1,6 @@
-let timeout = 120000
-let poin = 5000
-let handler = async (m, {
+var timeout = 120000
+var poin = 5000
+var handler = async (m, {
 	conn,
 	usedPrefix
 }) => {
@@ -8,14 +8,14 @@ let handler = async (m, {
 	var {
 		tebakgambar
 	} = await import('@bochilteam/scraper');
-	let id = m.chat
+	var id = m.chat
 	if (id in conn.tebakgambar) {
 		conn.sendButton(m.chat, 'Masih ada soal belum terjawab di chat ini', author, null, buttons, conn.tebakgambar[id][0])
 		throw false
 	}
-	let json = await tebakgambar()
+	var json = await tebakgambar()
 	// if (!json.status) throw json
-	let caption = `
+	var caption = `
 Timeout *${(timeout / 1000).toFixed(2)} detik*
 Ketik ${usedPrefix}hint untuk hint
 Bonus: ${poin} XP
@@ -37,7 +37,7 @@ handler.command = /^tebakgambar/i
 
 module.exports = handler
 
-const buttons = [
+var buttons = [
 	['hint', '/hint'],
 	['nyerah', 'menyerah']
 ]

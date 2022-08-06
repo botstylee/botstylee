@@ -1,8 +1,8 @@
-const {
+var {
 	areJidsSameUser
 } = require('@adiwajshing/baileys');
 
-const leaderboards = [
+var leaderboards = [
 	'level',
 	'exp',
 	'limit',
@@ -23,23 +23,23 @@ const leaderboards = [
 	'legendary',
 	'pet'
 ]
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args,
 	participants,
 	usedPrefix,
 	command
 }) => {
-	let users = Object.entries(db.data.users).map(([key, value]) => {
+	var users = Object.entries(db.data.users).map(([key, value]) => {
 		return {
 			...value,
 			jid: key
 		}
 	})
-	let leaderboard = leaderboards.filter(v => v && users.filter(user => user && user[v]).length)
-	let type = (args[0] || '').toLowerCase()
-	const getPage = (item) => Math.ceil((users.filter(user => user && user[item]).length) / 25)
-	let wrong = `
+	var leaderboard = leaderboards.filter(v => v && users.filter(user => user && user[v]).length)
+	var type = (args[0] || '').toLowerCase()
+	var getPage = (item) => Math.ceil((users.filter(user => user && user[item]).length) / 25)
+	var wrong = `
 Use format *${usedPrefix}${command} [type] [page]*
 example *${usedPrefix}${command} money 1*
 
@@ -49,11 +49,11 @@ ${rpg.emoticon(v)}${v}
 `.trim()).join('\n')}
 `.trim()
 	if (!leaderboard.includes(type)) return m.reply(wrong)
-	let page = isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 0), getPage(type)) : 0
-	let sortedItem = users.map(toNumber(type)).sort(sort(type))
-	let userItem = sortedItem.map(enumGetKey)
-	// let len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 5)) : Math.min(5, sortedExp.length)
-	let text = `
+	var page = isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 0), getPage(type)) : 0
+	var sortedItem = users.map(toNumber(type)).sort(sort(type))
+	var userItem = sortedItem.map(enumGetKey)
+	// var len = args[0] && args[0].length > 0 ? Math.min(100, Math.max(parseInt(args[0]), 5)) : Math.min(5, sortedExp.length)
+	var text = `
 • *${rpg.emoticon(type)}${type} Leaderboard page ${page} of ${getPage(type)}* •
 You: *${userItem.indexOf(m.sender) + 1}* of *${userItem.length}*
 

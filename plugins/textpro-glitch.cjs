@@ -1,9 +1,9 @@
 var tp = require("../lib/textpro.cjs")
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args
 }) => {
-	let txt = args.join` `
+	var txt = args.join` `
 	if (!txt) return conn.reply(m.chat, 'harap masukan teksnya!!!', m)
 	if (txt.length > 35) return conn.reply(m.chat, 'maksimal 35', m)
   if (!txt2) return conn.reply(m.chat, 'gunakan command seperti ini\m*Contoh*:\n'+`${usedPrefix+command} benni|ganteng`, m)

@@ -10,23 +10,23 @@ var {
 var {
 	sizeFormatter
 } = require('human-readable');
-let format = sizeFormatter({
+var format = sizeFormatter({
 	std: 'JEDEC', // 'SI' (default) | 'IEC' | 'JEDEC'
 	decimalPlaces: 2,
 	keepTrailingZeroes: false,
 	render: (literal, symbol) => `${literal} ${symbol}B`,
 })
-let handler = async (m, {
+var handler = async (m, {
 	conn
 }) => {
-	const chats = Object.entries(store.chats).filter(([id, data]) => id && data.isChats)
-	const groupsIn = chats.filter(([id]) => id.endsWith('@g.us')) //groups.filter(v => !v.read_only)
-	const used = process.memoryUsage()
-	const cpus = _cpus().map(cpu => {
+	var chats = Object.entries(store.chats).filter(([id, data]) => id && data.isChats)
+	var groupsIn = chats.filter(([id]) => id.endsWith('@g.us')) //groups.filter(v => !v.read_only)
+	var used = process.memoryUsage()
+	var cpus = _cpus().map(cpu => {
 		cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
 		return cpu
 	})
-	const cpu = cpus.reduce((last, cpu, _, {
+	var cpu = cpus.reduce((last, cpu, _, {
 		length
 	}) => {
 		last.total += cpu.total
@@ -48,10 +48,10 @@ let handler = async (m, {
 			irq: 0
 		}
 	})
-	let old = performance.now()
+	var old = performance.now()
 	await m.reply('_Testing speed..._')
-	let neww = performance.now()
-	let speed = neww - old
+	var neww = performance.now()
+	var speed = neww - old
 	m.reply(`
 Merespon dalam ${speed} millidetik
 

@@ -1,16 +1,16 @@
-const {
+var {
 	randomBytes
 } = require('crypto');
 
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text
 }) => {
-	let groups = Object.entries(store.chats).filter(([jid, chat]) => jid.endsWith('@g.us') && chat.isChats && !chat.metadata?.read_only && !chat.metadata?.announce).map(v => v[0])
-	let cc = text ? m : m.quoted ? await m.getQuotedObj() : false || m
-	let teks = text ? text : cc.text
+	var groups = Object.entries(store.chats).filter(([jid, chat]) => jid.endsWith('@g.us') && chat.isChats && !chat.metadata?.read_only && !chat.metadata?.announce).map(v => v[0])
+	var cc = text ? m : m.quoted ? await m.getQuotedObj() : false || m
+	var teks = text ? text : cc.text
 	conn.reply(m.chat, `_Mengirim pesan broadcast ke ${groups.length} grup_`, m)
-	for (let id of groups) await conn.copyNForward(id, conn.cMod(m.chat, cc, /bc|broadcast/i.test(teks) ? teks : teks + '\n' + readMore + '「 All Group Broadcast 」\n' + randomID(32)), true).catch(_ => _)
+	for (var id of groups) await conn.copyNForward(id, conn.cMod(m.chat, cc, /bc|broadcast/i.test(teks) ? teks : teks + '\n' + readMore + '「 All Group Broadcast 」\n' + randomID(32)), true).catch(_ => _)
 	m.reply('Selesai Broadcast All Group :)')
 }
 handler.help = ['broadcastgroup', 'bcgc'].map(v => v + ' <teks>')
@@ -21,7 +21,7 @@ handler.owner = true
 
 module.exports = handler
 
-const more = String.fromCharCode(8206)
-const readMore = more.repeat(4001)
+var more = String.fromCharCode(8206)
+var readMore = more.repeat(4001)
 
-const randomID = length => randomBytes(Math.ceil(length * .5)).toString('hex').slice(0, length)
+var randomID = length => randomBytes(Math.ceil(length * .5)).toString('hex').slice(0, length)

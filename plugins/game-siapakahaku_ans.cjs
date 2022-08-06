@@ -1,13 +1,13 @@
-const similarity = require('similarity');
-const threshold = 0.72
-let handler = m => m
+var similarity = require('similarity');
+var threshold = 0.72
+var handler = m => m
 handler.before = async function(m) {
-	let id = m.chat
+	var id = m.chat
 	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/Ketik.*who|hint/i.test(m.quoted.text)) return !0
 	this.siapakahaku = this.siapakahaku ? this.siapakahaku : {}
 	if (!(id in this.siapakahaku)) return conn.sendButton(m.chat, 'Soal itu telah berakhir', author, ['siapakahaku', '/siapakahaku'], m)
 	if (m.quoted.id == this.siapakahaku[id][0].id) {
-		let json = JSON.parse(JSON.stringify(this.siapakahaku[id][1]))
+		var json = JSON.parse(JSON.stringify(this.siapakahaku[id][1]))
 		// m.reply(JSON.stringify(json, null, '\t'))
 		if (m.text.toLowerCase() == json.jawaban.toLowerCase().trim()) {
 			db.data.users[m.sender].

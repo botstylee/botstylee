@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text,
 	usedPrefix,
@@ -12,7 +12,7 @@ let handler = async (m, {
 	switch (text) {
 		case "on":
 		case "enable":
-			let cek = db.data.settings[conn.user.jid].restrict
+			var cek = db.data.settings[conn.user.jid].restrict
 			if (cek) return conn.reply(m.chat, `*restrict telah diaktifkan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
 			db.data.settings[conn.user.jid].restrict = true
@@ -20,7 +20,7 @@ let handler = async (m, {
 			break
 		case "off":
 		case "disable":
-			let ce = db.data.settings[conn.user.jid].restrict
+			var ce = db.data.settings[conn.user.jid].restrict
 			if (!ce) return conn.reply(m.chat, `*restrict telah dimatikan pada bot ini.*`, m)
 			await conn.sendPresenceUpdate('composing', m.chat)
 			db.data.settings[conn.user.jid].restrict = false

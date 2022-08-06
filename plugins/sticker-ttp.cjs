@@ -1,13 +1,13 @@
-const {
+var {
 	sticker
 } = require('../lib/sticker.cjs');
 
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text
 }) => {
-	let teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
-	let stiker = await sticker(null, global.API('xteam', '/ttp', {
+	var teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
+	var stiker = await sticker(null, global.API('xteam', '/ttp', {
 		file: '',
 		text: teks
 	}), global.packname, global.author)

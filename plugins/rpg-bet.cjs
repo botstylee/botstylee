@@ -1,4 +1,4 @@
-let confirm = {}
+var confirm = {}
 
 async function handler(m, {
 	conn,
@@ -7,10 +7,10 @@ async function handler(m, {
 	//if (!isROwner) throw 'Dalam perbaikan'
 	if (m.sender in confirm) throw 'Kamu masih melakukan judi, tunggu sampai selesai!!'
 	try {
-		let user = db.data.users[m.sender]
+		var user = db.data.users[m.sender]
 		if (!args[0]) return m.reply('brani taruhan brapa?')
 		if (args[0] < 1000 || args > 100000) return m.reply('minimal 1000, max 100000 buat taruhan')
-		let count = (args[0] && number(parseInt(args[0])) ? Math.max(parseInt(args[0]), 1) : /all/i.test(args[0]) ? Math.floor(parseInt(user.money)) : 1) * 1
+		var count = (args[0] && number(parseInt(args[0])) ? Math.max(parseInt(args[0]), 1) : /all/i.test(args[0]) ? Math.floor(parseInt(user.money)) : 1) * 1
 		if ((user.money * 1) < count) return m.reply('💵Uang kamu tidak cukup!!')
 		if (!(m.sender in confirm)) {
 			confirm[m.sender] = {
@@ -18,7 +18,7 @@ async function handler(m, {
 				count,
 				timeout: setTimeout(() => (m.reply('timed out'), delete confirm[m.sender]), 60000)
 			}
-			let txt = '⚠️Warning⚠️\n*Jangan judi karena tidak akan menang, BENERAN!!*\nApakah anda yakin (pikirkan baik-baik) mau melakukan judi (Y/n) (60s Timeout)'
+			var txt = '⚠️Warning⚠️\n*Jangan judi karena tidak akan menang, BENERAN!!*\nApakah anda yakin (pikirkan baik-baik) mau melakukan judi (Y/n) (60s Timeout)'
 			return conn.sendButton(m.chat, txt, author, null, [
 				['y'],
 				['n']
@@ -27,7 +27,7 @@ async function handler(m, {
 	} catch (e) {
 		console.error(e)
 		if (m.sender in confirm) {
-			let {
+			var {
 				timeout
 			} = confirm[m.sender]
 			clearTimeout(timeout)
@@ -40,18 +40,18 @@ async function handler(m, {
 handler.before = async m => {
 	if (!(m.sender in confirm)) return
 	if (m.isBaileys) return
-	let {
+	var {
 		timeout,
 		count
 	} = confirm[m.sender]
-	let user = db.data.users[m.sender]
-	let moneyDulu = user.money * 1
-	let txt = (m.msg && m.msg.selectedDisplayText ? m.msg.selectedDisplayText : m.text ? m.text : '').toLowerCase()
+	var user = db.data.users[m.sender]
+	var moneyDulu = user.money * 1
+	var txt = (m.msg && m.msg.selectedDisplayText ? m.msg.selectedDisplayText : m.text ? m.text : '').toLowerCase()
 	try {
 		if (/^y(es|a)?$/i.test(txt)) {
-			let Bot = (Math.floor(Math.random() * 80)) * 1
-			let Kamu = (Math.floor(Math.random() * 71)) * 1
-			let status = 'Kalah'
+			var Bot = (Math.floor(Math.random() * 80)) * 1
+			var Kamu = (Math.floor(Math.random() * 71)) * 1
+			var status = 'Kalah'
 			if (Bot < Kamu) {
 				user.money += count * 1
 				status = 'Menang'

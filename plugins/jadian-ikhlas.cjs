@@ -5,7 +5,7 @@ https://github.com/hairullana
 
 /*/ ///////////////////////////////*/
 
-let handler = async (m, {
+var handler = async (m, {
 	conn
 }) => {
 	if (db.data.users[m.sender].pasangan == "") return conn.reply(m.chat, `Kamu sedang tidak menembak siapapun!`, m)

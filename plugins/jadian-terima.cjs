@@ -5,7 +5,7 @@ https://github.com/hairullana
 
 /*/ ///////////////////////////////*/
 
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	text
 }) => {
@@ -28,9 +28,9 @@ let handler = async (m, {
 			var user = number + '@s.whatsapp.net'
 		}
 	} catch (e) {} finally {
-		const groupMetadata = (m.isGroup ? ((store.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
-		const participants = (m.isGroup ? groupMetadata.participants : []) || []
-		const users = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === user) : {}) || {}
+		var groupMetadata = (m.isGroup ? ((store.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
+		var participants = (m.isGroup ? groupMetadata.participants : []) || []
+		var users = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === user) : {}) || {}
 		if (!users) return conn.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
 		if (user === m.sender) return conn.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
 		if (user === conn.user.jid) return conn.reply(m.chat, `Tidak bisa berpacaran dengan saya t_t`, m)

@@ -1,28 +1,28 @@
-const {
+var {
 	sticker
 } = require('../lib/sticker.cjs');
-const uploadFile = require('../lib/uploadFile.cjs');
-const uploadImage = require('../lib/uploadImage.cjs');
-const {
+var uploadFile = require('../lib/uploadFile.cjs');
+var uploadImage = require('../lib/uploadImage.cjs');
+var {
 	webp2png
 } = require('../lib/webp2mp4.cjs');
 
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args,
 	usedPrefix,
 	command
 }) => {
-	let stiker = false
+	var stiker = false
 	try {
-		let q = m.quoted ? m.quoted : m
-		let mime = (q.msg || q).mimetype || q.mediaType || ''
+		var q = m.quoted ? m.quoted : m
+		var mime = (q.msg || q).mimetype || q.mediaType || ''
 		if (/webp|image|video/g.test(mime)) {
 			if (/video/g.test(mime))
 				if ((q.msg || q).seconds > 11) return m.reply('Maksimal 10 detik!')
-			let img = await q.download?.()
+			var img = await q.download?.()
 			if (!img) return m.reply(`balas gambar/video/stiker dengan perintah ${usedPrefix + command}`)
-			let out
+			var out
 			try {
 				if (/webp/g.test(mime)) out = await webp2png(img)
 				else if (/image/g.test(mime)) out = await uploadImage(img)
@@ -52,6 +52,6 @@ handler.command = /^s(tic?ker)?(gif)?(wm)?$/i
 
 module.exports = handler
 
-const isUrl = (text) => {
+var isUrl = (text) => {
 	return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'))
 }

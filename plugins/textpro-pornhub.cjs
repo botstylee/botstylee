@@ -1,5 +1,5 @@
 var tp = require("../lib/textpro.cjs")
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args, 
 	text, 

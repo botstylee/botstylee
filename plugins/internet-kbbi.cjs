@@ -1,15 +1,15 @@
-const {
-	 kbbi
- } = require('@bochilteam/scraper');
-let handler = async (m, { 
-	conn, 
-	text, 
-	usedPrefix, 
-	command 
-}) => {
-    if (!text) throw `Example use ${usedPrefix}${command} halo`
-    const res = await kbbi(text)
-    m.reply(`
+var {
+	kbbi
+} = require('@bochilteam/scraper');
+var handler = async (m, {
+			conn,
+			text,
+			usedPrefix,
+			command
+		}) => {
+			if (!text) throw `Example use ${usedPrefix}${command} halo`
+			var res = await kbbi(text)
+			m.reply(`
 ${res.map(v => `
 ${v.title}*
 

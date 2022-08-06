@@ -1,4 +1,4 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	args,
 	usedPrefix,
@@ -12,7 +12,7 @@ let handler = async (m, {
 contoh:
 ${usedPrefix}math hard
 `.trim()
-	let mode = args[0].toLowerCase()
+	var mode = args[0].toLowerCase()
 	if (!(mode in modes)) throw `
     ┌─〔 Mode 〕
 ├ ${Object.keys(modes).join('\n├ ')}
@@ -20,10 +20,10 @@ ${usedPrefix}math hard
 contoh:
 ${usedPrefix}math hard
 `.trim()
-	const buttons = Object.keys(modes).map(v => [v, `${usedPrefix}${command} ${v}`])
-	let id = m.chat
+	var buttons = Object.keys(modes).map(v => [v, `${usedPrefix}${command} ${v}`])
+	var id = m.chat
 	if (id in conn.math) return conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.math[id][0])
-	let math = genMath(mode)
+	var math = genMath(mode)
 	conn.math[id] = [
 		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(2)} detik\nBonus Jawaban Benar: ${math.bonus} XP`, m),
 		math, 4,
@@ -42,7 +42,7 @@ handler.command = /^math/i
 
 module.exports = handler
 
-let modes = {
+var modes = {
 	noob: [-3, 3, -3, 3, '+-', 18000, 1000],
 	easy: [-10, 10, -10, 10, '*/+-', 20000, 4000],
 	medium: [-40, 40, -20, 20, '*/+-', 40000, 5000],
@@ -52,7 +52,7 @@ let modes = {
 	impossible2: [-99999999, 99999999, -9999, 9999, '/', 120000, 50000]
 }
 
-let operators = {
+var operators = {
 	'+': '+',
 	'-': '-',
 	'*': '×',
@@ -60,11 +60,11 @@ let operators = {
 }
 
 function genMath(mode) {
-	let [a1, a2, b1, b2, ops, time, bonus] = modes[mode]
-	let a = randomInt(a1, a2)
-	let b = randomInt(b1, b2)
-	let op = pickRandom([...ops])
-	let result = (new Function(`return ${a} ${op.replace('/', '*')} ${b < 0 ? `(${b})` : b}`))()
+	var [a1, a2, b1, b2, ops, time, bonus] = modes[mode]
+	var a = randomInt(a1, a2)
+	var b = randomInt(b1, b2)
+	var op = pickRandom([...ops])
+	var result = (new Function(`return ${a} ${op.replace('/', '*')} ${b < 0 ? `(${b})` : b}`))()
 	if (op == '/')[a, result] = [result, a]
 	return {
 		str: `${a} ${operators[op]} ${b}`,

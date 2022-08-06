@@ -1,10 +1,10 @@
-let handler = async (m, { 
-	conn, 
-	usedPrefix, 
-	command, 
-	text 
-}) => { 
-conn.reply(m.chat, `
+var handler = async (m, {
+	conn,
+	usedPrefix,
+	command,
+	text
+}) => {
+	conn.reply(m.chat, `
 ────〔 *${command}* 〕────
 
 ${command.replace('cek', '').toUpperCase()} LEVEL *${Math.floor(Math.random() * 101)}*% 

@@ -1,20 +1,20 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn
 }) => {
 	//-----PRICE
 	//sewa
-	let sh = '8'
-	let sn = '15'
-	let ss = '25'
-	let sp = '35'
-	let sv = '45'
+	var sh = '8'
+	var sn = '15'
+	var ss = '25'
+	var sp = '35'
+	var sv = '45'
 	//premium
-	let ph = '5'
-	let pn = '20'
-	let pp = '40'
-	let pv = '50'
-	let ppm = '70'
-	let info = `
+	var ph = '5'
+	var pn = '20'
+	var pp = '40'
+	var pv = '50'
+	var ppm = '70'
+	var info = `
 ╭━━━━「 *POINT* 」
 ┊⫹⫺ *1 point:* _${sh}k_
 ┊⫹⫺ *2 point:* _${sn}k_
@@ -52,7 +52,7 @@ let handler = async (m, {
 
 ▌│█║▌║▌║║▌║▌║█│▌
 `
-	const sections = [{
+	var sections = [{
 		title: `-------✦ SEWA ✦-------`,
 		rows: [{
 				title: "🔖 𝗛𝗘𝗠𝗔𝗧",
@@ -109,14 +109,14 @@ let handler = async (m, {
 			},
 		]
 	}, ]
-	let d = new Date(new Date + 3600000)
-	let locale = 'id'
-	let time = d.toLocaleTimeString(locale, {
+	var d = new Date(new Date + 3600000)
+	var locale = 'id'
+	var time = d.toLocaleTimeString(locale, {
 		hour: 'numeric',
 		minute: 'numeric',
 		second: 'numeric'
 	})
-	const listMessage = {
+	var listMessage = {
 		text: info,
 		footer: `𝗧 𝗜 𝗠 𝗘 : ${time}`,
 		title: "BOTSTYLEE",

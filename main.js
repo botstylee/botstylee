@@ -3,70 +3,65 @@
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 process.on('uncaughtException', console.error)
 
-import './config.js';
-import path, {
-	join
-} from 'path'
-import fs, {
-	readdirSync,
-	statSync,
-	unlinkSync,
-} from 'fs'
+import './config.js'
+
 import {
 	spawn
 } from 'child_process'
 import {
-	tmpdir
-} from 'os'
-import {
 	protoType,
 	serialize
 } from './lib/simple.js'
-import plug, {
+import {
 	plugins,
 	filesInit,
-	reload
+	reload,
+	pluginFolder,
+	pluginFilter
 } from './lib/plugins.js'
 import Connection from './lib/connection.js'
+import Helper from './lib/helper.js'
 import db, {
 	loadDatabase
 } from './lib/database.js'
+import clearTmp from './lib/clearTmp.js';
 import axios from 'axios';
 import former from 'form-data';
 import cheri from 'cheerio';
 import fetch from 'node-fetch';
-import Helper from './lib/helper.js';
+import cron from 'node-cron';
+import fs from 'fs';
 global.fetch = fetch
 global.fs = fs
 global.axios = axios
 global.former = former
 global.cheerio = cheri
 global.db = db
-global.loadDatabase = loadDatabase()
+global.loadDatabase = await loadDatabase()
 global.delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
+global.plugins = plugins
+var PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
 protoType()
 serialize()
 if (db.data == null) loadDatabase
-global.plugins = (await import('./lib/plugins.js')).plugins
+
 Object.assign(global, Helper)
 // global.Fn = function functionCallBack(fn, ...args) { return fn.call(Connection.conn, ...args) }
 global.timestamp = {
 	start: new Date
 }
 
-const __dirname = global.__dirname(
-	import.meta.url)
-
 // global.opts['db'] = process.env['db']
 
-global.conn = await Connection.conn
+global.conn = Object.defineProperty(Connection, 'conn', {
+	value: await Connection.conn,
+	enumerable: true,
+	configurable: true,
+	writable: true
+}).conn
 global.store = Connection.store
 // load plugins
-const pluginFolder = global.__dirname(join(__dirname, './plugins/index'))
-const pluginFilter = filename => /\.(mc)?cjs$/.test(filename)
 filesInit(pluginFolder, pluginFilter, conn).then(_ => console.log(Object.keys(plugins))).catch(console.error)
 
 Object.freeze(reload)
@@ -74,33 +69,18 @@ Object.freeze(reload)
 
 if (!opts['test']) {
 	setInterval(async () => {
-		if (db.data) await db.write().catch(console.error)
-		if (opts['autocleartmp']) try {
-			clearTmp()
-		} catch (e) {
-			console.error(e)
-		}
+		await Promise.allSettled([
+			db.data ? db.write() : Promise.reject('db.data is null'),
+			(opts['autocleartmp'] || opts['cleartmp']) ? clearTmp() : Promise.resolve()
+		])
 		Connection.store.writeToFile(Connection.storeFile)
 	}, 60 * 1000)
 }
 if (opts['server'])(await import('./server.js')).default(conn, PORT)
 
-
-function clearTmp() {
-	const tmp = [tmpdir(), join(__dirname, './tmp')]
-	const filename = []
-	tmp.forEach(dirname => readdirSync(dirname).forEach(file => filename.push(join(dirname, file))))
-	return filename.map(file => {
-		const stats = statSync(file)
-		if (stats.isFile() && (Date.now() - stats.mtimeMs >= 1000 * 60 * 3)) return unlinkSync(file) // 3 minutes
-		return false
-	})
-}
-
-
 // Quick Test
 async function _quickTest() {
-	let test = await Promise.all([
+	var test = await Promise.all([
 		spawn('ffmpeg'),
 		spawn('ffprobe'),
 		spawn('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-filter_complex', 'color', '-frames:v', '1', '-f', 'webp', '-']),
@@ -120,9 +100,9 @@ async function _quickTest() {
 			})
 		])
 	}))
-	let [ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find] = test
+	var [ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find] = test
 	console.log(test)
-	let s = global.support = {
+	var s = global.support = {
 		ffmpeg,
 		ffprobe,
 		ffmpegWebp,
@@ -140,9 +120,9 @@ async function _quickTest() {
 }
 async function expired() {
 	return new Promise(async (resolve, reject) => {
-		let user = Object.keys(db.data.users)
-		let chat = Object.keys(db.data.chats)
-		for (let jid of user) {
+		var user = Object.keys(db.data.users)
+		var chat = Object.keys(db.data.chats)
+		for (var jid of user) {
 			var users = db.data.users[jid]
 			var {
 				name,
@@ -168,7 +148,7 @@ async function expired() {
 				}
 			}
 		}
-		for (let id of chat) {
+		for (var id of chat) {
 			if (id.endsWith('g.us')) {
 				var chats = db.data.chats[id]
 				if (chats.grouprental) {

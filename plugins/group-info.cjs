@@ -1,11 +1,11 @@
-let handler = async (m, {
+var handler = async (m, {
 	conn,
 	participants,
 	groupMetadata
 }) => {
-	const _p = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || profil
+	var _p = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || profil
 	var pp = /^https?:\/\//.test(_p) ? await getbuffer(_p) : _p
-	const {
+	var {
 		isBanned,
 		welcome,
 		detect,
@@ -20,10 +20,10 @@ let handler = async (m, {
 		groupexpired,
 		expired
 	} = db.data.chats[m.chat]
-	const groupAdmins = participants.filter(p => p.admin)
-	const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
-	const owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || m.chat.split`-` [0] + '@s.whatsapp.net'
-	let text = `*「 Group Information 」*\n
+	var groupAdmins = participants.filter(p => p.admin)
+	var listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
+	var owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || m.chat.split`-` [0] + '@s.whatsapp.net'
+	var text = `*「 Group Information 」*\n
 *ID:* 
 ${groupMetadata.id}
 *Name:* 
