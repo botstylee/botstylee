@@ -25,7 +25,7 @@ async function handler(m, {
 						url: args[0]
 					}, 'key'))).data
 					console.log(a)
-					if (a.success) {
+					if (a.status) {
 						m.reply(work)
 						return (await conn.sendFile(m.chat, a.download.video.no_wm.url, "", require('util').format({
 							author: a.author.nickname,
