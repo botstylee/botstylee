@@ -4,22 +4,21 @@ var handler = async (m, {
 	usedPrefix,
 	command
 }) => {
-
 	if (!args[0]) throw `uhm.. url nya mana?\n\ncontoh:\n${usedPrefix + command} https://vt.tiktok.com/yqyjPX/`
 	if (!args[0].match(/tiktok/gi)) throw `url salah`
-
-	var res = await fetch("https://rest-beni.herokuapp.com/api/tiktok?url=" + args[0])
-	if (!res.status) throw eror
-	var json = await res.json()
-	// if (!json.status) throw json
-	await m.reply('Tunggu Sebentar...')
-	await conn.sendFile(m.chat, json.result.nowm, '', `\n\nBOTSTYLE`, m)
-
+	try {
+		var a = await axios.get('https://rest-beni.herokuapp.com/api/tiktok?url=' + args[0])
+		if (!a.result.video_original) {
+			conn.sendFile(m.chat, a.result.video, '', '\n\nBOTSTYLEE', m)
+		} else {
+			conn.sendFile(m.chat, a.result.video_original, "", "\n\nBOTSTYLEE", m)
+		}
+	} catch (e) {
+		conn.reply(m.chat, "error", m)
+	}
 }
 handler.help = ['tiktok <url>']
 handler.tags = ['downloader']
-handler.command = ['tiktok']
-
+handler.command = /^(tiktok)$/i
 handler.limit = true
-
 module.exports = handler
