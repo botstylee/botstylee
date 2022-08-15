@@ -8,12 +8,13 @@ var handler = async (m, {
 	if (!args[0].match(/tiktok/gi)) throw `url salah`
 	try {
 		var a = await axios.get('https://rest-beni.herokuapp.com/api/tiktok?url=' + args[0])
-		if (!a.result.video_original) {
-			conn.sendFile(m.chat, a.result.video, '', '\n\nBOTSTYLEE', m)
+		if (!a.data.result.video_original) {
+			conn.sendFile(m.chat, a.data.result.video, '', '\n\nBOTSTYLEE', m)
 		} else {
-			conn.sendFile(m.chat, a.result.video_original, "", "\n\nBOTSTYLEE", m)
+			conn.sendFile(m.chat, a.data.result.video_original, "", "\n\nBOTSTYLEE", m)
 		}
 	} catch (e) {
+log(e)
 		conn.reply(m.chat, "error", m)
 	}
 }
