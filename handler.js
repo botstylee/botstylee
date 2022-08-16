@@ -839,11 +839,11 @@ export async function handler(chatUpdate) {
 					}
 				}
 			}
-			if (!opts['restrict'])
+			/*if (!opts['restrict'])
 				if (plugin.tags && plugin.tags.includes('admin')) {
 					// global.dfail('restrict', m, this)
 					continue
-				}
+				}*/
 			var strict = db.data.settings[this.user.jid].restrict
 			if (!strict) {
 				db.data.chats[m.chat].antiToxic = false
