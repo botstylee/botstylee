@@ -2,7 +2,7 @@ var handler = async (m, {
 	conn,
 	text
 }) => {
-	if (!text) throw 'Hai!!, saya robot. ada yang bisa saya bantu?. ketik pagar menu untuk melihat fitur🗿'
+	if (!text) throw 'Hai!!, saya robot. ada yang bisa saya bantu?. ketik #menu untuk melihat fitur🗿'
 	try {
 		a = (await axios.get(API('ghst', 'api/simsimi', {
 			pesan: text
