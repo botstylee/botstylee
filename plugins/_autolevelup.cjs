@@ -13,7 +13,7 @@ handler.before = m => {
 	if (before !== user.level) {
 		user.role = global.rpg.role(user.level).name
 		m.reply(`
-Selamat, ${this.getName(m.sender)} telah naik level!
+Selamat, ${conn.getName(m.sender)} telah naik level!
 • 🧬Level Sebelumnya : ${before}
 • 🧬Level Baru : ${user.level}
 • 🧬Role Kamu : ${user.role}
