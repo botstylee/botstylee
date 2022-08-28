@@ -1,3 +1,4 @@
+//kalo mau ngambil jangan lupa kasih tag github Find19
 var uploadFile = require('../lib/uploadFile.cjs');
 var {
 	webp2png
