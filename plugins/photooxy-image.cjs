@@ -1,4 +1,4 @@
-//kalo mau ngambil jangan lupa kasih tag github Find19
+//kalo mau ngambil jangan lupa kasih tag github.com/findme-19 and github.com/botstylee
 var uploadFile = require('../lib/uploadFile.cjs');
 var {
 	webp2png
