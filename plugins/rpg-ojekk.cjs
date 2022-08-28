@@ -71,9 +71,9 @@ Stamina anda berkurang -20
 `
 
 
-	global.db.data.users[m.sender].money += rbrb1
-	global.db.data.users[m.sender].exp += rbrb2
-	global.db.data.users[m.sender].stamina -= stamina
+	db.data.users[m.sender].money += rbrb1
+	db.data.users[m.sender].exp += rbrb2
+	db.data.users[m.sender].stamina -= stamina
 
 	setTimeout(() => {
 		m.reply(`${hsl}`)
