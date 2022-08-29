@@ -36,7 +36,7 @@ var handler = async (m, {
 }) => {
 	var tags
 	var teks = `${args[0]}`.toLowerCase()
-	var arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'anime', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
+	var arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'wattpad', 'anime', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
 	if (!arrayMenu.includes(teks)) teks = '404'
 	if (teks == 'all') tags = {
 		'main': 'Main',
@@ -57,6 +57,7 @@ var handler = async (m, {
 		'anonymous': 'Anonymous Chat',
 		'downloader': 'Downloader',
 		'tools': 'Tools',
+                'wattpad': 'Wattpad',
 		'anime': 'Anime',
 		'fun': 'Fun',
 		'database': 'Database',
@@ -118,6 +119,9 @@ var handler = async (m, {
 	}
 	if (teks == 'tools') tags = {
 		'tools': 'Tools'
+	}
+        if (teks == 'wattpad') tags = {
+		'wattpad': 'Wattpad'
 	}
 	if (teks == 'anime') tags = {
 		'anime': 'Anime'
@@ -267,6 +271,10 @@ var handler = async (m, {
 						{
 							title: "Tools",
 							rowId: _p + `? tools`
+						},
+						{
+                                                        title: "Wattpad",
+							rowId: _p + `? wattpad`
 						},
 						{
 							title: "Anime",
