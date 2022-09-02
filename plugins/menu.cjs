@@ -36,7 +36,7 @@ var handler = async (m, {
 }) => {
 	var tags
 	var teks = `${args[0]}`.toLowerCase()
-	var arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'wattpad', 'anime', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
+	var arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'wattpadz', 'anime', 'audio', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
 	if (!arrayMenu.includes(teks)) teks = '404'
 	if (teks == 'all') tags = {
 		'main': 'Main',
@@ -57,8 +57,9 @@ var handler = async (m, {
 		'anonymous': 'Anonymous Chat',
 		'downloader': 'Downloader',
 		'tools': 'Tools',
-                'wattpad': 'Wattpad',
+                'wattpadz': 'Wattpadz',
 		'anime': 'Anime',
+                'audio': 'Audio',
 		'fun': 'Fun',
 		'database': 'Database',
 		'vote': 'Voting',
@@ -120,11 +121,14 @@ var handler = async (m, {
 	if (teks == 'tools') tags = {
 		'tools': 'Tools'
 	}
-        if (teks == 'wattpad') tags = {
-		'wattpad': 'Wattpad'
+        if (teks == 'wattpadz') tags = {
+		'wattpadz': 'Wattpadz'
 	}
 	if (teks == 'anime') tags = {
 		'anime': 'Anime'
+	}
+        if (teks == 'audio') tags = {
+		'audio': 'Audio'
 	}
 	if (teks == 'database') tags = {
 		'database': 'Database'
@@ -273,12 +277,16 @@ var handler = async (m, {
 							rowId: _p + `? tools`
 						},
 						{
-                                                        title: "Wattpad",
-							rowId: _p + `? wattpad`
+                                                        title: "Wattpadz",
+							rowId: _p + `? wattpadz`
 						},
 						{
 							title: "Anime",
 							rowId: _p + `? anime`
+						},
+						{
+                                                        title: "Audio",
+							rowId: _p + `? audio`
 						},
 						{
 							title: "Database",
