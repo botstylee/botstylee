@@ -11,31 +11,35 @@ var handler = async (m, {
 	conn,
 	args,
 	usedPrefix,
-	command
+	command,
+	text
 }) => {
 	var stiker = false
 	try {
 		var q = m.quoted ? m.quoted : m
 		var mime = (q.msg || q).mimetype || q.mediaType || ''
-		if (/webp|image|video/g.test(mime)) {
-			if (/video/g.test(mime))
-				if ((q.msg || q).seconds > 11) return m.reply('Maksimal 10 detik!')
+		var [text1, text2] = text.split('|')
+		if (!text1) text1 = '-'
+		if (!text2) text2 = ''
+		if (/webp|image/g.test(mime)) {
 			var img = await q.download?.()
-			if (!img) return m.reply(`balas gambar/video/stiker dengan perintah ${usedPrefix + command}`)
+			if (!img) return m.reply(`balas gambar/video/stiker dengan perintah\n\ncontoh: ${usedPrefix + command} text1|text2`)
 			var out
 			try {
 				if (/webp/g.test(mime)) out = await webp2png(img)
-				else if (/video/g.test(mime)) out = await uploadFile(img)
-				if (!out || typeof out !== 'string') out = await uploadImage(img)
-				stiker = await sticker(out, global.packname, `© ${await conn.getName(m.sender)}`)
+				else if (/image/g.test(mime)) out = await uploadImage(img)
+				if (typeof out !== 'string') out = await uploadImage(img)
+				var meme
+				meme = await fetch(API('https://api.memegen.link', `/images/custom/${encodeURIComponent(text1)}/${encodeURIComponent(text2)}.png`, {
+					background: out
+				}))
+				meme = (await meme.arrayBuffer()).toBuffer()
+				stiker = await sticker(meme, packname, author)
 			} catch (e) {
 				console.error(e)
 			} finally {
-				if (!stiker) stiker = await sticker(img, global.packname, global.author)
+				if (!stiker) stiker = await sticker(meme, packname, author)
 			}
-		} else if (args[0]) {
-			if (isUrl(args[0])) stiker = await sticker(args[0], global.packname, global.author)
-			else return m.reply('URL tidak valid!')
 		}
 	} catch (e) {
 		console.error(e)
@@ -45,10 +49,10 @@ var handler = async (m, {
 		else throw 'Conversion failed'
 	}
 }
-handler.help = ['stiker (caption|reply media)', 'stiker *url*', 'stikergif (caption|reply media)', 'stikergif *url*']
+handler.help = ['memegen *teks|teks*']
 handler.tags = ['sticker']
-handler.command = /^s(tic?ker)?(gif)?(wm)?$/i
-
+handler.command = /^memegen$/i
+handler.limit = true
 module.exports = handler
 
 var isUrl = (text) => {

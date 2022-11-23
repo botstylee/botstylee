@@ -1,19 +1,20 @@
 import express from 'express'
 import path from 'path'
 import {
-	Socket
+	createServer
+} from 'http'
+import {
+	Server
 } from 'socket.io'
 import {
 	toBuffer
 } from 'qrcode'
 import fetch from 'node-fetch'
-import fs from 'fs';
-import wakeDyno from 'woke-dyno';
+import Helper from './lib/helper.js'
 
 function connect(conn, PORT) {
 	let app = global.app = express()
-
-	// app.use(express.static(path.join(__dirname, 'views')))
+	let server = global.server = createServer(app)
 	let _qr = 'invalid'
 
 	conn.ev.on('connection.update', function appQR({
@@ -26,17 +27,20 @@ function connect(conn, PORT) {
 		res.setHeader('content-type', 'image/png')
 		res.end(await toBuffer(_qr))
 	})
+	app.use(express.static(path.join(Helper.__dirname(
+		import.meta.url), 'views')))
 
-	let server = app.listen(PORT, () => {
-		console.log('App listened on port', PORT)
-		if (opts['keepalive']) keepAlive()
-	})
-	let io = Socket(server)
+	let io = new Server(server)
 	io.on('connection', socket => {
 		let {
 			unpipeEmit
 		} = pipeEmit(conn, socket, 'conn-')
-		socket.on('disconnect', unpipeEmit)
+		socket.once('disconnect', unpipeEmit)
+	})
+
+	server.listen(PORT, () => {
+		console.log('App listened on port', PORT)
+		if (opts['keepalive']) keepAlive()
 	})
 }
 

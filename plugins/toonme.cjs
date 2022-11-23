@@ -16,8 +16,8 @@ async function handler(m, {
 		var img = await q.download?.()
 		if (!img) throw `balas gambar/stiker dengan perintah ${usedPrefix + command}`
 		if (args.length == 0) return m.reply(`Untuk menggunakan fitur ini\nSilahkan balas gambar atau kirim gambar dengan caption : ${_p+command} [filter]\n\n*Contoh:* ${_p+command} v2\n\nfilter yang tersedia:\n1. v1\n2. v2\n3. v3\n4. v4\n5. v5\n6. v6\n7. v7\n8. v8\n9. v9\n10. v10`)
-		let Pilihan = args[0]
-		let uuid = {
+		var Pilihan = args[0]
+		var uuid = {
 			v1: 't1',
 			v2: 't2',
 			v3: 't3',
