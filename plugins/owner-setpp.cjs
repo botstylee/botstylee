@@ -15,7 +15,7 @@ var handler = async (m, {
 		if (!isAdmin) throw 'Only admin can use this command'
 		if (!isBotAdmin) throw 'jadiin admin dulu'
 	}
-	if (!(m.isGroup && isROwner)) throw
+	if (!(m.isGroup && isROwner)) throw 'Command Access Denied!!!'
 	if (/webp|image/g.test(mime)) {
 		var img = await q.download?.()
 		if (!img) return m.reply(`balas gambar/stiker dengan perintah ${usedPrefix+command}`)
