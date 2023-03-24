@@ -17,11 +17,12 @@
   "keywords": [
     "heko"
   ],
-  "author": "gweh",
+  "author": "Benniismail",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://github.com/what-zit-tooyaa/Baileys.git",
-    "@bochilteam/scraper": "^2.0.0",
+    "@adiwajshing/baileys": "github:what-zit-tooyaa/Baileys",
+    "@bochilteam/scraper": "^3.0.0",
+    "aki-api": "^6.0.8",
     "awesome-phonenumber": "^2.70.0",
     "axios": "^0.26.1",
     "brainly-scraper-v2": "^1.1.2",
