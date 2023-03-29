@@ -126,14 +126,14 @@ global.prems = [] // Premium user has unlimited limit
 global.APIs = { // API Prefix
 	// name: 'https://website'
 	nrtm: 'https://nurutomo.herokuapp.com/',
-	ghst: 'https://ghostui-api.herokuapp.com/',
+	ghst: 'https://api-ghost.herokuapp.com/',
 	botstyle: 'https://botstyle-api.herokuapp.com',
 	beni: 'https://rest-beni.herokuapp.com/'
 }
 global.APIKeys = { // APIKey Here
 	// 'https://website': 'apikey'
         'https://botstyle-api.herokuapp.com': 'iAEzm9gH',
-	'https://ghostui-api.herokuapp.com/': 'OC2eTK'
+	'https://api-ghost.herokuapp.com': 'EsLLv3'
 }
 // Sticker WM
 global.packname = 'ig : Beni_230\'Benniismael'
