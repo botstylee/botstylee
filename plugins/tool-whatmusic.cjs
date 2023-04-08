@@ -25,4 +25,4 @@ handler.help = ['whatmusic']
 handler.tags = ['tools']
 handler.command = /^(whatmusic)$/i
 
-export default handler
+module.exports = handler
