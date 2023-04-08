@@ -1,25 +1,50 @@
-var handler = async (m, {
-	conn,
-	args,
-	usedPrefix,
-	command
-}) => {
-	if (!args[0]) throw `uhm.. url nya mana?\n\ncontoh:\n${usedPrefix + command} https://vt.tiktok.com/yqyjPX/`
-	if (!args[0].match(/tiktok/gi)) throw `url salah`
-	try {
-		var a = await axios.get('https://rest-beni.herokuapp.com/api/tiktok?url=' + args[0])
-		if (!a.data.result.video_original) {
-			conn.sendFile(m.chat, a.data.result.video, '', '\n\nBOTSTYLEE', m)
-		} else {
-			conn.sendFile(m.chat, a.data.result.video_original, "", "\n\nBOTSTYLEE", m)
-		}
-	} catch (e) {
-log(e)
-		conn.reply(m.chat, "error", m)
-	}
+var axios = require('axios');
+var cheerio = require('cheerio');
+var handler = async (m, { conn, args}) => {
+  if (!args[0]) throw 'Uhm...url nya mana?'
+    const { thumbnail, video, audio } = await tiktokdl(args[0])
+    const url = video
+    if (!url) throw 'Can\'t download video!'
+    await conn.sendMessage(m.chat, { video: { url: url }},m) 
 }
-handler.help = ['tiktok <url>']
+handler.help = ['tiktok'].map(v => v + ' <url>')
 handler.tags = ['downloader']
-handler.command = /^(tiktok)$/i
-handler.limit = true
+
+handler.command = /^t(iktok(d(own(load(er)?)?|l))?|td(own(load(er)?)?|l))$/i
+
 module.exports = handler
+
+async function tiktokdl (url) {
+    if (!/tiktok/.test(url)) return error.link;
+    const gettoken = await axios.get("https://tikdown.org/id");
+    const $ = cheerio.load(gettoken.data);
+    const token = $("#download-form > input[type=hidden]:nth-child(2)").attr(
+        "value"
+    );
+    const param = {
+        url: url,
+        _token: token,
+    };
+    const {
+        data
+    } = await axios.request("https://tikdown.org/getAjax?", {
+        method: "post",
+        data: new URLSearchParams(Object.entries(param)),
+        headers: {
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36",
+        },
+    });
+    var getdata = cheerio.load(data.html);
+    if (data.status) {
+        return {
+            status: true,
+            thumbnail: getdata("img").attr("src"),
+            video: getdata("div.download-links > div:nth-child(1) > a").attr("href"),
+            audio: getdata("div.download-links > div:nth-child(2) > a").attr("href"),
+        };
+    } else
+        return {
+            status: false,
+        };
+};
