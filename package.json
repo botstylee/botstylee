@@ -20,7 +20,7 @@
   "author": "Benniismail",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "github:what-zit-tooyaa/Baileys",
+    "@adiwajshing/baileys": "github:zennn08/Baileys-Compiled",
     "@bochilteam/scraper": "^3.0.0",
     "aki-api": "^6.0.8",
     "awesome-phonenumber": "^2.70.0",
