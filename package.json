@@ -28,6 +28,7 @@
     "axios": "^0.26.1",
     "brainly-scraper-v2": "^1.1.2",
     "buffer-image-size": "^0.6.4",
+    "cfonts": "^2.10.0",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.10",
     "colors": "^1.4.0",
@@ -66,6 +67,7 @@
     "syntax-error": "^1.4.0",
     "terminal-image": "^2.0.0",
     "url-regex-safe": "^3.0.0",
+    "wa-sticker-formatter": "^4.3.2",
     "woke-dyno": "^0.0.4",
     "yargs": "^17.4.0"
   }
