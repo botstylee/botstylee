@@ -5,40 +5,59 @@ var {
 	join
 } = require('path');
 var levelling = require('../lib/levelling.cjs')
-var moment = require('moment-timezone')
-var defaultMenu = {
-	before: `
-👋🏻 Halo kak %name
-
-*Limit* : %limit
-*Role* : %role
-*Level* : %level (%exp / %maxexp)
-*Total exp* : %totalexp
-
-*Tanggal*: %week, %date
-*Waktu*: %time
-
-*Uptime*: %uptime (%muptime)
-*Database*: %totalreg
-
-`.trimStart(),
-	header: '*%category*',
-	body: '⚄ %cmd %islimit %isPremium',
-	footer: '\n',
-	after: ``,
+var _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
+var {
+	exp,
+	limit,
+	level,
+	role
+} = db.data.users[m.sender]
+var {
+	min,
+	xp,
+	max
+} = levelling.xpRange(level, global.multiplier)
+var name = await conn.getName(m.sender)
+var d = new Date(new Date + 3600000)
+var locale = 'id'
+// d.getTimeZoneOffset()
+// Offset -420 is 18.00
+// Offset    0 is  0.00
+// Offset  420 is  7.00
+var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
+var week = d.toLocaleDateString(locale, {
+	weekday: 'long'
+})
+var date = d.toLocaleDateString(locale, {
+	day: 'numeric',
+	month: 'long',
+	year: 'numeric'
+})
+var dateIslamic = Intl.DateTimeFormat(locale + '-TN-u-ca-islamic', {
+	day: 'numeric',
+	month: 'long',
+	year: 'numeric'
+}).format(d)
+var time = d.toLocaleTimeString(locale, {
+	hour: 'numeric',
+	minute: 'numeric',
+	second: 'numeric'
+})
+var _uptime = process.uptime() * 1000
+var _muptime
+if (process.send) {
+process.send('uptime')
+_muptime = await new Promise(resolve => {
+process.once('message', resolve)
+setTimeout(resolve, 1000)
+  }) * 1000
 }
-var handler = async (m, {
-	conn,
-	usedPrefix: _p,
-	__dirname,
-	args,
-	command
-}) => {
-	var tags
-	var teks = `${args[0]}`.toLowerCase()
-	var arrayMenu = ['all', 'game', 'rpg', 'xp', 'sticker', 'kerang', 'primbon', 'group', 'premium', 'internet', 'anonymous', 'downloader', 'tools', 'wattpadz', 'anime', 'audio', 'database', 'owner', 'jadian', 'noktg', 'imagemaker', 'textmaker']
-	if (!arrayMenu.includes(teks)) teks = '404'
-	if (teks == 'all') tags = {
+var muptime = clockString(_muptime)
+var uptime = clockString(_uptime)
+var totalreg = Object.keys(db.data.users).length
+var rtotalreg = Object.values(db.data.users).filter(user => user.registered == true).length
+var moment = require('moment-timezone')
+var tags = {
 		'main': 'Main',
 		'game': 'Games',
 		'rpg': 'RPG Games',
@@ -68,284 +87,54 @@ var handler = async (m, {
 		'user': 'User',
 		'advanced': 'Advanced',
 		'info': 'Info',
-		'': 'No Category',
-	}
-	if (teks == 'game') tags = {
-		'game': 'Games',
-		'fun': 'Fun',
-		'berburu': 'Berburu'
-	}
-	if (teks == 'textmaker') tags = {
-		'textpro': 'Textpro',
-		'photofunia': 'Photofunia',
-		'ephoto': 'Ephoto'
-	}
-	if (teks == 'imagemaker') tags = {
-		'photooxy': 'Photooxy',
-		'canvas': 'Canvas',
-		'funnyphoto': 'Funny Photo'
-	}
-	if (teks == 'rpg') tags = {
-		'rpg': 'RPG Games'
-	}
-	if (teks == 'xp') tags = {
-		'xp': 'Exp & Limit'
-	}
-	if (teks == 'sticker') tags = {
-		'sticker': 'Sticker'
-	}
-	if (teks == 'kerang') tags = {
-		'kerang': 'Kerang Ajaib'
-	}
-	if (teks == 'primbon') tags = {
-		'primbon': 'Primbon Jawa'
-	}
-	if (teks == 'group') tags = {
-		'admin': 'Admin',
-		'group': 'Group',
-		'vote': 'Voting',
-		'absen': 'Absen'
-	}
-	if (teks == 'premium') tags = {
-		'premium': 'Premium'
-	}
-	if (teks == 'internet') tags = {
-		'internet': 'Internet'
-	}
-	if (teks == 'anonymous') tags = {
-		'anonymous': 'Anonymous Chat'
-	}
-	if (teks == 'downloader') tags = {
-		'downloader': 'Downloader'
-	}
-	if (teks == 'tools') tags = {
-		'tools': 'Tools'
-	}
-        if (teks == 'wattpadz') tags = {
-		'wattpadz': 'Wattpadz'
-	}
-	if (teks == 'anime') tags = {
-		'anime': 'Anime'
-	}
-        if (teks == 'audio') tags = {
-		'audio': 'Audio'
-	}
-	if (teks == 'database') tags = {
-		'database': 'Database'
-	}
-	if (teks == 'owner') tags = {
-		'owner': 'Owner',
-		'advanced': 'Advanced'
-	}
-	if (teks == 'jadian') tags = {
-		'user': 'User',
-		'jadian': 'Jadian'
-	}
-	if (teks == 'noktg') tags = {
-		'info': 'Info',
 		'': 'No Category'
-	}
-
-	try {
-		var _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
-		var {
-			exp,
-			limit,
-			level,
-			role
-		} = db.data.users[m.sender]
-		var {
-			min,
-			xp,
-			max
-		} = levelling.xpRange(level, global.multiplier)
-		var name = await conn.getName(m.sender)
-		var d = new Date(new Date + 3600000)
-		var locale = 'id'
-		// d.getTimeZoneOffset()
-		// Offset -420 is 18.00
-		// Offset    0 is  0.00
-		// Offset  420 is  7.00
-		var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
-		var week = d.toLocaleDateString(locale, {
-			weekday: 'long'
-		})
-		var date = d.toLocaleDateString(locale, {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric'
-		})
-		var dateIslamic = Intl.DateTimeFormat(locale + '-TN-u-ca-islamic', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric'
-		}).format(d)
-		var time = d.toLocaleTimeString(locale, {
-			hour: 'numeric',
-			minute: 'numeric',
-			second: 'numeric'
-		})
-		var _uptime = process.uptime() * 1000
-		var _muptime
-		if (process.send) {
-			process.send('uptime')
-			_muptime = await new Promise(resolve => {
-				process.once('message', resolve)
-				setTimeout(resolve, 1000)
-			}) * 1000
-		}
-		var muptime = clockString(_muptime)
-		var uptime = clockString(_uptime)
-		var totalreg = Object.keys(db.data.users).length
-		var rtotalreg = Object.values(db.data.users).filter(user => user.registered == true).length
-		var help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => {
-			return {
-				help: Array.isArray(plugin.tags) ? plugin.help : [plugin.help],
-				tags: Array.isArray(plugin.tags) ? plugin.tags : [plugin.tags],
-				prefix: 'customPrefix' in plugin,
-				limit: plugin.limit,
-				premium: plugin.premium,
-				enabled: !plugin.disabled,
-			}
-		})
-		if (teks == '404') {
-			var sendMsg = await conn.sendMessage(m.chat, {
-				text: 'Sekarang Jam ' + time,
-				footer: author,
-				title: '```' + ucapan() + name + '```\n*' + week + ' - ' + date + '*\n',
-				buttonText: "Click",
-				sections: [{
-					title: "List Featured",
-					rows: [{
-							title: "All",
-							rowId: _p + `? all`
-						},
-						{
-							title: "Games",
-							rowId: _p + `? game`
-						},
-						{
-							title: "RPG Games",
-							rowId: _p + `? rpg`
-						},
-						{
-							title: "Exp & Limit",
-							rowId: _p + `? xp`
-						},
-						{
-							title: "Stickers",
-							rowId: _p + `? sticker`
-						},
-						{
-							title: "Kerang Ajaib",
-							rowId: _p + `? kerang`
-						},
-						{
-							title: "Primbon Jawa",
-							rowId: _p + `? primbon`
-						},
-						{
-							title: "Text Maker",
-							rowId: _p + `? textmaker`
-						},
-						{
-							title: "Image Maker",
-							rowId: _p + `? imagemaker`
-						},
-						{
-							title: "Groups",
-							rowId: _p + `? group`
-						},
-						{
-							title: "Premium",
-							rowId: _p + `? premium`
-						},
-						{
-							title: "Internet",
-							rowId: _p + `? internet`
-						},
-						{
-							title: "Anonymous Chat",
-							rowId: _p + `? anonymous`
-						},
-						{
-							title: "Downloader",
-							rowId: _p + `? downloader`
-						},
-						{
-							title: "Tools",
-							rowId: _p + `? tools`
-						},
-						{
-                                                        title: "Wattpadz",
-							rowId: _p + `? wattpadz`
-						},
-						{
-							title: "Anime",
-							rowId: _p + `? anime`
-						},
-						{
-                                                        title: "Audio",
-							rowId: _p + `? audio`
-						},
-						{
-							title: "Database",
-							rowId: _p + `? database`
-						},
-						{
-							title: "Owner",
-							rowId: _p + `? owner`
-						},
-						{
-							title: "Jadian",
-							rowId: _p + `? jadian`
-						},
-						{
-							title: "Tanpa Kategori",
-							rowId: _p + `? noktg`
-						}
-					]
-				}]
-			})
-			await delay(60000)
-			return (await conn.sendMessage(m.chat, {
-				delete: sendMsg.key
-			}))
-		}
-		var groups = {}
-		for (var tag in tags) {
-			groups[tag] = []
-			for (var plugin of help)
-				if (plugin.tags && plugin.tags.includes(tag))
-					if (plugin.help) groups[tag].push(plugin)
-			// for (var tag of plugin.tags)
-			//   if (!(tag in tags)) tags[tag] = tag
-		}
-		conn.menu = conn.menu ? conn.menu : {}
-		var before = conn.menu.before || defaultMenu.before
-		var header = conn.menu.header || defaultMenu.header
-		var body = conn.menu.body || defaultMenu.body
-		var footer = conn.menu.footer || defaultMenu.footer
-		var after = conn.menu.after || (conn.user.jid == global.conn.user.jid ? '' : `Powered by https://wa.me/${global.conn.user.jid.split`@`[0]}`) + defaultMenu.after
-		var _text = [
-			before,
-			...Object.keys(tags).map(tag => {
-				return header.replace(/%category/g, tags[tag]) + '\n' + [
-					...help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
-						return menu.help.map(help => {
-							return body.replace(/%cmd/g, menu.prefix ? help : '%p' + help)
-								.replace(/%islimit/g, menu.limit ? '🄻' : '')
-								.replace(/%isPremium/g, menu.premium ? '🄿' : '')
-								.trim()
-						}).join('\n')
-					}),
-					footer
-				].join('\n')
-			}),
-			after
-		].join('\n')
-		var text = typeof conn.menu == 'string' ? conn.menu : typeof conn.menu == 'object' ? _text : ''
-		var replace = {
+    }
+    for (let plugin of Object.values(global.plugins))
+      if (plugin && 'tags' in plugin)
+        for (let tag of plugin.tags)
+          if (!tag in  tags) tags[tag] = tag
+    let help = Object.values(global.plugins).map(plugin => {
+      return {
+        help: plugin.help,
+        tags: plugin.tags,
+        prefix: 'customPrefix' in plugin,
+        limit: plugin.limit
+      }
+    })
+    let groups = {}
+    for (let tag in tags) {
+      groups[tag] = []
+      for (let menu of help)
+        if (menu.tags && menu.tags.includes(tag))
+          if (menu.help) groups[tag].push(menu)
+    }
+    conn.menu = conn.menu ? conn.menu : {}
+    var before = conn.menu.before || ` ┌──「 ${conn.user.name} 」
+│============================
+├  ${ucapan()}, %name!
+├ Nama : %name!
+├ Hari: *%week %weton*
+├ Tanggal: *%date*
+├ Waktu: *%time*
+├ Uptime: *%uptime*
+├ Database: *%totalreg*
+│============================`
+    let header = conn.menu.header || '┌◪「 %category ッ」◪'
+    let body   = conn.menu.body   || '├❏  %cmd%islimit'
+    let footer = conn.menu.footer || '└────\n'
+    let after  = conn.menu.after  || '\n'
+    let _text  = before + '\n'
+    for (let tag in groups) {
+      _text += header.replace(/%category/g, tags[tag]) + '\n'
+      for (let menu of groups[tag]) {
+        for (let help of menu.help)
+          _text += body.replace(/%cmd/g, menu.prefix ? help : '%p' + help).replace(/%islimit/g, menu.limit ? ' (Limit)' : '')  + '\n'
+      }
+      _text += footer + '\n'
+    }
+    _text += after
+    text =  typeof conn.menu == 'string' ? conn.menu : typeof conn.menu == 'object' ? _text : ''
+    var replace = {
 			'%': '%',
 			p: _p,
 			uptime,
@@ -372,19 +161,13 @@ var handler = async (m, {
 			role,
 			readmore: readMore
 		}
-		text = await tiny(text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name]))
-		var pp = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => './src/avatar_contact.png')
-		conn.sendHydrated(m.chat, text.trim(), 'BOT BY BENNIISMAEL & GHOST', pp, 'https://github.com/botstylee', 'Github', null, null, [
-			['Donate', '/donasi'],
-			['Speed', '/ping'],
-			['Owner', '/owner']
-		], false, {
-			asLocation: true
-		})
-	} catch (e) {
-		conn.reply(m.chat, 'Maaf, menu sedang error', m)
-		throw conn.reply(conn.user.jid, await e, m)
-	}
+    text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
+    //conn.reply(m.chat, text.trim(), m)
+    await conn.send2Button(m.chat, text.trim(), '𝚈𝚊𝚖𝚊𝚒𝙱𝚘𝚝𝚣ッ々 - ``` Since August 2021 ```\nCMD : Menu', '♦️INFO BOT♦️', '#info', '🔱OWNER🔱', '#creator')
+  } catch (e) {
+    conn.reply(m.chat, 'Maaf, menu sedang error', m)
+    throw e
+  }
 }
 handler.help = ['menu', 'help', '?']
 handler.tags = ['main']
