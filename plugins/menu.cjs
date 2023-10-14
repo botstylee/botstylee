@@ -4,60 +4,30 @@ var {
 var {
 	join
 } = require('path');
-var levelling = require('../lib/levelling.cjs')
-var _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
-var {
-	exp,
-	limit,
-	level,
-	role
-} = db.data.users[m.sender]
-var {
-	min,
-	xp,
-	max
-} = levelling.xpRange(level, global.multiplier)
-var name = await conn.getName(m.sender)
-var d = new Date(new Date + 3600000)
-var locale = 'id'
-// d.getTimeZoneOffset()
-// Offset -420 is 18.00
-// Offset    0 is  0.00
-// Offset  420 is  7.00
-var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
-var week = d.toLocaleDateString(locale, {
-	weekday: 'long'
-})
-var date = d.toLocaleDateString(locale, {
-	day: 'numeric',
-	month: 'long',
-	year: 'numeric'
-})
-var dateIslamic = Intl.DateTimeFormat(locale + '-TN-u-ca-islamic', {
-	day: 'numeric',
-	month: 'long',
-	year: 'numeric'
-}).format(d)
-var time = d.toLocaleTimeString(locale, {
-	hour: 'numeric',
-	minute: 'numeric',
-	second: 'numeric'
-})
-var _uptime = process.uptime() * 1000
-var _muptime
-if (process.send) {
-process.send('uptime')
-_muptime = await new Promise(resolve => {
-process.once('message', resolve)
-setTimeout(resolve, 1000)
-  }) * 1000
-}
-var muptime = clockString(_muptime)
-var uptime = clockString(_uptime)
-var totalreg = Object.keys(db.data.users).length
-var rtotalreg = Object.values(db.data.users).filter(user => user.registered == true).length
 var moment = require('moment-timezone')
-var tags = {
+var defaultMenu = {
+	before: `│============================
+├  ${ucapan()}, %name!
+├ Nama : %name!
+├ Hari: *%week %weton*
+├ Tanggal: *%date*
+├ Waktu: *%time*
+├ Uptime: *%uptime*
+│============================\n`.trimStart(),
+	header: '┌◪「*%category*ッ」◪',
+	body: '├❏ %cmd %islimit %isPremium',
+	footer: '└────',
+	after: ``,
+}
+var handler = async (m, {
+	conn,
+	usedPrefix: _p,
+	__dirname,
+	args,
+	command
+}) => {
+	var tags
+	tags = {
 		'main': 'Main',
 		'game': 'Games',
 		'rpg': 'RPG Games',
@@ -86,88 +56,123 @@ var tags = {
 		'owner': 'Owner',
 		'user': 'User',
 		'advanced': 'Advanced',
-		'info': 'Info',
-		'': 'No Category'
-    }
-    for (let plugin of Object.values(global.plugins))
-      if (plugin && 'tags' in plugin)
-        for (let tag of plugin.tags)
-          if (!tag in  tags) tags[tag] = tag
-    let help = Object.values(global.plugins).map(plugin => {
-      return {
-        help: plugin.help,
-        tags: plugin.tags,
-        prefix: 'customPrefix' in plugin,
-        limit: plugin.limit
-      }
-    })
-    let groups = {}
-    for (let tag in tags) {
-      groups[tag] = []
-      for (let menu of help)
-        if (menu.tags && menu.tags.includes(tag))
-          if (menu.help) groups[tag].push(menu)
-    }
-    conn.menu = conn.menu ? conn.menu : {}
-    var before = conn.menu.before || ` ┌──「 ${conn.user.name} 」
-│============================
-├  ${ucapan()}, %name!
-├ Nama : %name!
-├ Hari: *%week %weton*
-├ Tanggal: *%date*
-├ Waktu: *%time*
-├ Uptime: *%uptime*
-├ Database: *%totalreg*
-│============================`
-    let header = conn.menu.header || '┌◪「 %category ッ」◪'
-    let body   = conn.menu.body   || '├❏  %cmd%islimit'
-    let footer = conn.menu.footer || '└────\n'
-    let after  = conn.menu.after  || '\n'
-    let _text  = before + '\n'
-    for (let tag in groups) {
-      _text += header.replace(/%category/g, tags[tag]) + '\n'
-      for (let menu of groups[tag]) {
-        for (let help of menu.help)
-          _text += body.replace(/%cmd/g, menu.prefix ? help : '%p' + help).replace(/%islimit/g, menu.limit ? ' (Limit)' : '')  + '\n'
-      }
-      _text += footer + '\n'
-    }
-    _text += after
-    text =  typeof conn.menu == 'string' ? conn.menu : typeof conn.menu == 'object' ? _text : ''
-    var replace = {
+		'info': 'Info'
+	}
+
+	try {
+		var _package = JSON.parse(await promises.readFile(join(__dirname, '../package.json')).catch(_ => ({}))) || {}
+		var role = db.data.users[m.sender].role
+		//var saldo = getMonUser(m.sender)
+		var name = await conn.getName(m.sender)
+		var d = new Date(new Date + 3600000)
+		var locale = 'id'
+		// d.getTimeZoneOffset()
+		// Offset -420 is 18.00
+		// Offset    0 is  0.00
+		// Offset  420 is  7.00
+		var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
+		var week = new Intl.DateTimeFormat(locale, {
+			weekday: 'long'
+		}).format(moment.tz('asia/jakarta'))
+		var date = new Intl.DateTimeFormat(locale, {
+			day: 'numeric',
+			month: 'long',
+			weekday: 'long',
+			year: 'numeric'
+		}).format(moment.tz('asia/jakarta'))
+		var dateIslamic = Intl.DateTimeFormat(locale + '-TN-u-ca-islamic', {
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric'
+		}).format(moment.tz('asia/jakarta'))
+		var time = new Intl.DateTimeFormat(locale, {
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric'
+		}).format(moment.tz('asia/jakarta'))
+		var _uptime = process.uptime() * 1000
+		var _muptime
+		if (process.send) {
+			process.send('uptime')
+			_muptime = await new Promise(resolve => {
+				process.once('message', resolve)
+				setTimeout(resolve, 1000)
+			}) * 1000
+		}
+		var muptime = clockString(_muptime)
+		var uptime = clockString(_uptime)
+		var {
+			plugins
+		} = await import('../lib/plugins.js')
+		var help = Object.values(plugins).filter(plugin => !plugin.disabled).map(plugin => {
+			return {
+				help: Array.isArray(plugin.tags) ? plugin.help : [plugin.help],
+				tags: Array.isArray(plugin.tags) ? plugin.tags : [plugin.tags],
+				prefix: 'customPrefix' in plugin,
+				limit: plugin.limit,
+				premium: plugin.premium,
+				enabled: !plugin.disabled,
+			}
+		})
+		var groups = {}
+		for (var tag in tags) {
+			groups[tag] = []
+			for (var plugin of help)
+				if (plugin.tags && plugin.tags.includes(tag))
+					if (plugin.help) groups[tag].push(plugin)
+			// for (var tag of plugin.tags)
+			//   if (!(tag in tags)) tags[tag] = tag
+		}
+		conn.menu = conn.menu ? conn.menu : {}
+		var before = conn.menu.before || defaultMenu.before
+		var header = conn.menu.header || defaultMenu.header
+		var body = conn.menu.body || defaultMenu.body
+		var footer = conn.menu.footer || defaultMenu.footer
+		var after = conn.menu.after || (conn.user.jid == global.conn.user.jid ? '' : `Powered by https://wa.me/${global.conn.user.jid.split`@`[0]}`) + defaultMenu.after
+		var _text = [
+			before,
+			...Object.keys(tags).map(tag => {
+				return header.replace(/%category/g, tags[tag]) + '\n' + [
+					...help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
+						return menu.help.map(help => {
+							return body.replace(/%cmd/g, menu.prefix ? help : '%p' + help)
+								.replace(/%islimit/g, menu.limit ? '🄻' : '')
+								.replace(/%isPremium/g, menu.premium ? '🄿' : '')
+								.trim()
+						}).join('\n')
+					}),
+					footer
+				].join('\n')
+			}),
+			after
+		].join('\n')
+		var text = typeof conn.menu == 'string' ? conn.menu : typeof conn.menu == 'object' ? _text : ''
+		var replace = {
 			'%': '%',
 			p: _p,
 			uptime,
 			muptime,
+			role,
 			me: conn.getName(conn.user.jid),
 			npmname: _package.name,
 			npmdesc: _package.description,
 			version: _package.version,
-			exp: exp - min,
-			maxexp: xp,
-			totalexp: exp,
-			xp4levelup: max - exp,
 			github: _package.homepage ? _package.homepage.url || _package.homepage : '[unknown github url]',
-			level,
-			limit,
 			name,
 			weton,
 			week,
 			date,
 			dateIslamic,
 			time,
-			totalreg,
-			rtotalreg,
-			role,
 			readmore: readMore
 		}
-    text = text.replace(new RegExp(`%(${Object.keys(replace).join`|`})`, 'g'), (_, name) => replace[name])
-    //conn.reply(m.chat, text.trim(), m)
-    await conn.send2Button(m.chat, text.trim(), '𝚈𝚊𝚖𝚊𝚒𝙱𝚘𝚝𝚣ッ々 - ``` Since August 2021 ```\nCMD : Menu', '♦️INFO BOT♦️', '#info', '🔱OWNER🔱', '#creator')
-  } catch (e) {
-    conn.reply(m.chat, 'Maaf, menu sedang error', m)
-    throw e
-  }
+		text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
+		var pp = await conn.profilePictureUrl(conn.user.jid, 'image').catch(_ => './src/avatar_contact.png')
+		conn.reply(m.chat, text.trim(), m)
+	} catch (e) {
+		conn.reply(m.chat, 'Maaf, menu sedang error', m)
+		log(e)
+	}
 }
 handler.help = ['menu', 'help', '?']
 handler.tags = ['main']
