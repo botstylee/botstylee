@@ -1,7 +1,7 @@
 window.onload = () => {
-let chat = document.querySelector('div.container-fluid')
+var chat = document.querySelector('div.container-fluid')
 function addMsg(obj) {
-  let html = document.createElement('span')
+  var html = document.createElement('span')
   html.className = 'msg'
   html.innerHTML = obj
   chat.appendChild(html)
