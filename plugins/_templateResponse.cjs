@@ -6,7 +6,7 @@ var {
 //var plugins = import('../lib/plugins.js').then(async({plugins}) { return new Promise(async(resolve,reject)=>{resolve(plugins)})})
 var handler = m => m
 handler.all = async function(m, chatUpdate) {
-	//console.log(plugins)
+//console.log(plugins)
 	if (m.isBaileys)
 		return
 	if (!m.message)
@@ -24,9 +24,6 @@ handler.all = async function(m, chatUpdate) {
 		if (plugin.disabled)
 			continue
 		if (!opts['restrict'])
-			if (plugin.tags && plugin.tags.includes('admin'))
-				continue
-		if (!db.data.settings[this.user.jid].restrict)
 			if (plugin.tags && plugin.tags.includes('admin'))
 				continue
 		if (typeof plugin !== 'function')
@@ -75,12 +72,13 @@ handler.all = async function(m, chatUpdate) {
 		}
 
 	}
+	if (isIdMessage == true) {
 	var messages = await generateWAMessage(m.chat, {
-		text: isIdMessage ? id : text,
+		text: id,
 		mentions: m.mentionedJid
 	}, {
 		userJid: this.user.id,
-		quoted: m.quoted && m.quoted.fakeObj
+		quoted: null
 	})
 	messages.key.fromMe = areJidsSameUser(m.sender, this.user.id)
 	messages.key.id = m.key.id
@@ -93,6 +91,7 @@ handler.all = async function(m, chatUpdate) {
 		type: 'append'
 	}
 	this.ev.emit('messages.upsert', msg)
+	}
 }
 
 module.exports = handler

@@ -12,7 +12,7 @@ var handler = async (m, {
 }
 handler.help = ['debounce']
 handler.tags = ['host']
-handler.command = /^(debounce|refresh)$/i
+handler.command = /^(debounce|refresh|r|refreshing|reload)$/i
 handler.owner = true
 
 handler.fail = null

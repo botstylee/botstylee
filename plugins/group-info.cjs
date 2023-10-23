@@ -8,16 +8,8 @@ var handler = async (m, {
 	var {
 		isBanned,
 		welcome,
-		detect,
-		sWelcome,
-		sBye,
-		sPromote,
-		sDemote,
 		antiLink,
-		delete: del,
-		reminder,
-		antiToxic,
-		groupexpired,
+		grouprental,
 		expired
 	} = db.data.chats[m.chat]
 	var groupAdmins = participants.filter(p => p.admin)
@@ -36,32 +28,23 @@ ${participants.length} Members
 @${owner.split('@')[0]}
 *Group Admins:*
 ${listAdmin}
-${groupexpired ? '*Group Expired:*\nExpired: ' + await msToDate(expired - new Date() * 1)+ '\n' : ''}
+${grouprental ? '*Expired Group:*\nExpired: ' + await msToDate(expired - new Date() * 1)+ '\n' : ''}
 *Group Settings:*
 ${isBanned ? '✅' : '❌'} Banned
 ${welcome ? '✅' : '❌'} Welcome
-${detect ? '✅' : '❌'} Detect
-${del ? '❌' : '✅'} Anti Delete
-${antiLink ? '✅' : '❌'} Anti Link
-${antiToxic ? '✅' : '❌'} Anti Toxic
-${reminder ? '✅' : '❌'} Reminder
-*Message Settings:*
-Welcome: ${sWelcome}
-Bye: ${sBye}
-Promote: ${sPromote}
-Demote: ${sDemote}
+${antiLink ? '✅' : '❌'} AntiLink
 `.trim()
-	conn.reply(m.chat, await tiny(text), m, {
-		mentions: [...groupAdmins.map(v => v.id), owner],
+	conn.reply(m.chat, text, m, {
 		contextInfo: {
+			mentionedJid: [...groupAdmins.map(v => v.id), owner],
 			externalAdReply: {
 				mediaType: 2,
-				description: 'anu',
+				description: 'info group',
 				title: conn.getName(m.chat),
-				mediaUrl: yt,
+				mediaUrl: "",
 				body: '𓃗𓅜',
 				thumbnail: pp,
-				sourceUrl: gc,
+				sourceUrl: "",
 				showAdAttribution: true, // false
 				//renderLargerThumbnail: true // false
 			}
@@ -78,18 +61,14 @@ handler.group = true
 module.exports = handler
 
 function msToDate(ms) {
-	temp = ms
-	years = Math.floor(ms / (12 * 30 * 24 * 60 * 60 * 1000));
-	yearsms = ms % (12 * 30 * 24 * 60 * 60 * 1000);
-	month = Math.floor((yearsms) / (30 * 24 * 60 * 60 * 1000));
-	monthms = ms % (30 * 24 * 60 * 60 * 1000);
-	days = Math.floor((monthms) / (24 * 60 * 60 * 1000));
-	daysms = ms % (24 * 60 * 60 * 1000);
-	hours = Math.floor((daysms) / (60 * 60 * 1000));
-	hoursms = ms % (60 * 60 * 1000);
-	minutes = Math.floor((hoursms) / (60 * 1000));
-	minutesms = ms % (60 * 1000);
-	sec = Math.floor((minutesms) / (1000));
+	var temp = ms,
+	days = Math.floor((ms) / (24 * 60 * 60 * 1000)),
+	daysms = ms % (24 * 60 * 60 * 1000),
+	hours = Math.floor((daysms) / (60 * 60 * 1000)),
+	hoursms = ms % (60 * 60 * 1000),
+	minutes = Math.floor((hoursms) / (60 * 1000)),
+	minutesms = ms % (60 * 1000),
+	sec = Math.floor((minutesms) / (1000))
 	return days + " Hari " + hours + " Jam " + minutes + " Menit";
 	// +minutes+":"+sec;
 }

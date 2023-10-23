@@ -34,7 +34,7 @@ var handler = async (m, {
 }
 handler.help = ['antilink'].map(v => v + ' [on/off]')
 handler.tags = ['group', 'admin']
-handler.command = /^antilink$/i
+handler.command = ['antilink']
 
 handler.group = true
 handler.admin = true

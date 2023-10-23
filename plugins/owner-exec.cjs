@@ -35,7 +35,7 @@ var handler = async (m, _2) => {
 		_return = e
 	} finally {
 		//conn.reply(m.sender, _syntax + util.format(_return), m)
-		conn.reply(m.sender, _syntax + util.format(_return), m)
+		conn.reply(m.chat, _syntax + util.format(_return), m)
 		m.exp = old
 	}
 }

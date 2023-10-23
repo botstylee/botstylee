@@ -1,29 +1,39 @@
 var {
-	addExif
-} = require('../lib/sticker.cjs');
+	sticker
+} = require('../../lib/sticker.cjs');
+var uploadFile = require('../../lib/uploadFile.cjs');
+var uploadImage = require('../../lib/uploadImage.cjs');
 var {
-	Image
-} = require('node-webpmux')
+	webp2png
+} = require('../../lib/webp2mp4.cjs');
 
 var handler = async (m, {
 	conn,
 	text
 }) => {
-	if (!m.quoted) throw 'Quoted the sticker!'
 	var stiker = false
 	try {
 		var [packname, ...author] = text.split('|')
 		author = (author || []).join('|')
-		var mime = m.quoted.mimetype || ''
-		if (!/webp/.test(mime)) throw 'Reply sticker!'
-		var img = await m.quoted.download()
-		if (!img) throw 'Reply a sticker!'
-		var exif = new Image()
-		await exif.load(img)
-		if (JSON.parse(exif.exif.slice(22).toString())['sticker-pack-publisher'] == global.author) {
-			return m.reply('terdapat nama bot di situ, kamu tidak dapat mengubah wm')
+		var q = m.quoted ? m.quoted : m
+		var mime = (q.msg || q).mimetype || q.mediaType || ''
+		if (/webp|image|video/g.test(mime)) {
+			if (/video/g.test(mime))
+				if ((q.msg || q).seconds > 11) return m.reply('Maksimal 10 detik!')
+			var img = await q.download?.()
+			if (!img) return m.reply(`balas gambar/video/stiker dengan perintah ${usedPrefix + command}`)
+			var out
+			try {
+				if (/webp/g.test(mime)) out = await webp2png(img)
+				else if (/video/g.test(mime)) out = await uploadFile(img)
+				if (!out || typeof out !== 'string') out = await uploadImage(img)
+				stiker = await sticker(out, packname || '', author || '')
+			} catch (e) {
+				console.error(e)
+			} finally {
+				if (!stiker) stiker = await sticker(img, packname || '', author || '')
+			}
 		}
-		stiker = await addExif(img, packname || '', author || '')
 	} catch (e) {
 		console.error(e)
 		if (Buffer.isBuffer(e)) stiker = e
@@ -36,6 +46,6 @@ var handler = async (m, {
 }
 handler.help = ['wm *packname|author*']
 handler.tags = ['sticker']
-handler.command = /^wm$/i
+handler.command = ['wm', 'swm']
 
 module.exports = handler
