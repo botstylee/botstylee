@@ -6,7 +6,7 @@ let handler = async (m, { usedPrefix }) => {
     m.reply(`Berhasil!`)
 }
 handler.help = ['hapusabsen']
-handler.tags = ['main']
+handler.tags = ['absen']
 handler.command = /^(delete|hapus)absen$/i
 handler.group = true
 handler.admin = true
