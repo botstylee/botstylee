@@ -8,7 +8,7 @@ var handler = async (m, {
 		users.afkReason = text
 		users.afkObj = m
 		var tag = m.sender.split`@` [0]
-		return conn.reply(m.chat, `*🚩 @${tag} is now AFK!*`, m, {
+		return conn.reply(m.chat, `*🚩 @${tag} is now AFK!!*`, m, {
 			mentions: [m.sender]
 		})
 	} catch (e) {
