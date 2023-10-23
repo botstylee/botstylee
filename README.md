@@ -25,7 +25,7 @@
 $ pkg upgrade && pkg update && pkg install git nodejs ffmpeg imagemagick nano bash mc -y
 $ git clone https://github.com/botstylee/botstylee
 $ cd botstylee
-$ npm i 
+$ npm install -g npm@6.14.14 && npm install
 $ node .
 ```
 2. Wait for bot starting...
