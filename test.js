@@ -14,20 +14,20 @@ import {
 	createRequire
 } from 'module'
 
-const __filename = fileURLToPath(
+var __filename = fileURLToPath(
 	import.meta.url)
-const __dirname = dirname(__filename)
-const require = createRequire(__dirname)
+var __dirname = dirname(__filename)
+var require = createRequire(__dirname)
 
-let folders = ['.', ...Object.keys(require(path.join(__dirname, './package.json')).directories)]
-let files = []
-for (let folder of folders)
-	for (let file of fs.readdirSync(folder).filter(v => v.endsWith('.js')))
+var folders = ['.', ...Object.keys(require(path.join(__dirname, './package.json')).directories)]
+var files = []
+for (var folder of folders)
+	for (var file of fs.readdirSync(folder).filter(v => v.endsWith('.js')))
 		files.push(path.resolve(path.join(folder, file)))
-for (let file of files) {
+for (var file of files) {
 	if (file == __filename) continue
 	console.error('Checking', file)
-	const error = syntaxError(fs.readFileSync(file, 'utf8'), file, {
+	var error = syntaxError(fs.readFileSync(file, 'utf8'), file, {
 		sourceType: 'module',
 		allowReturnOutsideFunction: true,
 		allowAwaitOutsideFunction: true

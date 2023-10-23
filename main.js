@@ -4,7 +4,9 @@ process.on('uncaughtException', console.error)
 import './config.js';
 import Connection from './lib/connection.js';
 import Helper from './lib/helper.js';
-import db from './lib/database.js';
+import db, {
+	loadDatabase
+} from './lib/database.js';
 import clearTmp from './lib/clearTmp.js';
 import {
 	spawn
@@ -21,22 +23,19 @@ import {
 	pluginFilter
 } from './lib/plugins.js';
 import axios from 'axios';
-import former from 'form-data';
-import cheri from 'cheerio';
 import fetch from 'node-fetch';
-import cron from 'node-cron';
+import former from 'form-data';
 import fs from 'fs';
+import cron from 'node-cron';
 import toMs from 'ms';
+global.former = former
 global.fetch = fetch
 global.fs = fs
 global.axios = axios
-global.former = former
-global.cheerio = cheri
 global.db = db
 global.delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 global.plugins = plugins
 var PORT = process.env.PORT || process.env.SERVER_PORT || 3000
-
 protoType()
 serialize()
 
@@ -57,15 +56,110 @@ global.conn = Object.defineProperty(Connection, 'conn', {
 	configurable: true,
 	writable: true
 }).conn
-global.store = Connection.store;
-// load plugins
-
+global.store = Connection.store
 loadPluginFiles(pluginFolder, pluginFilter, {
 		logger: conn.logger,
-		recursiveRead: false
+		recursiveRead: true
 	}).then(_ => console.log(Object.keys(plugins)))
 	.catch(console.error)
-
+// load plugins
+if (db.data == null) {
+	await loadDatabase()
+}
+async function expired() {
+	return new Promise(async (resolve, reject) => {
+		var user = Object.keys(db.data.users)
+		var chat = Object.keys(db.data.chats)
+		for (var jid of user) {
+			var users = db.data.users[jid]
+			if (users.banned) {
+				if (Date.now() >= users.banexpired && users.banexpired !== 0) {
+					users.banned = false
+					users.banexpired = 0
+				}
+			}
+			if (users.premium) {
+				if (Date.now() >= users.expired) {
+					conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${nomorown}`, null, {
+						mentions: [nomorown + '@s.whatsapp.net']
+					})
+					users.premium = false
+					users.expired = 0
+					users.tokenpremium = 0
+					users.tokenfree = 0
+					resolve(console.log(`masa premium ${name} sudah habis`))
+				}
+			}
+		}
+	})
+}
+async function petproduction() {
+	return new Promise(async (resolve, reject) => {
+		var user = Object.keys(db.data.users)
+		for (var jid of user) {
+			var users = db.data.users[jid]
+			if (!users.pet) users.pet = [{
+				petname: 'ayam',
+				level: 0,
+				production: 0,
+				hasproduction: 0,
+				active: false
+			}, {
+				petname: 'kucing',
+				level: 0,
+				production: 0,
+				hasproduction: 0,
+				active: false
+			}, {
+				petname: 'kambing',
+				level: 0,
+				production: 0,
+				hasproduction: 0,
+				active: false
+			}, {
+				petname: 'sapi',
+				level: 0,
+				production: 0,
+				hasproduction: 0,
+				active: false
+			}, {
+				petname: 'kuda',
+				level: 0,
+				production: 0,
+				hasproduction: 0,
+				active: false
+			}]
+			if (users.pet.find(v => v.active == true)) {
+				users.mp += users.pet.find(v => v.active == true).production
+				users.pet.find(v => v.active == true).hasproduction += users.pet.find(v => v.active == true).production
+			}
+		}
+	})
+}
+cron.schedule('0 0 */12 * * *', () => {
+	var useres = Object.keys(db.data.users)
+	for (var jid of useres) {
+		db.data.users[jid].limit = 50
+	}
+	console.log('Add Limit')
+}, {
+	scheduled: true,
+	timezone: "Asia/Jakarta"
+});
+cron.schedule('0 */2 * * * *', async () => {
+	await expired()
+}, {
+	scheduled: true,
+	timezone: "Asia/Jakarta"
+});
+// Auto restart if ram usage has reached the limit, if you want to use enter the ram size in bytes
+var ramCheck = setInterval(() => {
+	var ramUsage = process.memoryUsage().rss
+	if (ramUsage >= global.ram_usage) {
+		clearInterval(ramCheck)
+		process.send('reset')
+	}
+}, 60 * 1000) // Checking every 1 minutes
 if (!opts['test']) {
 	setInterval(async () => {
 		await Promise.allSettled([
@@ -117,59 +211,6 @@ async function _quickTest() {
 	if (s.ffmpeg && !s.ffmpegWebp)(conn?.logger || console).warn('Stickers may not animated without libwebp on ffmpeg (--enable-libwebp while compiling ffmpeg)')
 	if (!s.convert && !s.magick && !s.gm)(conn?.logger || console).warn('Stickers may not work without imagemagick if libwebp on ffmpeg doesnt isntalled (pkg install imagemagick)')
 }
-
-async function expired() {
-	return new Promise(async (resolve, reject) => {
-		var user = Object.keys(db.data.users)
-		var chat = Object.keys(db.data.chats)
-		for (var jid of user) {
-			var users = db.data.users[jid]
-			var {
-				name,
-				premium,
-				expired
-			} = users
-			if (users.premium) {
-				if (Date.now() >= users.expired) {
-					users.premium = false
-					users.expired = 0
-					users.limitjoinprem = 0
-					users.limitjoinfree = 0
-					conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${nomorown}`, null, {
-						mentions: [nomorown + '@s.whatsapp.net']
-					})
-					resolve(console.log(`masa premium ${name} sudah habis`))
-				}
-			}
-			if (users.sewa) {
-				if (users.limitjoinprem == 0) {
-					users.sewa = false
-					users.limitjoinfree = 1
-				}
-			}
-		}
-		for (var id of chat) {
-			if (id.endsWith('g.us')) {
-				var chats = db.data.chats[id]
-				if (chats.grouprental) {
-					if (Date.now() >= chats.expired) {
-						chats.grouprental = false
-						chats.expired = 0
-						await conn.reply(id, `masa menetap di ${await conn.getName(id)} sudah habis.\nBot sebentar lagi akan keluar.\nterima kasih telah menggunakan bot kami.\nChat owner kami jika ingin menyewa lagi :)\nowner: @${nomorown}`, null, {
-							mentions: [nomorown + '@s.whatsapp.net']
-						})
-						await delay(3000)
-						await conn.groupLeave(id)
-						resolve(console.log(`masa menetap di ${await conn.getName(id)} sudah habis`))
-					}
-				}
-			}
-		}
-	})
-}
-setInterval(async () => {
-	var b = await expired()
-}, 1000)
 setInterval(async () => {
 	var a = await clearTmp()
 	console.log(a)

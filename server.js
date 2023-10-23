@@ -13,9 +13,9 @@ import fetch from 'node-fetch'
 import Helper from './lib/helper.js'
 
 function connect(conn, PORT) {
-	let app = global.app = express()
-	let server = global.server = createServer(app)
-	let _qr = 'invalid'
+	var app = global.app = express()
+	var server = global.server = createServer(app)
+	var _qr = 'invalid'
 
 	conn.ev.on('connection.update', function appQR({
 		qr
@@ -30,9 +30,9 @@ function connect(conn, PORT) {
 	app.use(express.static(path.join(Helper.__dirname(
 		import.meta.url), 'views')))
 
-	let io = new Server(server)
+	var io = new Server(server)
 	io.on('connection', socket => {
-		let {
+		var {
 			unpipeEmit
 		} = pipeEmit(conn, socket, 'conn-')
 		socket.once('disconnect', unpipeEmit)
@@ -45,7 +45,7 @@ function connect(conn, PORT) {
 }
 
 function pipeEmit(event, event2, prefix = '') {
-	let old = event.emit
+	var old = event.emit
 	event.emit = function(event, ...args) {
 		old.emit(event, ...args)
 		event2.emit(prefix + event, ...args)
@@ -58,7 +58,7 @@ function pipeEmit(event, event2, prefix = '') {
 }
 
 function keepAlive() {
-	const url = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
+	var url = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
 	if (/(\/\/|\.)undefined\./.test(url)) return
 	setInterval(() => {
 		fetch(url).catch(console.error)

@@ -23,26 +23,27 @@ import {
 	createInterface
 } from 'readline'
 // https://stackoverflow.com/a/50052194
-const __dirname = dirname(fileURLToPath(
+var __dirname = dirname(fileURLToPath(
 	import.meta.url))
-const require = createRequire(__dirname) // Bring in the ability to create the 'require' method
-const {
+console.log({import:import.meta.url,path:fileURLToPath(import.meta.url) })
+var require = createRequire(__dirname) // Bring in the ability to create the 'require' method
+var {
 	name,
 	author
 } = require(join(__dirname, './package.json')) // https://www.stefanjudis.com/snippets/how-to-import-json-files-in-es-modules-node-js/
-const {
+var {
 	say
 } = cfonts
-const rl = createInterface(process.stdin, process.stdout)
+var rl = createInterface(process.stdin, process.stdout)
 import yargs from 'yargs';
-say(`BOTSTYLEE`, {
+say(`MILKITA BOT`, {
 	font: 'shade',
 	align: 'center',
 	gradient: ['#12c2e9', '#c471ed'],
 	transitionGradient: true,
 	letterSpacing: 3,
 });
-say(`'BOTSTYLEE' Coded By BENNIISMAIL`, {
+say(`'MILKITA' Coded By Findme-19`, {
 	font: 'console',
 	align: 'center',
 	gradient: ['#DCE35B', '#45B649'],
@@ -57,7 +58,7 @@ var isRunning = false
 function start(file) {
 	if (isRunning) return
 	isRunning = true
-	let args = [join(__dirname, file), ...process.argv.slice(2)]
+	var args = [join(__dirname, file), ...process.argv.slice(2)]
 	say([process.argv[0], ...args].join(' '), {
 		font: 'console',
 		align: 'center',
@@ -67,7 +68,7 @@ function start(file) {
 		exec: args[0],
 		args: args.slice(1),
 	})
-	let p = fork()
+	var p = fork()
 	p.on('message', data => {
 		console.log('[RECEIVED]', data)
 		switch (data) {
@@ -91,7 +92,7 @@ function start(file) {
 		})
 	})
 
-	let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
+	var opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 	if (!opts['test'])
 		if (!rl.listenerCount()) rl.on('line', line => {
 			p.emit('message', line.trim())
