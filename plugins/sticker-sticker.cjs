@@ -1,8 +1,8 @@
 var {
 	sticker
-} = require('../../lib/sticker.cjs');
-var uploadFile = require('../../lib/uploadFile.cjs');
-var uploadImage = require('../../lib/uploadImage.cjs');
+} = require('../lib/sticker.cjs');
+var uploadFile = require('../lib/uploadFile.cjs');
+var uploadImage = require('../lib/uploadImage.cjs');
 var {
 	webp2png
 } = require('../../lib/webp2mp4.cjs');
