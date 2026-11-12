@@ -1,24 +1,28 @@
-var similarity = require('similarity');
+var similarity = require('similarity')
 var threshold = 0.72
 var handler = m => m
 handler.before = async function(m) {
 	var id = m.chat
-	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/Ketik.*who|hint/i.test(m.quoted.text)) return !0
-	this.siapakahaku = this.siapakahaku ? this.siapakahaku : {}
-	if (!(id in this.siapakahaku)) return conn.sendButton(m.chat, 'Soal itu telah berakhir', author, ['siapakahaku', '/siapakahaku'], m)
-	if (m.quoted.id == this.siapakahaku[id][0].id) {
-		var json = JSON.parse(JSON.stringify(this.siapakahaku[id][1]))
-		// m.reply(JSON.stringify(json, null, '\t'))
-		if (m.text.toLowerCase() == json.jawaban.toLowerCase().trim()) {
-			db.data.users[m.sender].
-			exp += this.siapakahaku[id][2]
-			conn.sendButton(m.chat, `*Benar!*\n+${this.siapakahaku[id][2]} XP`, author, ['siapakahaku', '/siapakahaku'], m)
-			clearTimeout(this.siapakahaku[id][3])
-			delete this.siapakahaku[id]
-		} else if (similarity(m.text.toLowerCase(), json.jawaban.toLowerCase().trim()) >= threshold) m.reply(`*Dikit Lagi!*`)
-		else m.reply(`*Salah!*`)
+	this.siapakahaku = this.siapakahaku || {}
+	var game = this.siapakahaku[id]
+	if (!game || !m.text) return !0
+	var question = game[0]
+	if (m.quoted && m.quoted.id !== question?.key?.id) return !0
+	var answer = String(game[1]?.jawaban || '').trim().toLowerCase()
+	var guess = m.text.trim().toLowerCase()
+	if (/^(me)?nyerah|surr?ender$/i.test(guess)) {
+		clearTimeout(game[3])
+		delete this.siapakahaku[id]
+		return m.reply(`Menyerah. Jawabannya: *${answer}*`)
 	}
-	return !0
+	if (guess === answer) {
+		var user = global.db?.data?.users?.[m.sender]
+		if (user) user.exp = (Number(user.exp) || 0) + (Number(game[2]) || 0)
+		clearTimeout(game[3])
+		delete this.siapakahaku[id]
+		return m.reply(`*Benar!*\n+${game[2]} XP`)
+	}
+	if (similarity(guess, answer) >= threshold) return m.reply('*Dikit lagi!*')
+	return m.reply('*Salah!*')
 }
-
 module.exports = handler

@@ -1,36 +1,15 @@
-async function handler(m, {
-	conn,
-	command
-}) {
-	await delay(4000)
-	var a
-	if (/waifu/i.test(command)) {
-		try {
-			a = await axios.request('https://api.waifu.im/random/?is_nsfw=false', {
-				method: 'GET'
-			})
-			conn.sendButton(m.chat, '🧐', wm, a.data.images[0].url, [
-				['Get Again😁', '.waifu']
-			], m)
-		} catch (e) {
-			throw 'error'
-		}
-	} else {
-		var ran = ['oppai', 'uniform', 'waifu', 'marin-kitagawa', 'mori-calliope', 'raiden-shogun', 'selfies']
-		var ranw = ran[Math.floor(Math.random() * ran.length)]
-		try {
-			a = await axios.request('https://api.waifu.im/random/?selected_tags=' + ranw + '&is_nsfw=false', {
-				method: 'GET'
-			})
-			conn.sendButton(m.chat, '🧐', wm, a.data.images[0].url, [
-				['Get Again😁', '.rwaifu']
-			], m)
-		} catch (e) {
-			throw 'error'
-		}
-	}
+var handler = async (m, { conn, command }) => {
+	var axios = global.axios
+	if (!axios) throw 'HTTP client belum tersedia.'
+	var tag = command.toLowerCase() === 'waifu' ? null : randomTags[Math.floor(Math.random() * randomTags.length)]
+	var endpoint = tag ? `https://api.waifu.im/random/?selected_tags=${encodeURIComponent(tag)}&is_nsfw=false` : 'https://api.waifu.im/random/?is_nsfw=false'
+	var response = await axios.get(endpoint, { timeout: 15000 })
+	var image = response.data?.images?.[0]?.url
+	if (!image) throw 'Gambar tidak ditemukan. Coba lagi nanti.'
+	return conn.sendFile(m.chat, image, 'waifu.jpg', '🧐\nUntuk gambar lain, ketik perintah waifu atau rwaifu lagi.', m)
 }
+var randomTags = ['uniform', 'waifu', 'marin-kitagawa', 'mori-calliope', 'raiden-shogun', 'selfies']
 handler.help = ['waifu', 'rwaifu']
 handler.tags = ['internet']
-handler.command = ['waifu', 'rwaifu']
+handler.command = /^(waifu|rwaifu)$/i
 module.exports = handler

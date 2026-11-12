@@ -1,16 +1,11 @@
-var handler = async (m, {
-	conn
-}) => {
-	conn.tebakgambar = conn.tebakgambar ? conn.tebakgambar : {}
-	var id = m.chat
-	if (!(id in conn.tebakgambar)) throw false
-	var json = conn.tebakgambar[id][1]
-	conn.sendButton(m.chat, '```' + json.jawaban.replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_') + '```', author, null, [
-		['nyerah', 'menyerah']
-	], m)
+var handler = async (m, { conn }) => {
+	conn.tebakgambar = conn.tebakgambar || {}
+	var game = conn.tebakgambar[m.chat]
+	if (!game) return m.reply('Tidak ada soal tebak gambar yang aktif.')
+	var answer = String(game[1]?.jawaban || '')
+	var clue = answer.replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_')
+	return conn.reply(m.chat, `Petunjuk: \`${clue}\`\nKetik .nyerah untuk menyerah.`, m)
 }
 handler.command = /^hint$/i
-
 handler.limit = true
-
 module.exports = handler
