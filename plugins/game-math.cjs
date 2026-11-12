@@ -1,30 +1,24 @@
 var handler = async (m, { conn, args = [], usedPrefix, command }) => {
 	conn.math = conn.math || {}
-	if (args.length < 1 || !Object.hasOwn(modes, String(args[0]).toLowerCase())) throw `
-┌─〔 Mode 〕
-├ ${Object.keys(modes).join('\n├ ')}
-└────
-Contoh: ${usedPrefix}math hard`.trim()
-
-	var mode = String(args[0]).toLowerCase()
+	var mode = String(args[0] || '').toLowerCase()
+	if (!Object.hasOwn(modes, mode)) throw `Mode tersedia: ${Object.keys(modes).join(', ')}\nContoh: ${usedPrefix}${command} hard`
 	var id = m.chat
-	if (id in conn.math) return conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.math[id][0])
+	if (id in conn.math) return conn.reply(m.chat, `Masih ada soal belum terjawab. Ketik ${usedPrefix}nyerah untuk menyerah.`, conn.math[id][0])
 
 	var math = genMath(mode)
 	conn.math[id] = [
-		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(0)} detik\nBonus jawaban benar: ${math.bonus} XP\nKetik ${usedPrefix}nyerah untuk menyerah.`, m),
+		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\nTimeout: ${(math.time / 1000).toFixed(0)} detik\nBonus jawaban benar: ${math.bonus} XP\nKetik ${usedPrefix}nyerah untuk menyerah.`, m),
 		math, 4,
 		setTimeout(async () => {
-			if (conn.math[id]) {
-				await conn.reply(m.chat, `Waktu habis! Jawabannya adalah ${math.result}`, conn.math[id][0])
-				delete conn.math[id]
-			}
+			if (!conn.math[id]) return
+			await conn.reply(m.chat, `Waktu habis! Jawabannya adalah *${math.result}*`, conn.math[id][0])
+			delete conn.math[id]
 		}, math.time)
 	]
 }
 handler.help = ['math *mode*']
 handler.tags = ['game']
-handler.command = /^(math)$/i
+handler.command = /^math$/i
 module.exports = handler
 
 var modes = {
@@ -56,8 +50,6 @@ function genMath(mode) {
 }
 function randomInt(from, to) {
 	if (from > to) [from, to] = [to, from]
-	from = Math.ceil(from)
-	to = Math.floor(to)
-	return Math.floor(Math.random() * (to - from + 1)) + from
+	return Math.floor(Math.random() * (Math.floor(to) - Math.ceil(from) + 1)) + Math.ceil(from)
 }
 function pickRandom(list) { return list[Math.floor(Math.random() * list.length)] }

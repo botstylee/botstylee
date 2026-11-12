@@ -6,7 +6,6 @@ handler.before = async function(m) {
 	if (!game || !m.text || !/^-?\d+(\.\d+)?$/.test(m.text.trim())) return !0
 	var quotedText = m.quoted?.text || m.quoted?.contentText || ''
 	if (m.quoted && !/^Berapa hasil dari/i.test(quotedText)) return !0
-
 	var math = game[1]
 	if (Number(m.text.trim()) === Number(math.result)) {
 		var user = global.db?.data?.users?.[m.sender]
@@ -18,9 +17,7 @@ handler.before = async function(m) {
 		clearTimeout(game[3])
 		delete this.math[id]
 		await this.reply(m.chat, `*Kesempatan habis!*\nJawaban: *${math.result}*`, m)
-	} else {
-		await m.reply(`*Jawaban salah!*\nMasih ada ${game[2]} kesempatan.`)
-	}
+	} else await m.reply(`*Jawaban salah!*\nMasih ada ${game[2]} kesempatan.`)
 	return !0
 }
 module.exports = handler
