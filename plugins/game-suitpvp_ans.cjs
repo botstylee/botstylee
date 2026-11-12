@@ -1,103 +1,84 @@
-let handler = m => m
+var handler = m => m
 handler.before = async function(m) {
-	this.suit = this.suit ? this.suit : {}
-	if (db.data.users[m.sender].suit < 0) db.data.users[m.sender].suit = 0
-	let room = Object.values(this.suit).find(room => room.id && room.status && [room.p, room.p2].includes(m.sender))
-	if (room) {
-		let win = ''
-		let tie = false
-		if (m.sender == room.p2 && /^(acc(ept)?|terima|gas|oke?|tolak|gamau|nanti|ga(k.)?bisa)/i.test(m.text) && m.isGroup && room.status == 'wait') {
-			if (/^(tolak|gamau|nanti|ga(k.)?bisa)/i.test(m.text)) {
-				this.reply(m.chat, `@${room.p2.split`@`[0]} menolak suit, suit dibatalkan`, m)
-				delete this.suit[room.id]
-				return !0
-			}
+	this.suit = this.suit || {}
+	var text = typeof m.text === 'string' ? m.text.trim().toLowerCase() : ''
+	if (!text) return !0
+	var room = Object.values(this.suit).find(item => item?.id && item.status && [item.p, item.p2].includes(m.sender))
+	if (!room) return !0
+	var users = global.db?.data?.users || {}
+	var player = users[m.sender]
+	if (player && Number(player.suit) < 0) player.suit = 0
+
+	if (room.status === 'wait' && m.sender === room.p2 && m.isGroup) {
+		if (/^(tolak|gamau|nanti|gak bisa|gabisa|nggak bisa)$/i.test(text)) {
+			clearTimeout(room.waktu)
+			await this.reply(m.chat, `@${room.p2.split('@')[0]} menolak tantangan suit.`, m, { mentions: [room.p2] })
+			delete this.suit[room.id]
+			return !0
+		}
+		if (/^(acc(ept)?|terima|gas|oke?|ya)$/i.test(text)) {
 			room.status = 'play'
 			room.asal = m.chat
 			clearTimeout(room.waktu)
-			//delete room[room.id].waktu
-			m.reply(`Suit telah dikirimkan ke chat
-@${room.p.split`@`[0]} dan 
-@${room.p2.split`@`[0]}
-Silahkan pilih suit di chat masing"
-klik wa.me/${conn.user.jid.split`@`[0]}`, m.chat, {
-				mentions: [room.p, room.p2]
-			})
-
-			if (!room.pilih) this.sendButton(room.p, 'Silahkan pilih', `Menang +${room.poin} Money & Exp\nKalah -${room.poin_lose} Money`, null, [
-				['Batu🗿', 'Batu'],
-				['Kertas📄', 'Kertas'],
-				['Gunting✂️', 'Gunting']
-			], m)
-			if (!room.pilih2) this.sendButton(room.p2, 'Silahkan pilih', `Menang +${room.poin}nMoney & Exp\nKalah -${room.poin_lose} Money`, null, [
-				['Batu🗿', 'Batu'],
-				['Kertas📄', 'Kertas'],
-				['Gunting✂️', 'Gunting']
-			], m)
-			room.waktu_milih = setTimeout(() => {
-				if (!room.pilih && !room.pilih2) this.reply(m.chat, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
-				else if (!room.pilih || !room.pilih2) {
-					win = !room.pilih ? room.p2 : room.p
-					this.reply(m.chat, `@${(room.pilih ? room.p2 : room.p).split`@`[0]} tidak memilih suit, game berakhir`, m)
-					db.data.users[win == room.p ? room.p : room.p2].money += room.poin
-					db.data.users[win == room.p ? room.p2 : room.p].money -= room.poin_lose
-					db.data.users[win == room.p ? room.p : room.p2].exp += room.poin
+			var instructions = `Tantangan diterima! Pilih di chat pribadi dengan bot.\nKetik *batu*, *kertas*, atau *gunting*.\nHadiah menang: ${room.poin} money/XP; penalti kalah: ${room.poin_lose} money.`
+			await this.reply(room.p, instructions)
+			await this.reply(room.p2, instructions)
+			room.waktu_milih = setTimeout(async () => {
+				if (!this.suit[room.id]) return
+				if (!room.pilih && !room.pilih2) {
+					await this.reply(room.asal, 'Kedua pemain tidak memilih. Suit dibatalkan.')
+				} else if (!room.pilih || !room.pilih2) {
+					var winnerId = room.pilih ? room.p : room.p2
+					var loserId = room.pilih ? room.p2 : room.p
+					var winnerUser = users[winnerId]
+					var loserUser = users[loserId]
+					if (winnerUser) {
+						winnerUser.money = (Number(winnerUser.money) || 0) + room.poin
+						winnerUser.exp = (Number(winnerUser.exp) || 0) + room.poin
+					}
+					if (loserUser) loserUser.money = Math.max(0, (Number(loserUser.money) || 0) - room.poin_lose)
+					await this.reply(room.asal, `Suit berakhir karena salah satu pemain tidak memilih. Pemenang: @${winnerId.split('@')[0]}`, null, { mentions: [winnerId] })
 				}
 				delete this.suit[room.id]
-				return !0
-			}, room.timeout)
-		}
-		let jwb = m.sender == room.p
-		let jwb2 = m.sender == room.p2
-		let g = /gunting/i
-		let b = /batu/i
-		let k = /kertas/i
-		let reg = /^(gunting|batu|kertas)/i
-		if (jwb && reg.test(m.text) && !room.pilih && !m.isGroup) {
-			room.pilih = reg.exec(m.text.toLowerCase())[0]
-			room.text = m.text
-			m.reply(`Kamu telah memilih ${m.text} ${!room.pilih2 ? `\n\nMenunggu lawan memilih` : ''}`)
-			if (!room.pilih2) this.reply(room.p2, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
-		}
-		if (jwb2 && reg.test(m.text) && !room.pilih2 && !m.isGroup) {
-			room.pilih2 = reg.exec(m.text.toLowerCase())[0]
-			room.text2 = m.text
-			m.reply(`Kamu telah memilih ${m.text} ${!room.pilih ? `\n\nMenunggu lawan memilih` : ''}`)
-			if (!room.pilih) this.reply(room.p, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
-		}
-		let stage = room.pilih
-		let stage2 = room.pilih2
-		if (room.pilih && room.pilih2) {
-			clearTimeout(room.waktu_milih)
-			if (b.test(stage) && g.test(stage2)) win = room.p
-			else if (b.test(stage) && k.test(stage2)) win = room.p2
-			else if (g.test(stage) && k.test(stage2)) win = room.p
-			else if (g.test(stage) && b.test(stage2)) win = room.p2
-			else if (k.test(stage) && b.test(stage2)) win = room.p
-			else if (k.test(stage) && g.test(stage2)) win = room.p2
-			else if (stage == stage2) tie = true
-			this.reply(room.asal, `
-_*Hasil Suit*_${tie ? '\nSERI' : ''}
-@${room.p.split`@`[0]} (${room.text}) ${tie ? '' : room.p == win ? ` Menang \n+${room.poin} Money & Exp` : ` Kalah \n-${room.poin_lose} Money`}
-@${room.p2.split`@`[0]} (${room.text2}) ${tie ? '' : room.p2 == win ? ` Menang \n+${room.poin} Money & Exp` : ` Kalah \n-${room.poin_lose} Money`}
-`.trim(), m, {
-				mentions: [room.p, room.p2]
-			})
-			if (!tie) {
-				db.data.users[win == room.p ? room.p : room.p2].money += room.poin
-				db.data.users[win == room.p ? room.p2 : room.p].money += room.poin_lose
-				db.data.users[win == room.p ? room.p : room.p2].exp += room.poin
-				db.data.users[win == room.p ? room.p2 : room.p].exp += room.poin_lose
-
-			}
-			delete this.suit[room.id]
+			}, Number(room.timeout) || 60000)
+			return !0
 		}
 	}
+
+	if (room.status !== 'play' || m.isGroup || ![room.p, room.p2].includes(m.sender)) return !0
+	if (!/^(batu|kertas|gunting)$/i.test(text)) return !0
+	if (m.sender === room.p && room.pilih || m.sender === room.p2 && room.pilih2) return m.reply('Pilihan kamu sudah tercatat.')
+	if (m.sender === room.p) {
+		room.pilih = text
+		room.text = text
+	} else {
+		room.pilih2 = text
+		room.text2 = text
+	}
+	await m.reply(`Pilihan *${text}* tercatat. ${room.pilih && room.pilih2 ? 'Menentukan hasil...' : 'Menunggu lawan memilih.'}`)
+	if (!room.pilih || !room.pilih2) return !0
+
+	clearTimeout(room.waktu_milih)
+	var winner = null
+	if (room.pilih !== room.pilih2) {
+		var winsAgainst = { batu: 'gunting', gunting: 'kertas', kertas: 'batu' }
+		winner = winsAgainst[room.pilih] === room.pilih2 ? room.p : room.p2
+	}
+	var tie = !winner
+	var loser = tie ? null : winner === room.p ? room.p2 : room.p
+	if (!tie) {
+		var winnerUser = users[winner]
+		var loserUser = users[loser]
+		if (winnerUser) {
+			winnerUser.money = (Number(winnerUser.money) || 0) + room.poin
+			winnerUser.exp = (Number(winnerUser.exp) || 0) + room.poin
+		}
+		if (loserUser) loserUser.money = Math.max(0, (Number(loserUser.money) || 0) - room.poin_lose)
+	}
+	var result = tie ? 'Seri!' : `Pemenang: @${winner.split('@')[0]} (+${room.poin} money/XP)`
+	await this.reply(room.asal, `*Hasil Suit*\n@${room.p.split('@')[0]} memilih ${room.text}\n@${room.p2.split('@')[0]} memilih ${room.text2}\n${result}${tie ? '' : `\nPemain lain kehilangan ${room.poin_lose} money.`}`, null, { mentions: [room.p, room.p2] })
+	delete this.suit[room.id]
 	return !0
 }
 handler.exp = 5
 module.exports = handler
-
-function random(arr) {
-	return arr[Math.floor(Math.random() * arr.length)]
-}

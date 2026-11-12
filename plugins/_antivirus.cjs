@@ -20,20 +20,18 @@ handler.all = async function(m) {
 	var repeatedPayload = /(.)\1{2047,}/su.test(text)
 	if (!oversizedStub && !tooLong && !mostlyInvisible && !repeatedPayload) return
 
-	// Auto-clear from the bot's processing path: normalize the message so no plugin
-	// can interpret it as a command or consume the suspicious text.
+	// Clear the normalized text so ordinary command handlers ignore it. Keep the
+	// original protocol message/key intact for Baileys and deletion handling.
 	m.antivirusBlocked = true
 	m.isCommand = false
 	m.text = ''
-	m.message = {}
-	if (m.msg && typeof m.msg === 'object') m.msg = {}
 
 	var chat = m.chat || m.key?.remoteJid
 	var key = m.key
 	if (!chat || !key || key.fromMe || chat === 'status@broadcast') return
 
-	// WhatsApp permits deleting another participant's message only in groups when
-	// the bot has the required admin rights. Never clear/delete an entire chat.
+	// Delete only this message, and only in groups where WhatsApp allows the bot
+	// to delete another participant's message (the bot generally must be an admin).
 	var deleted = false
 	if (chat.endsWith('@g.us') && typeof this.sendMessage === 'function') {
 		try {
@@ -48,13 +46,13 @@ handler.all = async function(m) {
 	if (now - (warned.get(chat) || 0) < WARNING_COOLDOWN) return
 	warned.set(chat, now)
 	var notice = deleted
-		? 'Pesan abnormal terdeteksi, dibersihkan dari pemrosesan bot, dan dihapus dari grup.'
+		? 'Pesan abnormal terdeteksi, diabaikan bot, dan dihapus dari grup.'
 		: chat.endsWith('@g.us')
-			? 'Pesan abnormal terdeteksi dan dibersihkan dari pemrosesan bot. Bot tidak bisa menghapusnya; pastikan bot admin.'
-			: 'Pesan abnormal terdeteksi dan dibersihkan dari pemrosesan bot. Penghapusan otomatis hanya dicoba di grup.'
+			? 'Pesan abnormal terdeteksi dan diabaikan bot. Penghapusan gagal; pastikan bot admin.'
+			: 'Pesan abnormal terdeteksi dan diabaikan bot. Penghapusan otomatis hanya dicoba di grup.'
 	try {
-		if (typeof this.reply === 'function') await this.reply(chat, notice, m)
-		else if (typeof this.sendMessage === 'function') await this.sendMessage(chat, { text: notice })
+		// Do not quote the suspicious message; avoid reprocessing its payload.
+		if (typeof this.sendMessage === 'function') await this.sendMessage(chat, { text: notice })
 	} catch (error) {
 		console.warn('[antivirus] failed to send warning:', error?.message || error)
 	}
@@ -66,5 +64,4 @@ handler.all = async function(m) {
 		}
 	}
 }
-
 module.exports = handler
