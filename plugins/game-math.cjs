@@ -1,9 +1,4 @@
-var handler = async (m, {
-	conn,
-	args,
-	usedPrefix,
-	command
-}) => {
+var handler = async (m, { conn, args = [], usedPrefix, command }) => {
 	conn.math = conn.math || {}
 	if (args.length < 1 || !Object.hasOwn(modes, String(args[0]).toLowerCase())) throw `
 ┌─〔 Mode 〕
@@ -12,19 +7,16 @@ var handler = async (m, {
 Contoh: ${usedPrefix}math hard`.trim()
 
 	var mode = String(args[0]).toLowerCase()
-	var buttons = Object.keys(modes).map(value => [value, `${usedPrefix}${command} ${value}`])
 	var id = m.chat
 	if (id in conn.math) return conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.math[id][0])
 
 	var math = genMath(mode)
 	conn.math[id] = [
-		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(0)} detik\nBonus jawaban benar: ${math.bonus} XP`, m),
+		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(0)} detik\nBonus jawaban benar: ${math.bonus} XP\nKetik ${usedPrefix}nyerah untuk menyerah.`, m),
 		math, 4,
 		setTimeout(async () => {
 			if (conn.math[id]) {
-				await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah ${math.result}`, global.author || '', null, [
-					['Coba lagi', `${usedPrefix}${command} ${math.mode}`], ...buttons
-				], conn.math[id][0])
+				await conn.reply(m.chat, `Waktu habis! Jawabannya adalah ${math.result}`, conn.math[id][0])
 				delete conn.math[id]
 			}
 		}, math.time)
@@ -44,16 +36,11 @@ var modes = {
 	impossible: [-9999999, 9999999, -999999, 999999, '*/', 100000, 35000],
 	impossible2: [-99999999, 99999999, -9999, 9999, '/', 120000, 50000]
 }
-
-var operators = { '+': '+', '-': '−', '*': '×', '/': '÷' }
-
+var symbols = { '+': '+', '-': '−', '*': '×', '/': '÷' }
 function genMath(mode) {
 	var [a1, a2, b1, b2, allowed, time, bonus] = modes[mode]
 	var op = pickRandom([...allowed])
-	var a
-	var b
-	var result
-
+	var a, b, result
 	if (op === '/') {
 		b = randomInt(Math.max(1, b1), Math.max(1, b2))
 		result = randomInt(Math.min(a1, a2), Math.max(a1, a2))
@@ -61,23 +48,16 @@ function genMath(mode) {
 	} else {
 		a = randomInt(a1, a2)
 		b = randomInt(b1, b2)
-		switch (op) {
-			case '+': result = a + b; break
-			case '-': result = a - b; break
-			case '*': result = a * b; break
-		}
+		if (op === '+') result = a + b
+		if (op === '-') result = a - b
+		if (op === '*') result = a * b
 	}
-
-	return { str: `${a} ${operators[op]} ${b}`, mode, time, bonus, result }
+	return { str: `${a} ${symbols[op]} ${b}`, mode, time, bonus, result }
 }
-
 function randomInt(from, to) {
 	if (from > to) [from, to] = [to, from]
 	from = Math.ceil(from)
 	to = Math.floor(to)
 	return Math.floor(Math.random() * (to - from + 1)) + from
 }
-
-function pickRandom(list) {
-	return list[Math.floor(Math.random() * list.length)]
-}
+function pickRandom(list) { return list[Math.floor(Math.random() * list.length)] }

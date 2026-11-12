@@ -1,28 +1,25 @@
-let acrcloud = require('acrcloud')
-let acr = new acrcloud({
-	host: 'identify-eu-west-1.acrcloud.com',
-	access_key: 'f692756eebf6326010ab8694246d80e7',
-	access_secret: 'm2KQYmHdBCthmD7sOTtBExB9089TL7hiAazcUEmb'
+var acrcloud = require('acrcloud')
+var acr = new acrcloud({
+	host: process.env.ACRCLOUD_HOST || 'identify-eu-west-1.acrcloud.com',
+	access_key: process.env.ACRCLOUD_ACCESS_KEY || '',
+	access_secret: process.env.ACRCLOUD_ACCESS_SECRET || ''
 })
 
-let handler = async (m, { conn, usedPrefix, command }) => {
-	let q = m.quoted ? m.quoted : m
-	let mime = (q.msg || q).mimetype || q.mediaType || ''
-	if (/video|audio/.test(mime)) {
-		let buffer = await q.download()
-		await m.reply('_In progress, please wait..._')
-		let { status, metadata } = await acr.identify(buffer)
-		if (status.code !== 0) throw status.msg 
-		let { title, artists, album, genres, release_date } = metadata.music[0]
-		let txt = `*• Title:* ${title}${artists ? `\n*• Artists:* ${artists.map(v => v.name).join(', ')}` : ''}`
-		txt += `${album ? `\n*• Album:* ${album.name}` : ''}${genres ? `\n*• Genres:* ${genres.map(v => v.name).join(', ')}` : ''}\n`
-		txt += `*• Release Date:* ${release_date}`
-    conn.sendMessage(m.chat, { text: txt.trim(), buttons: [{ buttonText: { displayText: 'Play Music' }, buttonId: `${usedPrefix}play ${title}` }] }, { quoted: m })
-		// m.reply(txt.trim())
-	} else throw `Reply audio/video with command ${usedPrefix + command}`
+var handler = async (m, { conn, usedPrefix, command }) => {
+	var q = m.quoted || m
+	var mime = (q.msg || q).mimetype || q.mediaType || ''
+	if (!/video|audio/.test(mime)) throw `Balas audio/video dengan perintah ${usedPrefix + command}`
+	if (!process.env.ACRCLOUD_ACCESS_KEY || !process.env.ACRCLOUD_ACCESS_SECRET) throw 'Fitur identifikasi musik belum dikonfigurasi (ACRCLOUD_ACCESS_KEY / ACRCLOUD_ACCESS_SECRET).'
+	var buffer = await q.download?.()
+	if (!buffer) throw 'Media tidak dapat diunduh.'
+	await m.reply('_Sedang mengenali musik, mohon tunggu..._')
+	var { status, metadata } = await acr.identify(buffer)
+	if (status?.code !== 0 || !metadata?.music?.length) throw status?.msg || 'Musik tidak ditemukan.'
+	var { title, artists, album, genres, release_date } = metadata.music[0]
+	var txt = `*Judul:* ${title || 'Tidak diketahui'}${artists?.length ? `\n*Artis:* ${artists.map(item => item.name).join(', ')}` : ''}${album?.name ? `\n*Album:* ${album.name}` : ''}${genres?.length ? `\n*Genre:* ${genres.map(item => item.name).join(', ')}` : ''}${release_date ? `\n*Tanggal rilis:* ${release_date}` : ''}`
+	return conn.reply(m.chat, txt, m)
 }
 handler.help = ['whatmusic']
 handler.tags = ['tools']
 handler.command = /^(whatmusic)$/i
-
 module.exports = handler
