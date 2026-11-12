@@ -24,8 +24,7 @@
   "author": "Benniismael",
   "license": "ISC",
   "dependencies": {
-    "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys#master",
-    "@adiwajshing/baileys": "npm:@whiskeysockets/baileys@7.0.0-rc14",
+    "@adiwajshing/baileys": "github:WhiskeySockets/Baileys#master",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^3.0.0",
     "aki-api": "^6.0.8",
