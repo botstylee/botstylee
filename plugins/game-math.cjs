@@ -4,42 +4,35 @@ var handler = async (m, {
 	usedPrefix,
 	command
 }) => {
-	conn.math = conn.math ? conn.math : {}
-	if (args.length < 1) throw `
-    ┌─〔 Mode 〕
+	conn.math = conn.math || {}
+	if (args.length < 1 || !Object.hasOwn(modes, String(args[0]).toLowerCase())) throw `
+┌─〔 Mode 〕
 ├ ${Object.keys(modes).join('\n├ ')}
-└────    
-contoh:
-${usedPrefix}math hard
-`.trim()
-	var mode = args[0].toLowerCase()
-	if (!(mode in modes)) throw `
-    ┌─〔 Mode 〕
-├ ${Object.keys(modes).join('\n├ ')}
-└────    
-contoh:
-${usedPrefix}math hard
-`.trim()
-	var buttons = Object.keys(modes).map(v => [v, `${usedPrefix}${command} ${v}`])
+└────
+Contoh: ${usedPrefix}math hard`.trim()
+
+	var mode = String(args[0]).toLowerCase()
+	var buttons = Object.keys(modes).map(value => [value, `${usedPrefix}${command} ${value}`])
 	var id = m.chat
 	if (id in conn.math) return conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.math[id][0])
+
 	var math = genMath(mode)
 	conn.math[id] = [
-		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(2)} detik\nBonus Jawaban Benar: ${math.bonus} XP`, m),
+		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(0)} detik\nBonus jawaban benar: ${math.bonus} XP`, m),
 		math, 4,
 		setTimeout(async () => {
-			if (conn.math[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah ${math.result}`, author, null, [
-				['again', `${usedPrefix}${command} ${math.mode}`], ...buttons
-			], conn.math[id][0])
-
-			delete conn.math[id]
+			if (conn.math[id]) {
+				await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah ${math.result}`, global.author || '', null, [
+					['Coba lagi', `${usedPrefix}${command} ${math.mode}`], ...buttons
+				], conn.math[id][0])
+				delete conn.math[id]
+			}
 		}, math.time)
 	]
 }
 handler.help = ['math *mode*']
 handler.tags = ['game']
-handler.command = /^math/i
-
+handler.command = /^(math)$/i
 module.exports = handler
 
 var modes = {
@@ -52,34 +45,37 @@ var modes = {
 	impossible2: [-99999999, 99999999, -9999, 9999, '/', 120000, 50000]
 }
 
-var operators = {
-	'+': '+',
-	'-': '-',
-	'*': '×',
-	'/': '÷'
-}
+var operators = { '+': '+', '-': '−', '*': '×', '/': '÷' }
 
 function genMath(mode) {
-	var [a1, a2, b1, b2, ops, time, bonus] = modes[mode]
-	var a = randomInt(a1, a2)
-	var b = randomInt(b1, b2)
-	var op = pickRandom([...ops])
-	var result = (new Function(`return ${a} ${op.replace('/', '*')} ${b < 0 ? `(${b})` : b}`))()
-	if (op == '/')[a, result] = [result, a]
-	return {
-		str: `${a} ${operators[op]} ${b}`,
-		mode,
-		time,
-		bonus,
-		result
+	var [a1, a2, b1, b2, allowed, time, bonus] = modes[mode]
+	var op = pickRandom([...allowed])
+	var a
+	var b
+	var result
+
+	if (op === '/') {
+		b = randomInt(Math.max(1, b1), Math.max(1, b2))
+		result = randomInt(Math.min(a1, a2), Math.max(a1, a2))
+		a = b * result
+	} else {
+		a = randomInt(a1, a2)
+		b = randomInt(b1, b2)
+		switch (op) {
+			case '+': result = a + b; break
+			case '-': result = a - b; break
+			case '*': result = a * b; break
+		}
 	}
+
+	return { str: `${a} ${operators[op]} ${b}`, mode, time, bonus, result }
 }
 
 function randomInt(from, to) {
-	if (from > to)[from, to] = [to, from]
-	from = Math.floor(from)
+	if (from > to) [from, to] = [to, from]
+	from = Math.ceil(from)
 	to = Math.floor(to)
-	return Math.floor((to - from) * Math.random() + from)
+	return Math.floor(Math.random() * (to - from + 1)) + from
 }
 
 function pickRandom(list) {
