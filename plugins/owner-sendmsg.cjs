@@ -1,17 +1,21 @@
-var handler = async (m, {
-	conn,
-	text,
-	usedPrefix,
-	command
-}) => {
-	var [a, b, c] = text.split(/[&|,]/i).trim()
-	conn.reply(m.chat, a + " @" + b + " " + c, null, {
-		mentions: [b + "@s.whatsapp.net"],
-		isCommand: true
-	})
+const handler = async (m, { conn, text = '', usedPrefix = '.', command = 'tag' }) => {
+	const parts = text.split(/[&|,]/).map(part => part.trim())
+	const [message, number, time] = parts
+	if (!message || !number) {
+		throw `Format: ${usedPrefix + command} <pesan> | <nomor> | <waktu opsional>\nContoh: ${usedPrefix + command} Rapat mulai | 6281234567890 | 10 menit`
+	}
+
+	const jid = `${number.replace(/[^0-9]/g, '')}@s.whatsapp.net`
+	const suffix = time ? `\nWaktu: ${time}` : ''
+	await conn.sendMessage(m.chat, {
+		text: `${message} @${jid.split('@')[0]}${suffix}`,
+		mentions: [jid]
+	}, { quoted: m })
 }
-handler.help = ['tag [command]|[nomer]|[time]']
+
+handler.help = ['tag <pesan> | <nomor> | <waktu opsional>']
 handler.tags = ['owner']
 handler.owner = true
 handler.command = /^tag$/i
+
 module.exports = handler
