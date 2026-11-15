@@ -1,24 +1,27 @@
-var {
-	areJidsSameUser
-} = require('@adiwajshing/baileys');
-var handler = async (m, {
-	conn,
-	args
-}) => {
-	var group = m.chat
-	if (/^[0-9]{5,16}-?[0-9]+@g\.us$/.test(args[0])) group = args[0]
-	if (!/^[0-9]{5,16}-?[0-9]+@g\.us$/.test(group)) throw 'Hanya bisa dibuka di grup'
-	var groupMetadata = await conn.groupMetadata(group)
-	if (!groupMetadata) throw 'groupMetadata is undefined :\\'
-	if (!('participants' in groupMetadata)) throw 'participants is not defined :('
-	var me = groupMetadata.participants.find(user => areJidsSameUser(user.id, conn.user.id))
-	if (!me) throw 'Aku tidak ada di grup itu :('
-	if (!me.admin) throw 'Aku bukan admin T_T'
-	m.reply('https://chat.whatsapp.com/' + await conn.groupInviteCode(group))
+const handler = async (m, { conn, args = [] }) => {
+	const group = /^[0-9]{5,16}-?[0-9]+@g\.us$/.test(args[0] || '') ? args[0] : m.chat
+	if (!group?.endsWith('@g.us')) throw 'Perintah ini hanya bisa digunakan di grup.'
+
+	const metadata = await conn.groupMetadata(group)
+	if (!metadata?.participants) throw 'Metadata grup tidak tersedia.'
+
+	const botJid = conn.decodeJid(conn.user?.jid || conn.user?.id || '')
+	const botParticipant = metadata.participants.find(participant =>
+		conn.decodeJid(participant.id) === botJid
+	)
+	if (!botParticipant) throw 'Bot tidak ditemukan di grup tersebut.'
+	if (botParticipant.admin !== 'admin' && botParticipant.admin !== 'superadmin') {
+		throw 'Bot harus menjadi admin grup untuk mengambil tautan undangan.'
+	}
+
+	const inviteCode = await conn.groupInviteCode(group)
+	await m.reply(`https://chat.whatsapp.com/${inviteCode}`)
 }
+
 handler.help = ['linkgroup']
 handler.tags = ['group']
 handler.command = /^link(gro?up)?$/i
 handler.group = true
 handler.botAdmin = true
+
 module.exports = handler
