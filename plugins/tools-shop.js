@@ -1,75 +1,68 @@
-var items = {
+const items = {
 	buy: {
-		limit: {
-			mp: 1000
-		},
-		coin: {
-			mp: 10000,
-		},
-		ruby: {
-			coin: 5
-		},
-		tokenpremium: {
-			ruby: 20
-		},
-		tokenfree: {
-			ruby: 5
-		},
-		tokenupgrade: {
-			ruby: 50
-		}
+		limit: { mp: 1000 },
+		coin: { mp: 10000 },
+		ruby: { coin: 5 },
+		tokenpremium: { ruby: 20 },
+		tokenfree: { ruby: 5 },
+		tokenupgrade: { ruby: 50 }
 	},
 	sell: {
-		mp: {
-			exp: 100
+		mp: { exp: 100 }
+	}
+}
+
+const parseCount = value => {
+	if (value == null || value === '') return 1
+	if (!/^\d+$/.test(String(value))) return NaN
+	const count = Number(value)
+	return Number.isSafeInteger(count) && count > 0 ? count : NaN
+}
+
+const handler = async (m, { command, usedPrefix = '.', args = [] }) => {
+	const action = String(command || '').toLowerCase()
+	const user = global.db?.data?.users?.[m.sender]
+	if (!user) throw 'Data pengguna belum tersedia. Coba lagi sebentar.'
+
+	const catalog = items[action]
+	if (!catalog) throw 'Perintah toko tidak dikenal.'
+	const available = Object.fromEntries(Object.entries(catalog).filter(([item]) => item in user))
+	const item = String(args[0] || '').toLowerCase()
+	const count = parseCount(args[1])
+
+	if (!Number.isSafeInteger(count)) throw `Jumlah harus bilangan bulat positif. Contoh: *${usedPrefix}${action} ruby 2*`
+
+	if (!item || !available[item]) {
+		const list = Object.entries(available).map(([name, costs]) => {
+			const [currency, price] = Object.entries(costs)[0] || []
+			return currency ? `• ${name}: ${price} ${currency} per item` : `• ${name}`
+		}).join('\n')
+		return m.reply(`*Format:* ${usedPrefix}${action} <item> <jumlah>\nContoh: ${usedPrefix}${action} ruby 2\n\n*Item tersedia:*\n${list || 'Tidak ada item tersedia.'}`)
+	}
+
+	const [currency, price] = Object.entries(available[item])[0] || []
+	if (!currency || !Number.isFinite(Number(price)) || Number(price) < 0) throw 'Harga item tidak valid.'
+
+	if (action === 'buy') {
+		const cost = Number(price) * count
+		const balance = Number(user[currency])
+		if (!Number.isFinite(balance) || balance < cost) {
+			throw `Saldo ${currency} tidak cukup. Dibutuhkan ${cost} ${currency}, saldo kamu ${Number.isFinite(balance) ? balance : 0}.`
 		}
+		user[currency] = balance - cost
+		user[item] = (Number(user[item]) || 0) + count
+		return m.reply(`Berhasil membeli ${count} ${item}.\nSisa ${currency}: ${user[currency]}`)
 	}
+
+	const inventory = Number(user[item]) || 0
+	if (inventory < count) throw `Persediaan ${item} tidak cukup. Kamu memiliki ${inventory}.`
+	user[item] = inventory - count
+	user[currency] = (Number(user[currency]) || 0) + Number(price) * count
+	return m.reply(`Berhasil menjual ${count} ${item}.\nSaldo ${currency}: ${user[currency]}`)
 }
 
-var handler = async (m, {
-	command,
-	usedPrefix,
-	args
-}) => {
-	var user = global.db.data.users[m.sender]
-	var listItems = Object.fromEntries(Object.entries(items[command.toLowerCase()]).filter(([v]) => v && v in user))
-	var info = `
-Use Format *${usedPrefix}${command} [item] [count]*
-Usage example: *${usedPrefix}${command} potion 10*
-
-📍Items list:
-${Object.keys(listItems).map((v) => {
-		var paymentMethod = Object.keys(listItems[v]).find(v => v in user)
-		return `${v} | ${listItems[v][paymentMethod]} ${paymentMethod}`.trim()
-	}).join('\n')}
-`.trim()
-	var item = (args[0] || '').toLowerCase()
-	var total = Math.floor(isNumber(args[1]) ? Math.min(Math.max(parseInt(args[1]), 1), Number.MAX_SAFE_INTEGER) : 1) * 1
-	if (!listItems[item]) return m.reply(info)
-	if (command.toLowerCase() == 'buy') {
-		var paymentMethod = Object.keys(listItems[item]).find(v => v in user)
-		if (user[paymentMethod] < listItems[item][paymentMethod] * total) return m.reply(`You don't have enough ${paymentMethod} to buy *${total}* ${item}. You need *${(listItems[item][paymentMethod] * total) - user[paymentMethod]}* more ${paymentMethod} to be able to buy`)
-		user[paymentMethod] -= listItems[item][paymentMethod] * total
-		user[item] += total
-		return m.reply(`You bought *${total}* ${item}`)
-	} else {
-		if (user[item] < total) return m.reply(`You don't have enough *${item}* to sell, you only have ${user[item]} items`)
-		user[item] -= total
-		user.exp += listItems[item].exp * total
-		return m.reply(`You sold *${total}* ${item}`)
-	}
-}
-
-handler.help = ['buy', 'sell'].map(v => v + ' [item] [count]')
+handler.help = ['buy <item> <jumlah>', 'sell <item> <jumlah>']
 handler.tags = ['tools']
 handler.command = /^(buy|sell)$/i
-
 handler.disabled = false
-
 export default handler
-
-function isNumber(number) {
-	if (!number) return number
-	number = parseInt(number)
-	return typeof number == 'number' && !isNaN(number)
-}
