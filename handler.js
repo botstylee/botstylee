@@ -26,12 +26,12 @@ import db, {
 } from './lib/database.js'
 import Queque from './lib/queque.js'
 
-/** @type {import('@adiwajshing/baileys')} */
+/** @type {typeof import('@whiskeysockets/baileys')} */
 var {
 	getContentType,
 	proto,
 	WAMessageStubType
-} = (await import('@adiwajshing/baileys')).default
+} = await import('@whiskeysockets/baileys')).default
 
 var isNumber = x => typeof x === 'number' && !isNaN(x)
 /**
