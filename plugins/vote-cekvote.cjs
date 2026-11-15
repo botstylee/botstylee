@@ -1,30 +1,27 @@
-var handler = async (m, {
-	conn,
-	usedPrefix
-}) => {
-	var id = m.chat
-	conn.vote = conn.vote ? conn.vote : {}
-	if (!(id in conn.vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
+const handler = async (m, { conn, usedPrefix = '.' }) => {
+	conn.vote ||= {}
+	const id = m.chat
+	if (!(id in conn.vote)) {
+		throw `*Tidak ada voting di grup ini.*\nGunakan *${usedPrefix}mulaivote* untuk memulai vote.`
+	}
 
-	var [reason, upvote, devote] = conn.vote[id]
-	var baba = [upvote, devote]
-	var name = await conn.getName(m.sender)
-	m.reply(`
-*「 VOTE 」*
+	const [reason, upvote = [], devote = []] = conn.vote[id]
+	const result = [
+		'*「 VOTE 」*',
+		'',
+		`*Alasan:* ${reason || 'Tidak ada alasan'}`,
+		'',
+		`*UPVOTE:* ${upvote.length}`,
+		`*DEVOTE:* ${devote.length}`,
+		'',
+		`*Total peserta:* ${upvote.length + devote.length}`,
+		'',
+		`Gunakan *${usedPrefix}hapusvote* untuk menghapus vote.`
+	].join('\n')
 
-*Alasan:* ${reason}
-
-*UPVOTE*
-_Total: ${upvote.length}_
-
-*DEVOTE*
-_Total: ${devote.length}_
-
-*${usedPrefix}hapusvote* - untuk menghapus vote
-
-_${global.wm}_
-`.trim())
+	await conn.sendMessage(m.chat, { text: result }, { quoted: m })
 }
+
 handler.help = ['cekvote']
 handler.tags = ['vote']
 handler.command = /^cekvote$/i

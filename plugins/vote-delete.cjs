@@ -1,14 +1,14 @@
-var handler = async (m, {
-	conn,
-	usedPrefix
-}) => {
-	var id = m.chat
-	conn.vote = conn.vote ? conn.vote : {}
-	if (!(id in conn.vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
-	delete conn.vote[id]
-	m.reply(`Done!`)
+const handler = async (m, { conn, usedPrefix = '.' }) => {
+	conn.vote ||= {}
+	const id = m.chat
+	if (!(id in conn.vote)) {
+		throw `*Tidak ada voting di grup ini.*\nGunakan *${usedPrefix}mulaivote* untuk memulai vote.`
+	}
 
+	delete conn.vote[id]
+	await conn.sendMessage(m.chat, { text: 'Vote di grup ini telah dihapus.' }, { quoted: m })
 }
+
 handler.help = ['hapusvote']
 handler.tags = ['vote']
 handler.command = /^(delete|hapus)vote$/i

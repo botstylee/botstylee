@@ -1,38 +1,36 @@
-var handler = async (m, {
-	conn,
-	usedPrefix,
-	command
-}) => {
-	var id = m.chat
-	conn.vote = conn.vote ? conn.vote : {}
-	if (!(id in conn.vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
-	var isVote = conn.vote[id][1].concat(conn.vote[id][2])
-	var wasVote = isVote.includes(m.sender)
-	if (wasVote) throw 'Kamu sudah vote!'
-	if (/up/i.test(command)) {
-		conn.vote[id][1].push(m.sender)
-	} else if (/de/i.test(command)) {
-		conn.vote[id][2].push(m.sender)
+const handler = async (m, { conn, usedPrefix = '.', text = '' }) => {
+	conn.vote ||= {}
+	const id = m.chat
+	if (!(id in conn.vote)) {
+		throw `*Tidak ada voting di grup ini.*\nGunakan *${usedPrefix}mulaivote* untuk memulai vote.`
 	}
-	m.reply(`Done!\n\n*${usedPrefix}cekvote* - untuk mengecek vote`)
-	var [reason, upvote, devote] = conn.vote[id]
-	var baba = [upvote, devote]
-	m.reply(`
-*「 VOTE 」*
 
-*Alasan:* ${reason}
+	const [reason, upvote = [], devote = []] = conn.vote[id]
+	const isVote = [...upvote, ...devote].includes(m.sender)
+	if (isVote) throw 'Kamu sudah ikut voting di grup ini.'
 
-*UPVOTE*
-_Total: ${upvote.length}_
+	const voteType = /^(up|ya|setuju)$/i.test(text || m.text || '') ? 'upvote' : /^(de|tidak|tolak)$/i.test(text || m.text || '') ? 'devote' : null
+	if (!voteType) {
+		throw `Gunakan perintah ${usedPrefix}upvote atau ${usedPrefix}devote.`
+	}
 
-*DEVOTE*
-_Total: ${devote.length}_
+	if (voteType === 'upvote') upvote.push(m.sender)
+	else devote.push(m.sender)
 
-*${usedPrefix}hapusvote* - untuk menghapus vote
+	const summary = [
+		'*「 VOTE 」*',
+		'',
+		`*Alasan:* ${reason || 'Tidak ada alasan'}`,
+		'',
+		`*UPVOTE:* ${upvote.length}`,
+		`*DEVOTE:* ${devote.length}`,
+		'',
+		`Gunakan *${usedPrefix}cekvote* untuk melihat hasil.`
+	].join('\n')
 
-_${global.wm}_
-`.trim())
+	await conn.sendMessage(m.chat, { text: `Vote berhasil dicatat.\n\n${summary}` }, { quoted: m })
 }
+
 handler.help = ['upvote', 'devote']
 handler.tags = ['vote']
 handler.command = /^(up|de)vote$/i
