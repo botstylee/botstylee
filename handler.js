@@ -31,13 +31,13 @@ var {
 	getContentType,
 	proto,
 	WAMessageStubType
-} = await import('@whiskeysockets/baileys')).default
+} = await import('@whiskeysockets/baileys')
 
 var isNumber = x => typeof x === 'number' && !isNaN(x)
 /**
  * Handle messages upsert
  * @this {import('./lib/connection').Socket}
- * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['messages.upsert']} chatUpdate
+ * @param {import('@whiskeysockets/baileys').BaileysEventMap<unknown>['messages.upsert']} chatUpdate
  */
 export async function handler(chatUpdate) {
 	this.msgqueque = this.msgqueque || new Queque()
