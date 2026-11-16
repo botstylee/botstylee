@@ -162,50 +162,25 @@ conn.logger.level = 'debug'
 
 ---------
 
-## How To Customise Message Display
+## 👥 Pengaturan Grup (Welcome, Leave, Promote, Demote)
+Bot mendukung template kustom notifikasi keanggotaan grup (khusus Admin grup):
 
-### Hydrated Buttons Image Location
-```bash
-conn.sendHydrated(m.chat, 'text', 'footer', 'buffer', 'template-url', 'Template-Name', '0123456789', 'Template-CALL', [
-      ['Donate', '/donasi'],
-      ['Speed', '/ping'],
-      ['Owner', '/owner']
-], m, {asLocation: true})
-```
+.antivirus on : Menghapus virus secara otomatis di group 
+.setwelcome <teks> : Mengatur teks sambutan member baru
+.setleave <teks> : Mengatur teks ucapan member keluar/dikeluarkan
+.setpromote <teks> : Mengatur notifikasi member diangkat jadi Admin
+.setdemote <teks> : Mengatur notifikasi Admin diturunkan pangkat
+Placeholder variabel yang didukung:
 
-### Remove Call Button
-```bash
-conn.sendHydrated(m.chat, 'text', 'footer', 'buffer', 'template-url', 'Template-Name', null, null, [
-      ['Donate', '/donasi'],
-      ['Speed', '/ping'],
-      ['Owner', '/owner']
-    ], m, {asLocation: true})
-```
-
-### Remove Both Template & Call Button
-```bash
-conn.sendHydrated(m.chat, 'text', 'footer', 'buffer', null, null, null, null, [
-      ['Donate', '/donasi'],
-      ['Speed', '/ping'],
-      ['Owner', '/owner']
-    ], m, {asLocation: true})
-```
-### Add/Remove/Edit Buttons
-* To remove button, delete `['button', '/button']` line.
-* To add button, add `['button', '/button']` code line.
-* To edit button, edit `button` name.
-```bash
-conn.sendHydrated(m.chat, 'text', 'footer', 'buffer', null, null, null, null, [
-      ['Button¹', '/button¹'],
-      ['Button²', '/button²'],
-      ['Button³', '/button³']
-    ], m, {asLocation: true})
+@user : Tag member bersangkutan
+@subject : Nama/judul grup
+@desc : Deskripsi grup
 ```
 
 ---------
 
 ### Thanks To 
-**Allah SWT**
+**Tuhan**
 
 [![Nurutomo](https://github.com/Nurutomo.png?size=100)](https://github.com/Nurutomo)
 [![BochilGaming](https://github.com/BochilGaming.png?size=100)](https://github.com/BochilGaming)
