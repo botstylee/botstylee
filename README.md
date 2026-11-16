@@ -162,7 +162,7 @@ conn.logger.level = 'debug'
 
 ---------
 
-## 👥 Pengaturan Grup (Welcome, Leave, Promote, Demote)
+### 👥 Pengaturan Grup (Antivirus, Welcome, Leave, Promote, Demote)
 Bot mendukung template kustom notifikasi keanggotaan grup (khusus Admin grup):
 
 .antivirus on : Menghapus virus secara otomatis di group 
