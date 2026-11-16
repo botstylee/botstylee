@@ -162,19 +162,19 @@ conn.logger.level = 'debug'
 
 ---------
 
-### 👥 Pengaturan Grup (Antivirus, Welcome, Leave, Promote, Demote)
+## 👥 Pengaturan Grup (Antivirus, Welcome, Leave, Promote, Demote)
 Bot mendukung template kustom notifikasi keanggotaan grup (khusus Admin grup):
 
-.antivirus on : Menghapus virus secara otomatis di group 
-.setwelcome <teks> : Mengatur teks sambutan member baru
-.setleave <teks> : Mengatur teks ucapan member keluar/dikeluarkan
-.setpromote <teks> : Mengatur notifikasi member diangkat jadi Admin
-.setdemote <teks> : Mengatur notifikasi Admin diturunkan pangkat
-Placeholder variabel yang didukung:
+- `.antivirus on` : Menghapus virus secara otomatis di group 
+- `.setwelcome <teks>` : Mengatur teks sambutan member baru
+- `.setleave <teks>` : Mengatur teks ucapan member keluar/dikeluarkan
+- `.setpromote <teks>` : Mengatur notifikasi member diangkat jadi Admin
+- `.setdemote <teks>` : Mengatur notifikasi Admin diturunkan pangkat
 
-@user : Tag member bersangkutan
-@subject : Nama/judul grup
-@desc : Deskripsi grup
+*Placeholder variabel yang didukung:*
+- `@user` : Tag member bersangkutan
+- `@subject` : Nama/judul grup
+- `@desc` : Deskripsi grup
 ```
 
 ---------
