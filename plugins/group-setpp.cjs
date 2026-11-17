@@ -17,9 +17,8 @@ const handler = async (m, { conn, command, isBotAdmin, isAdmin, isOwner }) => {
 		throw 'Hanya owner bot yang dapat mengubah foto profil bot.'
 	}
 
-	let buffer
 	try {
-		buffer = await quoted.download?.()
+		let buffer = await quoted.download?.()
 		if (!buffer) throw new Error('Media tidak dapat diunduh.')
 
 		if (/webp/i.test(mime)) {

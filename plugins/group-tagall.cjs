@@ -5,7 +5,6 @@ const handler = async (m, { conn, args = [], participants = [] }) => {
 		.filter(jid => typeof jid === 'string' && jid.includes('@')))]
 	const taggedUsers = users.map(jid => `❖ @${jid.split('@')[0]}`).join('\n')
 	const body = `*「 TAG ALL 」*\nMessage: *${message}*${taggedUsers ? `\n\n${taggedUsers}` : ''}`
-
 	return conn.reply(m.chat, body, m, { mentions: users })
 }
 
