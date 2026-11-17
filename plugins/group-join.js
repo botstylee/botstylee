@@ -1,60 +1,27 @@
-var linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})( [0-9]{1,3})?/i
+const inviteRegex = /(?:https?:\/\/)?chat\.whatsapp\.com\/([0-9A-Za-z]{20,24})/i
 
-var handler = async (m, {
-	conn,
-	text,
-	isOwner,
-	isPrems,
-	command
-}) => {
-	var users
-	var [_, code, expired] = text.match(linkRegex) || []
-	if (!code) throw 'Link invalid'
-	users = db.data.users[m.sender]
-	var res
+const handler = async (m, { conn, text = '' }) => {
+	const match = typeof text === 'string' ? text.trim().match(inviteRegex) : null
+	const inviteCode = match?.[1]
+	if (!inviteCode) throw 'Link undangan WhatsApp tidak valid. Kirim link chat.whatsapp.com yang benar.'
+
 	try {
-		res = await conn.groupAcceptInvite(code)
-		m.reply(`Berhasil join grup ${res}`)
-		var chats = db.data.chats[res]
-		if (!chats) chats = db.data.chats[res] = {}
-	} catch (e) {
-		log(e)
-		throw 'bot tidak dapat masuk menggunakan tautan dari kamu, mungkin kamu telah mengeluarkan bot sebelumnya'
+		const groupId = await conn.groupAcceptInvite(inviteCode)
+		if (typeof groupId !== 'string' || !groupId.endsWith('@g.us')) {
+			throw new Error('WhatsApp tidak mengembalikan ID grup yang valid.')
+		}
+
+		const chats = global.db?.data?.chats
+		if (chats && (!chats[groupId] || typeof chats[groupId] !== 'object')) chats[groupId] = {}
+		return m.reply(`Berhasil bergabung ke grup ${groupId}.`)
+	} catch (error) {
+		console.error('Gagal bergabung ke grup dari link undangan:', error)
+		throw 'Bot gagal bergabung. Link mungkin tidak valid/kedaluwarsa, atau bot tidak dapat diundang ke grup tersebut.'
 	}
 }
-handler.help = ['join *chat.whatsapp.com*']
-handler.tags = ['main']
 
+handler.help = ['join <link grup>']
+handler.tags = ['main']
 handler.command = ['join']
 
 export default handler
-
-var isNumber = (x) => (x = parseInt(x), typeof x === 'number' && !isNaN(x))
-
-function msToDate(ms) {
-	var temp = ms,
-	years = Math.floor(ms / (12 * 30 * 24 * 60 * 60 * 1000)),
-	yearsms = ms % (12 * 30 * 24 * 60 * 60 * 1000),
-	month = Math.floor((yearsms) / (30 * 24 * 60 * 60 * 1000)),
-	monthms = ms % (30 * 24 * 60 * 60 * 1000),
-	days = Math.floor((monthms) / (24 * 60 * 60 * 1000)),
-	daysms = ms % (24 * 60 * 60 * 1000),
-	hours = Math.floor((daysms) / (60 * 60 * 1000)),
-	hoursms = ms % (60 * 60 * 1000),
-	minutes = Math.floor((hoursms) / (60 * 1000)),
-	minutesms = ms % (60 * 1000),
-	sec = Math.floor((minutesms) / (1000))
-	if (days <= 0) {
-		return hours + " Jam " + minutes + " Menit";
-	}
-	if (days <= 0 && hours <= 0) {
-		return minutes + " Menit";
-	}
-	if (days <= 0 && hours <= 0 && minutes <= 0) {
-		return sec + " Detik"
-	}
-	if (month <= 0) {
-		return days + " Hari " + hours + " Jam " + minutes + " Menit";
-	}
-	// +minutes+":"+sec;
-}

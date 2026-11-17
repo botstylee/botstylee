@@ -1,41 +1,23 @@
-var handler = async (m, {
-	conn,
-	text,
-	usedPrefix,
-	command,
-	participants
-}) => {
-	if (!text) {
-		await conn.sendPresenceUpdate('composing', m.chat)
-		conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
+const handler = async (m, { conn, text, usedPrefix, command }) => {
+	const usage = `*Format salah! Contoh:*\n○ ${usedPrefix + command} on\n○ ${usedPrefix + command} off`
+	const option = typeof text === 'string' ? text.trim().toLowerCase() : ''
+	if (!['on', 'enable', 'off', 'disable'].includes(option)) return conn.reply(m.chat, usage, m)
+
+	const chats = db.data?.chats
+	if (!chats) return conn.reply(m.chat, '*Database chat belum siap. Coba lagi sebentar.*', m)
+	const chat = chats[m.chat] || (chats[m.chat] = {})
+	const enabled = option === 'on' || option === 'enable'
+	if (Boolean(chat.antiToxic) === enabled) {
+		return conn.reply(m.chat, enabled ? '*Filter sudah aktif di grup ini.*' : '*Filter belum aktif di grup ini.*', m)
 	}
-	switch (text) {
-		case "on":
-		case "enable":
-			var cek = db.data.chats[m.chat].antiToxic
-			if (cek) return conn.reply(m.chat, `*filter telah aktif pada grup ini.*`, m)
-			await conn.sendPresenceUpdate('composing', m.chat)
-			db.data.chats[m.chat].antiToxic = true
-			conn.reply(m.chat, `*filter berhasil diaktifkan.*`, m)
-			break
-		case "off":
-		case "disable":
-			var ce = db.data.chats[m.chat].antiToxic
-			if (!ce) return conn.reply(m.chat, `*filter belum aktif pada grup ini.*`, m)
-			await conn.sendPresenceUpdate('composing', m.chat)
-			db.data.chats[m.chat].antiToxic = false
-			conn.reply(m.chat, `*filter berhasil dimatikan.*`, m)
-			break
-		default:
-			await conn.sendPresenceUpdate('composing', m.chat)
-			conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
-			break
-	}
+
+	chat.antiToxic = enabled
+	return conn.reply(m.chat, enabled ? '*Filter berhasil diaktifkan.*' : '*Filter berhasil dimatikan.*', m)
 }
-handler.help = ['filter'].map(v => v + ' [on/off]')
+
+handler.help = ['filter [on/off]']
 handler.tags = ['group', 'admin']
 handler.command = /^(filter)$/i
-
 handler.group = true
 handler.admin = true
 handler.botAdmin = true
