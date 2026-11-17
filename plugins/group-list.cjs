@@ -1,4 +1,19 @@
-const decode = jid => typeof jid === 'string' ? (conn.decodeJid?.(jid) || jid) : ''
+const formatDuration = milliseconds => {
+	const remaining = Math.max(0, Number(milliseconds) || 0)
+	const days = Math.floor(remaining / 86400000)
+	const hours = Math.floor((remaining % 86400000) / 3600000)
+	const minutes = Math.floor((remaining % 3600000) / 60000)
+	return `${days} hari ${hours} jam ${minutes} menit`
+}
+
+const decodeJid = (conn, jid) => {
+	if (typeof jid !== 'string') return ''
+	try {
+		return conn.decodeJid?.(jid) || jid
+	} catch {
+		return jid
+	}
+}
 
 const handler = async (m, { conn, isOwner }) => {
 	try {
@@ -7,45 +22,46 @@ const handler = async (m, { conn, isOwner }) => {
 		}
 
 		const result = await conn.groupFetchAllParticipating()
-		const groups = Object.values(result || {})
+		const groups = Object.values(result || {}).filter(group => group?.id)
 		if (!groups.length) return m.reply('*Bot belum bergabung ke grup mana pun.*')
 
-		let txt = `*DAFTAR GRUP*\n\n*Total:* ${groups.length}\n\n`
-		const botJid = decode(conn.user?.jid || conn.user?.id || '')
-
-		for (const group of groups) {
-			if (!group?.id) continue
+		const botJid = decodeJid(conn, conn.user?.jid || conn.user?.id || '')
+		const sections = groups.map(group => {
 			const chat = db.data?.chats?.[group.id] || {}
 			const members = Array.isArray(group.participants) ? group.participants : []
-			const botParticipant = members.find(participant => decode(participant?.id) === botJid)
+			const bot = members.find(participant => decodeJid(conn, participant?.id) === botJid)
 			const expiry = Number(chat.expired)
-			const expiryText = chat.grouprental && Number.isFinite(expiry) && expiry > 0
-				? `*• Sewa berakhir:* ${expiry <= Date.now() ? 'Kedaluwarsa' : formatDuration(expiry - Date.now())}\n`
+			const rental = chat.grouprental && Number.isFinite(expiry) && expiry > 0
+				? `\n*• Sewa berakhir:* ${expiry <= Date.now() ? 'Kedaluwarsa' : formatDuration(expiry - Date.now())}`
 				: ''
+			return `*• Nama:* ${group.subject || '(tanpa nama)'}\n*• ID:* ${group.id}` +
+				`${isOwner ? `\n*• Anggota:* ${members.length}\n*• Bot admin:* ${Boolean(bot?.admin)}` : ''}${rental}`
+		})
 
-			txt += `*• Nama:* ${group.subject || '(tanpa nama)'}\n` +
-				`*• ID:* ${group.id}\n` +
-				`${isOwner ? `*• Anggota:* ${members.length}\n*• Bot admin:* ${Boolean(botParticipant?.admin)}\n` : ''}` +
-				expiryText + '\n'
+		// Avoid oversized WhatsApp payloads; output in multiple messages when necessary.
+		const header = `*DAFTAR GRUP*\n*Total:* ${groups.length}\n\n`
+		const chunks = []
+		let chunk = header
+		for (const section of sections) {
+			const next = `${section}\n\n`
+			if (chunk.length + next.length > 3500 && chunk !== header) {
+				chunks.push(chunk.trim())
+				chunk = header + next
+			} else {
+				chunk += next
+			}
 		}
-
-		return m.reply(txt.trim())
+		if (chunk.trim()) chunks.push(chunk.trim())
+		for (const part of chunks) await m.reply(part)
 	} catch (error) {
-		console.error('Gagal mengambil daftar grup:', error)
+		conn.logger?.error?.({ err: error }, 'Gagal mengambil daftar grup')
 		return m.reply('*Gagal mengambil daftar grup. Periksa koneksi WhatsApp lalu coba lagi.*')
 	}
-}
-
-function formatDuration(milliseconds) {
-	const remaining = Math.max(0, Number(milliseconds) || 0)
-	const days = Math.floor(remaining / 86400000)
-	const hours = Math.floor((remaining % 86400000) / 3600000)
-	const minutes = Math.floor((remaining % 3600000) / 60000)
-	return `${days} hari ${hours} jam ${minutes} menit`
 }
 
 handler.command = /^list(gc|gro?up)$/i
 handler.help = ['listgroup']
 handler.tags = ['info']
+handler.owner = true
 
 module.exports = handler

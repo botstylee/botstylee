@@ -1,18 +1,24 @@
 const handler = async (m, { conn, text = '', participants = [] }) => {
-	const quoted = m.quoted
-	const messageText = (text || '').trim() || quoted?.text || m.text?.trim()
+	const quotedText = typeof m.quoted?.text === 'string' ? m.quoted.text.trim() : ''
+	const messageText = (typeof text === 'string' ? text.trim() : '') || quotedText
 	if (!messageText) {
-		throw 'Tulis teks pengumuman atau balas pesan, lalu jalankan perintah hidetag.'
+		throw 'Tulis teks pengumuman atau balas pesan yang ingin diteruskan dengan hidetag.'
 	}
 
-	const mentions = [...new Set(participants
-		.map(participant => conn.decodeJid?.(participant.id) || participant.id)
-		.filter(Boolean))]
+	const members = Array.isArray(participants) ? participants : []
+	const mentions = [...new Set(members
+		.map(participant => {
+			const jid = participant?.id
+			if (typeof jid !== 'string') return ''
+			try {
+				return conn.decodeJid?.(jid) || jid
+			} catch {
+				return jid
+			}
+		})
+		.filter(jid => typeof jid === 'string' && jid.includes('@')))]
 
-	await conn.sendMessage(m.chat, {
-		text: messageText,
-		mentions
-	}, { quoted: m })
+	return conn.sendMessage(m.chat, { text: messageText, mentions }, { quoted: m })
 }
 
 handler.help = ['pengumuman <teks>', 'announce <teks>', 'hidetag <teks>']

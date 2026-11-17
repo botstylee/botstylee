@@ -7,11 +7,11 @@ const handler = async (m, { conn, text = '', isROwner, isOwner }) => {
 	else {
 		const chats = global.db?.data?.chats
 		if (!chats) throw 'Database chat belum siap. Coba lagi sebentar.'
-		const chat = chats[m.chat] || (chats[m.chat] = {})
+		const chat = chats[m.chat] && typeof chats[m.chat] === 'object' ? chats[m.chat] : (chats[m.chat] = {})
 		chat.sBye = byeText
 	}
 
-	return m.reply('Bye berhasil diatur. Gunakan @user untuk mention.')
+	return m.reply('Bye berhasil diatur. Gunakan @user untuk mention anggota.')
 }
 
 handler.help = ['setbye <teks>']

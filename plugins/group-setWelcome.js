@@ -7,11 +7,11 @@ const handler = async (m, { conn, text = '', isROwner, isOwner }) => {
 	else {
 		const chats = global.db?.data?.chats
 		if (!chats) throw 'Database chat belum siap. Coba lagi sebentar.'
-		const chat = chats[m.chat] || (chats[m.chat] = {})
+		const chat = chats[m.chat] && typeof chats[m.chat] === 'object' ? chats[m.chat] : (chats[m.chat] = {})
 		chat.sWelcome = welcomeText
 	}
 
-	return m.reply('Welcome berhasil diatur. Gunakan @user untuk mention, @subject untuk nama grup, dan @desc untuk deskripsi grup.')
+	return m.reply('Welcome berhasil diatur. Placeholder: @user, @subject, dan @desc.')
 }
 
 handler.help = ['setwelcome <teks>']

@@ -18,16 +18,17 @@ const normalizeJid = (conn, jid) => {
 
 const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 	const chat = db.data?.chats?.[m.chat] || {}
-	const members = Array.isArray(participants) ? participants.filter(Boolean) : []
-	const admins = members.filter(participant => participant.admin && participant.id)
+	const members = Array.isArray(participants) ? participants.filter(p => p && typeof p === 'object') : []
+	const admins = members.filter(participant => participant.admin && typeof participant.id === 'string')
 	const owner = groupMetadata.owner || admins.find(participant => participant.admin === 'superadmin')?.id
+	const ownerJid = normalizeJid(conn, owner)
 	const adminLines = admins.length
-		? admins.map((admin, index) => `${index + 1}. @${jidUser(admin.id)}`).join('\n')
+		? admins.map((admin, index) => `${index + 1}. @${jidUser(normalizeJid(conn, admin.id))}`).join('\n')
 		: 'Tidak ada admin yang terdeteksi'
 	const expiry = Number(chat.expired) || 0
 	const rentalText = chat.grouprental && expiry > 0
 		? `*Sewa grup:* ${expiry > Date.now() ? formatDuration(expiry - Date.now()) : 'Kedaluwarsa'}`
-		: null
+		: ''
 
 	const text = [
 		'*「 Informasi Grup 」*',
@@ -35,7 +36,7 @@ const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 		`*Nama:* ${groupMetadata.subject || 'Tidak diketahui'}`,
 		`*Deskripsi:* ${groupMetadata.desc?.toString() || 'Tidak ada deskripsi'}`,
 		`*Jumlah anggota:* ${members.length}`,
-		`*Pemilik grup:* ${owner ? `@${jidUser(owner)}` : 'Tidak diketahui'}`,
+		`*Pemilik grup:* ${ownerJid ? `@${jidUser(ownerJid)}` : 'Tidak diketahui'}`,
 		'*Admin grup:*',
 		adminLines,
 		'',
@@ -48,7 +49,7 @@ const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 		rentalText
 	].filter(Boolean).join('\n')
 
-	const mentions = [...new Set([...admins.map(admin => admin.id), ...(owner ? [owner] : [])].map(jid => normalizeJid(conn, jid)).filter(Boolean))]
+	const mentions = [...new Set([...admins.map(admin => normalizeJid(conn, admin.id)), ownerJid].filter(Boolean))]
 	return conn.sendMessage(m.chat, { text, mentions }, { quoted: m })
 }
 
