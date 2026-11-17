@@ -1,43 +1,47 @@
-var {
-	webp2png
-} = require('../../lib/webp2mp4.cjs');
-var handler = async (m, {
-	conn,
-	text,
-	usedPrefix,
-	command,
-	isBotAdmin,
-	isAdmin,
-	isOwner
-}) => {
-	var q = m.quoted ? m.quoted : m
-	var mime = (q.msg || q).mimetype || q.mediaType || ''
-	if (!/webp|image/g.test(mime)) throw 'kirim gambar/sticker atau reply gambar/sticker dengan caption #setpp or #setppgroup'
-	var img = await q.download?.()
-	if (!img) throw 'kirim gambar/sticker atau reply gambar/sticker dengan caption #setpp or #setppgroup'
-	var buffer = img
-	if (/webp/g.test(mime)) buffer = await getbuffer(await webp2png(img))
-	if (m.isGroup && /group/.test(command)) {
-		if (isBotAdmin) {
-			if (isAdmin) {
-				try {
-					var c = await conn.updateProfilePicture(m.chat, buffer)
-					m.reply('sukses atmin')
-				} catch (e) {
-					throw "can't update profile picture group"
-				}
-			}
+const { webp2png } = require('../lib/webp2mp4.cjs')
+
+const handler = async (m, { conn, command, isBotAdmin, isAdmin, isOwner }) => {
+	const useForGroup = /group/i.test(command)
+	if (useForGroup && !m.isGroup) throw 'Perintah setppgroup hanya bisa digunakan di grup.'
+
+	const quoted = m.quoted || m
+	const mime = quoted?.msg?.mimetype || quoted?.mimetype || quoted?.mediaType || ''
+	if (!/^(image\/|image\/webp|webp)/i.test(mime)) {
+		throw 'Kirim atau balas gambar/stiker dengan perintah setpp atau setppgroup.'
+	}
+
+	if (useForGroup) {
+		if (!isAdmin) throw 'Hanya admin grup yang dapat mengubah foto grup.'
+		if (!isBotAdmin) throw 'Bot harus menjadi admin grup untuk mengubah foto grup.'
+	} else if (!isOwner) {
+		throw 'Hanya owner bot yang dapat mengubah foto profil bot.'
+	}
+
+	let buffer
+	try {
+		buffer = await quoted.download?.()
+		if (!buffer) throw new Error('Media tidak dapat diunduh.')
+
+		if (/webp/i.test(mime)) {
+			const convertedUrl = await webp2png(buffer)
+			if (!convertedUrl) throw new Error('Konversi stiker gagal.')
+			const response = await fetch(convertedUrl)
+			if (!response.ok) throw new Error(`Unduh hasil konversi gagal (${response.status}).`)
+			buffer = Buffer.from(await response.arrayBuffer())
 		}
-	} else {
-		if (!isOwner) throw 'kamu bukan owner bot'
-		try {
-			var c = await conn.updateProfilePicture(conn.user.jid, buffer)
-			m.reply('sukses atmin')
-		} catch (e) {
-			throw "can't update profile picture bot"
-		}
+
+		const jid = useForGroup ? m.chat : (conn.user?.jid || conn.user?.id)
+		if (!jid) throw new Error('ID profil tidak tersedia.')
+		await conn.updateProfilePicture(jid, buffer)
+		return m.reply(useForGroup ? 'Foto grup berhasil diperbarui.' : 'Foto profil bot berhasil diperbarui.')
+	} catch (error) {
+		console.error('Gagal memperbarui foto profil:', error)
+		throw error instanceof Error ? `Gagal memperbarui foto profil: ${error.message}` : 'Gagal memperbarui foto profil.'
 	}
 }
+
+handler.help = ['setpp', 'setppgroup']
 handler.tags = ['group']
-handler.command = handler.help = ['setpp','setppgroup']
+handler.command = ['setpp', 'setppgroup']
+
 module.exports = handler

@@ -2,7 +2,7 @@ const handler = async (m, { conn, text = '', isROwner, isOwner }) => {
 	const welcomeText = typeof text === 'string' ? text.trim() : ''
 	if (!welcomeText) throw 'Teks welcome-nya belum diisi.'
 
-	if (isROwner) global.conn.welcome = welcomeText
+	if (isROwner) (global.conn || conn).welcome = welcomeText
 	else if (isOwner) conn.welcome = welcomeText
 	else {
 		const chats = global.db?.data?.chats

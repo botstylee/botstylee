@@ -6,26 +6,28 @@ const formatDuration = milliseconds => {
 	return `${days} hari ${hours} jam ${minutes} menit`
 }
 
+const jidUser = jid => typeof jid === 'string' ? jid.split('@')[0].split(':')[0] : ''
+
 const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 	const chat = db.data?.chats?.[m.chat] || {}
-	const admins = participants.filter(participant => participant.admin)
+	const members = Array.isArray(participants) ? participants : []
+	const admins = members.filter(participant => participant?.admin && participant?.id)
 	const owner = groupMetadata.owner || admins.find(participant => participant.admin === 'superadmin')?.id
-	const ownerText = owner ? `@${owner.split('@')[0]}` : 'Tidak diketahui'
 	const adminLines = admins.length
-		? admins.map((admin, index) => `${index + 1}. @${admin.id.split('@')[0]}`).join('\n')
+		? admins.map((admin, index) => `${index + 1}. @${jidUser(admin.id)}`).join('\n')
 		: 'Tidak ada admin yang terdeteksi'
 	const rentalExpiry = Number(chat.expired) || 0
 	const rentalText = chat.grouprental && rentalExpiry
-		? `\n*Sewa grup:* ${rentalExpiry > Date.now() ? formatDuration(rentalExpiry - Date.now()) : 'Kedaluwarsa'}`
-		: ''
+		? `*Sewa grup:* ${rentalExpiry > Date.now() ? formatDuration(rentalExpiry - Date.now()) : 'Kedaluwarsa'}`
+		: null
 
 	const text = [
 		'*「 Informasi Grup 」*',
 		`*ID:* ${groupMetadata.id || m.chat}`,
 		`*Nama:* ${groupMetadata.subject || 'Tidak diketahui'}`,
 		`*Deskripsi:* ${groupMetadata.desc?.toString() || 'Tidak ada deskripsi'}`,
-		`*Jumlah anggota:* ${participants.length}`,
-		`*Pemilik grup:* ${ownerText}`,
+		`*Jumlah anggota:* ${members.length}`,
+		`*Pemilik grup:* ${owner ? `@${jidUser(owner)}` : 'Tidak diketahui'}`,
 		'*Admin grup:*',
 		adminLines,
 		'',
@@ -33,15 +35,17 @@ const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 		`${chat.isBanned ? '✅' : '❌'} Bot diblokir di grup`,
 		`${chat.welcome ? '✅' : '❌'} Pesan selamat datang`,
 		`${chat.antiLink ? '✅' : '❌'} Anti-link`,
+		`${chat.antiToxic ? '✅' : '❌'} Filter kata kasar`,
 		rentalText
 	].filter(Boolean).join('\n')
 
-	const mentions = [...admins.map(admin => admin.id), ...(owner ? [owner] : [])]
-	await conn.sendMessage(m.chat, { text, mentions }, { quoted: m })
+	const mentions = [...new Set([...admins.map(admin => admin.id), ...(owner ? [owner] : [])])]
+	return conn.sendMessage(m.chat, { text, mentions }, { quoted: m })
 }
 
 handler.help = ['infogrup']
 handler.tags = ['group']
 handler.command = /^(gro?upinfo|info(gro?up|gc))$/i
 handler.group = true
+
 module.exports = handler
