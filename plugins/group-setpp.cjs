@@ -1,12 +1,12 @@
 const { webp2png } = require('../lib/webp2mp4.cjs')
 
 const handler = async (m, { conn, command, isBotAdmin, isAdmin, isOwner }) => {
-	const useForGroup = /group/i.test(command)
+	const useForGroup = typeof command === 'string' && /group/i.test(command)
 	if (useForGroup && !m.isGroup) throw 'Perintah setppgroup hanya bisa digunakan di grup.'
 
-	const quoted = m.quoted || m
-	const mime = quoted?.msg?.mimetype || quoted?.mimetype || quoted?.mediaType || ''
-	if (!/^(image\/|image\/webp|webp)/i.test(mime)) {
+	const target = m.quoted || m
+	const mime = target?.msg?.mimetype || target?.mimetype || target?.mediaType || ''
+	if (!/^image\//i.test(mime) && !/webp/i.test(mime)) {
 		throw 'Kirim atau balas gambar/stiker dengan perintah setpp atau setppgroup.'
 	}
 
@@ -18,23 +18,26 @@ const handler = async (m, { conn, command, isBotAdmin, isAdmin, isOwner }) => {
 	}
 
 	try {
-		let buffer = await quoted.download?.()
-		if (!buffer) throw new Error('Media tidak dapat diunduh.')
+		let image = await target.download?.()
+		if (!image || !Buffer.isBuffer(image)) throw new Error('Media tidak dapat diunduh.')
 
 		if (/webp/i.test(mime)) {
-			const convertedUrl = await webp2png(buffer)
-			if (!convertedUrl) throw new Error('Konversi stiker gagal.')
+			const convertedUrl = await webp2png(image)
+			if (typeof convertedUrl !== 'string' || !/^https?:\/\//i.test(convertedUrl)) {
+				throw new Error('Konversi stiker gagal menghasilkan URL gambar.')
+			}
 			const response = await fetch(convertedUrl)
 			if (!response.ok) throw new Error(`Unduh hasil konversi gagal (${response.status}).`)
-			buffer = Buffer.from(await response.arrayBuffer())
+			image = Buffer.from(await response.arrayBuffer())
+			if (!image.length) throw new Error('Hasil konversi gambar kosong.')
 		}
 
 		const jid = useForGroup ? m.chat : (conn.user?.jid || conn.user?.id)
 		if (!jid) throw new Error('ID profil tidak tersedia.')
-		await conn.updateProfilePicture(jid, buffer)
+		await conn.updateProfilePicture(jid, image)
 		return m.reply(useForGroup ? 'Foto grup berhasil diperbarui.' : 'Foto profil bot berhasil diperbarui.')
 	} catch (error) {
-		console.error('Gagal memperbarui foto profil:', error)
+		conn.logger?.error?.({ err: error, group: useForGroup ? m.chat : undefined }, 'Gagal memperbarui foto profil')
 		throw error instanceof Error ? `Gagal memperbarui foto profil: ${error.message}` : 'Gagal memperbarui foto profil.'
 	}
 }

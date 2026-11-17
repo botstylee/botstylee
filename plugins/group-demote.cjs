@@ -1,44 +1,59 @@
 const jidUser = jid => typeof jid === 'string' ? jid.split('@')[0].split(':')[0] : ''
+const normalizeJid = (conn, jid) => {
+	if (typeof jid !== 'string') return ''
+	try {
+		return conn.decodeJid?.(jid) || jid
+	} catch {
+		return jid
+	}
+}
+const isAdmin = participant => participant?.admin === 'admin' || participant?.admin === 'superadmin'
 
 const handler = async (m, { conn, participants = [] }) => {
-	const mentioned = Array.isArray(m.mentionedJid) ? m.mentionedJid : []
-	const targets = [...new Set(mentioned.filter(jid => jid && jid.endsWith('@s.whatsapp.net')))]
-	const botJid = conn.decodeJid ? conn.decodeJid(conn.user.id) : conn.user.id
+	const targets = [...new Set((Array.isArray(m.mentionedJid) ? m.mentionedJid : [])
+		.map(jid => normalizeJid(conn, jid))
+		.filter(jid => jid.endsWith('@s.whatsapp.net') || jid.endsWith('@lid')))]
+
+	if (!targets.length) return m.reply('Tag atau balas pesan admin yang ingin diturunkan.')
+
+	const botJid = normalizeJid(conn, conn.user?.jid || conn.user?.id || '')
 	const botUser = jidUser(botJid)
-
-	if (!targets.length) {
-		return m.reply('Tag anggota yang ingin diturunkan dari admin.')
-	}
-
 	const results = []
-	for (const target of targets) {
-		if (jidUser(target) === botUser) {
-			results.push(`@${jidUser(target)} tidak dapat diturunkan oleh perintah ini.`)
-			continue
-		}
+	const mentions = []
 
-		const participant = participants.find(item => jidUser(item.id) === jidUser(target))
-		if (!participant) {
-			results.push(`@${jidUser(target)} bukan anggota grup ini.`)
+	for (const target of targets) {
+		const participant = participants.find(item => jidUser(normalizeJid(conn, item?.id)) === jidUser(target))
+		const displayJid = participant?.id || target
+		mentions.push(displayJid)
+
+		if (jidUser(target) === botUser) {
+			results.push(`@${jidUser(displayJid)} adalah akun bot dan tidak diproses.`)
 			continue
 		}
-		if (!participant.admin) {
-			results.push(`@${jidUser(target)} bukan admin.`)
+		if (!participant) {
+			results.push(`@${jidUser(displayJid)} bukan anggota grup ini.`)
+			continue
+		}
+		if (!isAdmin(participant)) {
+			results.push(`@${jidUser(displayJid)} bukan admin.`)
 			continue
 		}
 
 		try {
-			await conn.groupParticipantsUpdate(m.chat, [participant.id], 'demote')
-			results.push(`@${jidUser(target)} berhasil diturunkan dari admin.`)
+			const response = await conn.groupParticipantsUpdate(m.chat, [participant.id], 'demote')
+			const item = Array.isArray(response) ? response[0] : null
+			if (item?.status && !['200', 200].includes(item.status)) {
+				results.push(`Penurunan admin @${jidUser(displayJid)} gagal (status ${item.status}).`)
+			} else {
+				results.push(`@${jidUser(displayJid)} berhasil diturunkan dari admin.`)
+			}
 		} catch (error) {
-			console.error('Gagal menurunkan admin:', error)
-			results.push(`Gagal menurunkan @${jidUser(target)} dari admin.`)
+			conn.logger?.error?.({ err: error, group: m.chat, target: participant.id }, 'Gagal menurunkan admin')
+			results.push(`Gagal menurunkan @${jidUser(displayJid)} dari admin.`)
 		}
 	}
 
-	return conn.reply(m.chat, results.join('\n'), m, {
-		mentions: targets
-	})
+	return conn.reply(m.chat, results.join('\n'), m, { mentions: [...new Set(mentions)] })
 }
 
 handler.help = ['demote @tag']

@@ -7,18 +7,26 @@ const formatDuration = milliseconds => {
 }
 
 const jidUser = jid => typeof jid === 'string' ? jid.split('@')[0].split(':')[0] : ''
+const normalizeJid = (conn, jid) => {
+	if (typeof jid !== 'string') return ''
+	try {
+		return conn.decodeJid?.(jid) || jid
+	} catch {
+		return jid
+	}
+}
 
 const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 	const chat = db.data?.chats?.[m.chat] || {}
-	const members = Array.isArray(participants) ? participants : []
-	const admins = members.filter(participant => participant?.admin && participant?.id)
+	const members = Array.isArray(participants) ? participants.filter(Boolean) : []
+	const admins = members.filter(participant => participant.admin && participant.id)
 	const owner = groupMetadata.owner || admins.find(participant => participant.admin === 'superadmin')?.id
 	const adminLines = admins.length
 		? admins.map((admin, index) => `${index + 1}. @${jidUser(admin.id)}`).join('\n')
 		: 'Tidak ada admin yang terdeteksi'
-	const rentalExpiry = Number(chat.expired) || 0
-	const rentalText = chat.grouprental && rentalExpiry
-		? `*Sewa grup:* ${rentalExpiry > Date.now() ? formatDuration(rentalExpiry - Date.now()) : 'Kedaluwarsa'}`
+	const expiry = Number(chat.expired) || 0
+	const rentalText = chat.grouprental && expiry > 0
+		? `*Sewa grup:* ${expiry > Date.now() ? formatDuration(expiry - Date.now()) : 'Kedaluwarsa'}`
 		: null
 
 	const text = [
@@ -36,10 +44,11 @@ const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
 		`${chat.welcome ? '✅' : '❌'} Pesan selamat datang`,
 		`${chat.antiLink ? '✅' : '❌'} Anti-link`,
 		`${chat.antiToxic ? '✅' : '❌'} Filter kata kasar`,
+		`${chat.antiSWGroup ? '✅' : '❌'} Anti-Group Status`,
 		rentalText
 	].filter(Boolean).join('\n')
 
-	const mentions = [...new Set([...admins.map(admin => admin.id), ...(owner ? [owner] : [])])]
+	const mentions = [...new Set([...admins.map(admin => admin.id), ...(owner ? [owner] : [])].map(jid => normalizeJid(conn, jid)).filter(Boolean))]
 	return conn.sendMessage(m.chat, { text, mentions }, { quoted: m })
 }
 
