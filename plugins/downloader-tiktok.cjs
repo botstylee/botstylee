@@ -1,50 +1,48 @@
-var axios = require('axios');
-var cheerio = require('cheerio');
-var handler = async (m, { conn, args}) => {
-  if (!args[0]) throw 'Uhm...url nya mana?'
-    const { thumbnail, video, audio } = await tiktokdl(args[0])
-    const url = video
-    if (!url) throw 'Can\'t download video!'
-    await conn.sendMessage(m.chat, { video: { url: url }},m) 
+const { download } = require('@silent-tech-offc/ttdl')
+
+const handler = async (m, { conn, args, usedPrefix, command }) => {
+    // 1. Validasi input URL
+    if (!args[0]) {
+        return m.reply(`Mana link TikTok-nya?\n\nContoh:\n*${usedPrefix + command} https://vt.tiktok.com/xxxx*`)
+    }
+    if (!/tiktok\.com/i.test(args[0])) {
+        return m.reply('Link tidak valid! Pastikan itu link TikTok.')
+    }
+
+    // 2. Reaksi loading
+    await conn.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
+
+    try {
+        // 3. Ambil data video menggunakan library @silent-tech-offc/ttdl
+        const data = await download(args[0])
+
+        // 4. Validasi hasil
+        if (!data.videoNoWatermark) {
+            throw new Error('Gagal menemukan link video tanpa watermark.')
+        }
+
+        // 5. Kirim video
+        await conn.sendFile(
+            m.chat, 
+            data.videoNoWatermark, 
+            `tiktok_${Date.now()}.mp4`, 
+            `*${data.title || 'TikTok Video'}*`, 
+            m
+        )
+
+        // 6. Reaksi sukses
+        await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+
+    } catch (e) {
+        console.error('[tiktok-dl]', e)
+        await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+        m.reply(`Gagal mengunduh video.\n\n*Error:* ${e.message}`)
+    }
 }
+
 handler.help = ['tiktok'].map(v => v + ' <url>')
 handler.tags = ['downloader']
-
 handler.command = /^t(iktok(d(own(load(er)?)?|l))?|td(own(load(er)?)?|l))$/i
+handler.limit = true // Opsional: jika bot Anda punya sistem limit
 
 module.exports = handler
-
-async function tiktokdl (url) {
-    if (!/tiktok/.test(url)) return error.link;
-    const gettoken = await axios.get("https://tikdown.org/id");
-    const $ = cheerio.load(gettoken.data);
-    const token = $("#download-form > input[type=hidden]:nth-child(2)").attr(
-        "value"
-    );
-    const param = {
-        url: url,
-        _token: token,
-    };
-    const {
-        data
-    } = await axios.request("https://tikdown.org/getAjax?", {
-        method: "post",
-        data: new URLSearchParams(Object.entries(param)),
-        headers: {
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36",
-        },
-    });
-    var getdata = cheerio.load(data.html);
-    if (data.status) {
-        return {
-            status: true,
-            thumbnail: getdata("img").attr("src"),
-            video: getdata("div.download-links > div:nth-child(1) > a").attr("href"),
-            audio: getdata("div.download-links > div:nth-child(2) > a").attr("href"),
-        };
-    } else
-        return {
-            status: false,
-        };
-};
