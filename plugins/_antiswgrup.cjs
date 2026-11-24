@@ -1,69 +1,63 @@
-const isGroupStatus = (message, depth = 0, seen = new Set()) => {
-	if (!message || typeof message !== 'object' || depth > 8 || seen.has(message)) return false
-	seen.add(message)
+var handler = m => m
+handler.before = async function(m, {
+	conn,
+	groupMetadata
+}) {
+	if (!m.isGroup) return !0
+	if (m.fromMe) return !0
 
-	for (const [key, value] of Object.entries(message)) {
-		if (/^groupStatusMessage(?:V2)?$/i.test(key) && value && typeof value === 'object') return true
-		if (isGroupStatus(value, depth + 1, seen)) return true
+	// Cek apakah fitur aktif di grup ini
+	if (!db.data.chats[m.chat]?.antiSwGrup) return !0
+
+	// Deteksi SW Grup
+	var isSwGrup = false
+	if (
+		m.message?.groupStatusMessageV2 ||
+		m.message?.groupStatusMessage ||
+		m.mtype === 'groupStatusMessageV2' ||
+		m.mtype === 'groupStatusMessage'
+	) {
+		isSwGrup = true
 	}
-	return false
-}
+	if (!isSwGrup) return !0
 
-const handler = m => m
+	var sender = m.sender || m.participant
+	var senderName = m.pushName || m.name || 'Kak'
+	var groupName = groupMetadata?.subject || 'grup ini'
 
-handler.before = async function (m, { isBotAdmin }) {
-	if (!m?.isGroup || !m.message || m.fromMe || !isGroupStatus(m.message)) return false
-
-	const chat = global.db?.data?.chats?.[m.chat]
-	if (!chat?.antiSWGroup) return false
-
-	if (!isBotAdmin) {
-		this.logger?.warn?.({ chat: m.chat }, 'Anti-SW grup aktif tetapi bot bukan admin; Group Status tidak dapat dihapus')
-		return false
-	}
-
-	const originalKey = m.key || {}
-	const statusAuthor = originalKey.participant || m.participant || m.sender
-	const statusId = originalKey.id || m.id
-	if (!statusId || !statusAuthor) {
-		this.logger?.warn?.({ chat: m.chat }, 'Anti-SW grup: data kunci Group Status tidak lengkap, batal menghapus')
-		return false
-	}
-
+	// Hapus SW Grup
 	try {
-		const { proto, generateWAMessageFromContent } = await import('@whiskeysockets/baileys')
-		const userJid = this.user?.jid || this.user?.id
-		if (!userJid || !proto?.Message?.ProtocolMessage?.Type?.REVOKE) {
-			throw new Error('API Baileys untuk revoke Group Status tidak tersedia')
-		}
-
-		const revoke = {
-			protocolMessage: {
-				key: {
-					remoteJid: m.chat,
-					id: statusId,
-					fromMe: false,
-					participant: statusAuthor,
-					...(originalKey.participantAlt ? { participantAlt: originalKey.participantAlt } : {})
-				},
-				type: proto.Message.ProtocolMessage.Type.REVOKE
+		await conn.sendMessage(m.chat, {
+			delete: {
+				remoteJid: m.chat,
+				fromMe: false,
+				id: m.key.id,
+				participant: sender
 			}
-		}
-		const generated = generateWAMessageFromContent(m.chat, revoke, { userJid })
-		await this.relayMessage(m.chat, generated.message, {
-			messageId: generated.key.id,
-			additionalAttributes: { edit: '8' },
-			additionalNodes: [{
-				tag: 'meta',
-					attrs: { is_group_status: 'true', origin: 'group_status' }
-				}]
 		})
-		this.logger?.info?.({ chat: m.chat, statusId, author: statusAuthor }, 'Group Status dihapus oleh Anti-SW grup')
-	} catch (error) {
-		this.logger?.error?.({ err: error, chat: m.chat, statusId }, 'Anti-SW grup gagal menghapus Group Status')
+	} catch (e) {
+		console.error('Gagal hapus SW Grup:', e)
 	}
 
-	return true
+	// Kirim peringatan
+	var warning = `
+⚠️ *STORY GRUP TERDETEKSI* ⚠️
+
+Hai *${senderName}* 👋
+Story grup (SW Grup) yang kamu kirim di *${groupName}* sudah *dihapus otomatis* oleh bot.
+
+📌 *Kenapa?*
+SW Grup sering mengganggu kenyamanan anggota dan memenuhi chat grup. Fitur ini juga bisa disalahgunakan untuk spam.
+
+🚫 *Mohon jangan mengirim SW Grup lagi* di grup ini, ya.
+✅ Kalau mau story, silakan pakai *Status WhatsApp pribadi* saja.
+
+Terima kasih atas pengertiannya 🙏
+`.trim()
+
+	await conn.reply(m.chat, warning, m)
+
+	return !0
 }
 
 module.exports = handler
