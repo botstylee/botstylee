@@ -16,11 +16,10 @@ var handler = async (m, {
 	if (!text) return m.reply('Berbicara kepada orang yang kamu suka secara anonim\n\nCara Penggunaan : .menfes nomor(diawali kode negara)|pesan\n\nExample : .menfes 62895xxxxx|I Love You')
 	if (args[0] == 'accept') {
 		const find = Object.values(db.data.menfes).find(t => t.to == m.sender)
+		if (!find) return m.reply('Tidak ada ajakan chatting untukmu')
 		db.data.menfes[find.id].chatting = true
 		await m.reply('Anda menerima ajakan chatting dari dia\n\nGood Luck!')
-		return await conn.sendButton(find.id, 'Dia telah menerima ajakan chatting denganmu\n\nGood Luck Bro & Sis:', `Ingin stop chat? Silahkan klik tombol dibawah`, [
-			['Stop Chat', '.stopmenfes']
-		], null)
+		return await conn.reply(find.id, `Dia telah menerima ajakan chatting denganmu\n\nGood Luck Bro & Sis:\n\nIngin stop chat? Ketik *.stopmenfes*`, null)
 	} else if (args[0] == 'decline') {
 		const find = Object.values(db.data.menfes).find(t => t.to == m.sender)
 		if (!find) return m.reply('Silahkan ketik #stopmenfes')
