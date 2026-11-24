@@ -1,8 +1,7 @@
 const axios = require('axios')
 const { download: tiktokDl } = require('@silent-tech-offc/ttdl')
 const yt = require('@denzy-official/youtube_scraper')
-const { downloader } = require('@heavstaltech/api')
-
+const { downloader } = require('@heavstal/api')
 // Helper untuk memformat ukuran file
 const formatSize = (bytes) => {
     if (!bytes) return 'Unknown'
