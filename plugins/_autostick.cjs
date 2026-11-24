@@ -1,18 +1,18 @@
-const {
+var {
 	sticker
 } = require('../lib/sticker.cjs');
-let handler = m => m
+var handler = m => m
 handler.all = async function(m) {
-	let chat = db.data.chats[m.chat]
-	let user = db.data.users[m.sender]
+	var chat = db.data.chats[m.chat]
+	var user = db.data.users[m.sender]
 
 	if (chat.stiker && !chat.isBanned && !user.banned && !m.isBaileys) {
-		let q = m
-		let stiker = false
-		let mime = (q.msg || q).mimetype || ''
+		var q = m
+		var stiker = false
+		var mime = (q.msg || q).mimetype || ''
 		if (/webp/.test(mime)) return
 		if (/image/.test(mime)) {
-			let img = await q.download()
+			var img = await q.download()
 			if (!img) return
 			stiker = await sticker(img, false, packname, author)
 		}
