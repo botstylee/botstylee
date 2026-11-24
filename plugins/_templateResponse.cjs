@@ -2,7 +2,7 @@ var {
 	proto,
 	generateWAMessage,
 	areJidsSameUser
-} = require('@adiwajshing/baileys')
+} = require('@whiskeysockets/baileys')
 //var plugins = import('../lib/plugins.js').then(async({plugins}) { return new Promise(async(resolve,reject)=>{resolve(plugins)})})
 var handler = m => m
 handler.all = async function(m, chatUpdate) {
