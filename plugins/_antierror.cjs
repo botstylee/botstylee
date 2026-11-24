@@ -1,19 +1,25 @@
-const clampFinite = (value, min, max) => {
-	const number = typeof value === 'number' ? value : Number(value)
-	if (!Number.isFinite(number)) return value
-	return Math.min(max, Math.max(min, number))
-}
+var handler = m => m
 
-const handler = m => m
-
-handler.all = async function (m) {
-	const user = db.data?.users?.[m?.sender]
-	if (!user || typeof user !== 'object') return
-
-	user.money = clampFinite(user.money, 0, 99999999)
-	user.exp = clampFinite(user.exp, 0, 99999999)
-	user.health = clampFinite(user.health, 0, 100)
-	user.limitjoin = clampFinite(user.limitjoin, 0, 5)
+handler.all = async function(m, {conn} ) {
+	var user = db.data.users[m.sender]
+	if ((user.money * 1) > 99999998) {
+		user.money = 99999999
+	} else if ((user.money * 1) < 0) {
+		user.money = 0
+	}
+	if ((user.limitjoin * 1) > 5) {
+		 user.limitjoin = 5
+	}
+	if ((user.exp * 1) > 99999998) {
+		user.exp = 99999999
+	} else if ((user.exp * 1) < 0) {
+		user.exp = 0
+	}
+	if ((user.health * 1) > 100) {
+		user.health = 100
+	} else if ((user.health * 1) < 0) {
+		user.health = 0
+	}
 }
 
 module.exports = handler
