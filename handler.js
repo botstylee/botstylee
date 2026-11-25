@@ -26,18 +26,18 @@ import db, {
 } from './lib/database.js'
 import Queque from './lib/queque.js'
 
-/** @type {typeof import('@whiskeysockets/baileys')} */
+/** @type {import('@adiwajshing/baileys')} */
 var {
 	getContentType,
 	proto,
 	WAMessageStubType
-} = await import('@whiskeysockets/baileys')
+} = (await import('@adiwajshing/baileys')).default
 
 var isNumber = x => typeof x === 'number' && !isNaN(x)
 /**
  * Handle messages upsert
  * @this {import('./lib/connection').Socket}
- * @param {import('@whiskeysockets/baileys').BaileysEventMap<unknown>['messages.upsert']} chatUpdate
+ * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['messages.upsert']} chatUpdate
  */
 export async function handler(chatUpdate) {
 	this.msgqueque = this.msgqueque || new Queque()
