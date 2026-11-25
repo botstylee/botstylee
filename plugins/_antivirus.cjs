@@ -2,25 +2,31 @@ var handler = m => m
 
 // === KONFIGURASI ===
 const CONFIG = {
-    maxTextLength: 2000,          // Teks > 2000 karakter langsung dicurigai
-    maxMentions: 20,              // Mention > 20 orang = spam
-    maxNestedDepth: 6,            // Kedalaman nested message
-    maxNullBytes: 2,              // Null byte dalam teks
-    burstWindowMs: 10000,         // 10 detik
-    burstThreshold: 3,            // 3 bug dalam 10 detik = eskalasi
+    maxTextLength: 2000,
+    maxMentions: 20,
+    maxNestedDepth: 6,
+    maxNullBytes: 2,
+    burstWindowMs: 10000,
+    burstThreshold: 3,
     autoKick: true,
     autoBlock: true,
     revokeForEveryone: true,
-    notifyOwner: true
+    notifyOwner: true,
+    dropRequestId: true // ✅ Workaround CVE: drop pesan dengan requestId
 }
 
-// State rate-limit per pengirim
 const burstMap = new Map()
 
 // === DETEKSI STRUKTURAL ===
 function analyzePayload(m) {
     const msg = m.message
     if (!msg) return null
+
+    // ✅ WORKAROUND CVE-2026-48063: Drop pesan dengan requestId
+    // Ini adalah event messages.upsert palsu yang dipalsukan lewat placeholderResendMessage
+    if (CONFIG.dropRequestId && m.requestId) {
+        return { reason: 'spoofed_upsert_requestId', severity: 'critical', spoofed: true }
+    }
 
     // 1. Teks raksasa
     if (m.text && m.text.length >= CONFIG.maxTextLength)
@@ -61,7 +67,7 @@ function analyzePayload(m) {
         }
     }
 
-    // 6. ProtocolMessage spoofing (CVE-2026-48063)
+    // 6. ProtocolMessage spoofing (mitigasi tambahan)
     if (msg.protocolMessage?.placeholderResendMessage)
         return { reason: 'protocol_spoofing', severity: 'critical' }
 
@@ -72,7 +78,7 @@ function analyzePayload(m) {
     return null
 }
 
-// === DETEKSI LONJAKAN (BURST) ===
+// === DETEKSI BURST ===
 function checkBurst(sender) {
     const now = Date.now()
     const entry = burstMap.get(sender) || { count: 0, first: now }
@@ -103,7 +109,7 @@ async function neutralize(conn, m, det, isBurst) {
     } catch (e) { console.error('[antivirus] delete fail:', e.message) }
 
     // 2. Kick + Block
-    if (isGroup && CONFIG.autoKick && sender) {
+    if (isGroup && CONFIG.autoKick && sender && !det.spoofed) {
         try {
             const meta = await conn.groupMetadata(m.chat)
             const bot = meta.participants.find(p => p.id === conn.user.jid)
@@ -115,7 +121,7 @@ async function neutralize(conn, m, det, isBurst) {
         } catch (e) { console.error('[antivirus] kick fail:', e.message) }
     }
 
-    if (CONFIG.autoBlock && !m.key.fromMe && sender) {
+    if (CONFIG.autoBlock && !m.key.fromMe && sender && !det.spoofed) {
         try {
             await conn.updateBlockStatus(sender, 'block')
             console.log(`[antivirus] 🚫 block: ${sender}`)
@@ -137,7 +143,7 @@ async function neutralize(conn, m, det, isBurst) {
 
 // === HANDLER UTAMA ===
 handler.all = async function (m) {
-    // Lewati pesan dari bot sendiri atau tanpa message
+    // Skip pesan dari bot sendiri atau tanpa message
     if (m.key?.fromMe || !m.message) return
 
     const det = analyzePayload(m)
