@@ -1,6 +1,7 @@
 var {
 	webp2png
-} = require('../../lib/webp2mp4.cjs');
+} = require('../lib/webp2mp4.cjs');
+
 var handler = async (m, {
 	conn,
 	usedPrefix,
