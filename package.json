@@ -26,6 +26,7 @@
     "@silent-tech-offc/ttdl": "^1.0.0",
     "@denzy-official/youtube_scraper": "^1.0.1",
     "@heavstal/api": "^2.2.0",
+    "acrcloud": "^1.4.0",
     "aki-api": "^6.0.8",
     "async-retry": "^1.3.3",
     "awesome-phonenumber": "^2.70.0",
