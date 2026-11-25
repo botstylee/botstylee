@@ -22,6 +22,7 @@ import {
 	pluginFolder,
 	pluginFilter
 } from './lib/plugins.js';
+import storeSystem from './lib/store.js'; // ✅ import store
 import axios from 'axios';
 import fetch from 'node-fetch';
 import former from 'form-data';
@@ -59,8 +60,12 @@ global.conn = Object.defineProperty(Connection, 'conn', {
 	writable: true
 }).conn
 
-// ✅ Store tetap dipakai — lib/store.js masih punya makeInMemoryStore()
-global.store = Connection.store
+// ✅ Buat store manual karena connection.js tidak mengekspor `store`
+global.store = storeSystem.makeInMemoryStore()
+// Bind store ke event socket supaya contacts/messages/groups terisi
+global.store.bind(global.conn.ev, {
+	groupMetadata: (jid) => global.conn.groupMetadata(jid)
+})
 
 loadPluginFiles(pluginFolder, pluginFilter, {
 		logger: global.conn?.logger || console,   // ✅ aman jika logger belum siap
@@ -181,8 +186,8 @@ if (!opts['test']) {
 			db.data ? db.write() : Promise.reject('db.data is null'),
 			(opts['autocleartmp'] || opts['cleartmp']) ? clearTmp() : Promise.resolve()
 		])
-		// ✅ Store tetap dipakai — lib/store.js masih ada
-		Connection.store.writeToFile(Connection.storeFile)
+		// ✅ Store tetap dipakai — pakai global.store yang sudah dibuat
+		global.store.writeToFile(Connection.storeFile || './store.json')
 	}, 60 * 1000)
 }
 
