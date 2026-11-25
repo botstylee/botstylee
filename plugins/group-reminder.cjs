@@ -5,9 +5,10 @@ var handler = async (m, {
 	command,
 	participants
 }) => {
+	// ✅ Tambahkan return — cegah eksekusi lanjut ke switch saat text kosong
 	if (!text) {
 		await conn.sendPresenceUpdate('composing', m.chat)
-		conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
+		return conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
 	}
 	switch (text) {
 		case "on":
