@@ -8,12 +8,21 @@ var handler = async (m, {
 		var {
 			grouprental,
 			expired
-		} = db.data.chats[groups[i].id]
+		} = db.data.chats[groups[i].id] || {}
+		
+		// ✅ Guard: bot mungkin tidak ada di participants (misalnya sudah di-kick)
+		var botParticipant = groups[i].participants.find(v => v.id == conn.user.jid)
+		var isBotAdmin = botParticipant ? !!botParticipant.admin : false
+		
+		// ✅ msToDate tidak async → hapus await
+		// ✅ Guard expired agar tidak NaN
+		var expiredText = grouprental && expired ? '*• Expired:* ' + msToDate(expired - new Date() * 1) + '\n' : ''
+		
 		txt += `*• Subject:* ${groups[i].subject}\n` +
 			`*• ID:* ${groups[i].id}\n` +
 			`${isOwner ? `*• Participants:* ${groups[i].participants.length}\n` : ''}` +
-			`${isOwner ? `*• isBotAdmin:* ${!!groups[i].participants.find(v => v.id == conn.user.jid).admin}\n` : ''}` +
-			`${grouprental ? '*• Expired:* ' + await msToDate(expired - new Date() * 1)+ '\n' : ''}\n`
+			`${isOwner ? `*• isBotAdmin:* ${isBotAdmin}\n` : ''}` +
+			`${expiredText}\n`
 	}
 	m.reply(txt.trim())
 }
@@ -33,5 +42,4 @@ function msToDate(ms) {
 	minutesms = ms % (60 * 1000),
 	sec = Math.floor((minutesms) / (1000))
 	return days + " Hari " + hours + " Jam " + minutes + " Menit";
-	// +minutes+":"+sec;
 }
