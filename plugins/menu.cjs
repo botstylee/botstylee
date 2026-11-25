@@ -61,7 +61,8 @@ const handler = async (m, { conn, usedPrefix = '.', __dirname } = {}) => {
 			)
 		}
 
-		const name = await conn.getName(m.sender).catch(() => m.pushName || 'Teman')
+		// ✅ FIX: Bungkus dengan Promise.resolve agar .catch() tidak error
+		const name = await Promise.resolve(conn.getName(m.sender)).catch(() => m.pushName || 'Teman')
 		const now = moment().tz('Asia/Jakarta')
 
 		// 📦 Baca package.json (path benar)
@@ -138,7 +139,8 @@ const handler = async (m, { conn, usedPrefix = '.', __dirname } = {}) => {
 			p: usedPrefix,
 			name,
 			role: user.role || 'Beginner',
-			me: await conn.getName(conn.user?.jid || conn.user?.id || '').catch(() => 'Bot'),
+			// ✅ FIX: Bungkus dengan Promise.resolve
+			me: await Promise.resolve(conn.getName(conn.user?.jid || conn.user?.id || '')).catch(() => 'Bot'),
 			npmname: packageInfo.name || 'Botstylee',
 			npmdesc: packageInfo.description || '',
 			version: packageInfo.version || '',
