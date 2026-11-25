@@ -1,61 +1,74 @@
-const formatDuration = milliseconds => {
-	const remaining = Math.max(0, Number(milliseconds) || 0)
-	const days = Math.floor(remaining / 86400000)
-	const hours = Math.floor((remaining % 86400000) / 3600000)
-	const minutes = Math.floor((remaining % 3600000) / 60000)
-	return `${days} hari ${hours} jam ${minutes} menit`
-}
-
-const jidUser = jid => typeof jid === 'string' ? jid.split('@')[0].split(':')[0] : ''
-const normalizeJid = (conn, jid) => {
-	if (typeof jid !== 'string') return ''
-	try {
-		return conn.decodeJid?.(jid) || jid
-	} catch {
-		return jid
-	}
-}
-
-const handler = async (m, { conn, participants = [], groupMetadata = {} }) => {
-	const chat = db.data?.chats?.[m.chat] || {}
-	const members = Array.isArray(participants) ? participants.filter(p => p && typeof p === 'object') : []
-	const admins = members.filter(participant => participant.admin && typeof participant.id === 'string')
-	const owner = groupMetadata.owner || admins.find(participant => participant.admin === 'superadmin')?.id
-	const ownerJid = normalizeJid(conn, owner)
-	const adminLines = admins.length
-		? admins.map((admin, index) => `${index + 1}. @${jidUser(normalizeJid(conn, admin.id))}`).join('\n')
-		: 'Tidak ada admin yang terdeteksi'
-	const expiry = Number(chat.expired) || 0
-	const rentalText = chat.grouprental && expiry > 0
-		? `*Sewa grup:* ${expiry > Date.now() ? formatDuration(expiry - Date.now()) : 'Kedaluwarsa'}`
-		: ''
-
-	const text = [
-		'*「 Informasi Grup 」*',
-		`*ID:* ${groupMetadata.id || m.chat}`,
-		`*Nama:* ${groupMetadata.subject || 'Tidak diketahui'}`,
-		`*Deskripsi:* ${groupMetadata.desc?.toString() || 'Tidak ada deskripsi'}`,
-		`*Jumlah anggota:* ${members.length}`,
-		`*Pemilik grup:* ${ownerJid ? `@${jidUser(ownerJid)}` : 'Tidak diketahui'}`,
-		'*Admin grup:*',
-		adminLines,
-		'',
-		'*Pengaturan:*',
-		`${chat.isBanned ? '✅' : '❌'} Bot diblokir di grup`,
-		`${chat.welcome ? '✅' : '❌'} Pesan selamat datang`,
-		`${chat.antiLink ? '✅' : '❌'} Anti-link`,
-		`${chat.antiToxic ? '✅' : '❌'} Filter kata kasar`,
-		`${chat.antiSWGroup ? '✅' : '❌'} Anti-Group Status`,
-		rentalText
-	].filter(Boolean).join('\n')
-
-	const mentions = [...new Set([...admins.map(admin => normalizeJid(conn, admin.id)), ownerJid].filter(Boolean))]
-	return conn.sendMessage(m.chat, { text, mentions }, { quoted: m })
+var handler = async (m, {
+	conn,
+	participants,
+	groupMetadata
+}) => {
+	var _p = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || profil
+	var pp = /^https?:\/\//.test(_p) ? await getbuffer(_p) : _p
+	var {
+		isBanned,
+		welcome,
+		antiLink,
+		grouprental,
+		expired
+	} = db.data.chats[m.chat]
+	var groupAdmins = participants.filter(p => p.admin)
+	var listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
+	var owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || m.chat.split`-` [0] + '@s.whatsapp.net'
+	var text = `*「 Group Information 」*\n
+*ID:* 
+${groupMetadata.id}
+*Name:* 
+${groupMetadata.subject}
+*Description:* 
+${groupMetadata.desc?.toString() || 'unknown'}
+*Total Members:*
+${participants.length} Members
+*Group Owner:* 
+@${owner.split('@')[0]}
+*Group Admins:*
+${listAdmin}
+${grouprental ? '*Expired Group:*\nExpired: ' + await msToDate(expired - new Date() * 1)+ '\n' : ''}
+*Group Settings:*
+${isBanned ? '✅' : '❌'} Banned
+${welcome ? '✅' : '❌'} Welcome
+${antiLink ? '✅' : '❌'} AntiLink
+`.trim()
+	conn.reply(m.chat, text, m, {
+		contextInfo: {
+			mentionedJid: [...groupAdmins.map(v => v.id), owner],
+			externalAdReply: {
+				mediaType: 2,
+				description: 'info group',
+				title: conn.getName(m.chat),
+				mediaUrl: "",
+				body: '𓃗𓅜',
+				thumbnail: pp,
+				sourceUrl: "",
+				showAdAttribution: true, // false
+				//renderLargerThumbnail: true // false
+			}
+		}
+	})
 }
 
 handler.help = ['infogrup']
 handler.tags = ['group']
 handler.command = /^(gro?upinfo|info(gro?up|gc))$/i
+
 handler.group = true
 
 module.exports = handler
+
+function msToDate(ms) {
+	var temp = ms,
+	days = Math.floor((ms) / (24 * 60 * 60 * 1000)),
+	daysms = ms % (24 * 60 * 60 * 1000),
+	hours = Math.floor((daysms) / (60 * 60 * 1000)),
+	hoursms = ms % (60 * 60 * 1000),
+	minutes = Math.floor((hoursms) / (60 * 1000)),
+	minutesms = ms % (60 * 1000),
+	sec = Math.floor((minutesms) / (1000))
+	return days + " Hari " + hours + " Jam " + minutes + " Menit";
+	// +minutes+":"+sec;
+}
