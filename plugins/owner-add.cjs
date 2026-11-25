@@ -1,7 +1,10 @@
 const {
 	getBinaryNodeChild,
 	getBinaryNodeChildren
-} = require('@adiwajshing/baileys')
+} = require('@whiskeysockets/baileys')
+
+// ✅ fetch tidak global di CommonJS, pakai node-fetch
+const fetch = require('node-fetch')
 
 let handler = async (m, {
 	conn,
@@ -55,6 +58,5 @@ handler.command = /^(oadd|o\+)$/i
 handler.owner = true
 handler.group = true
 handler.botAdmin = true
-
 
 module.exports = handler
