@@ -2,9 +2,6 @@ var {
 	webp2png
 } = require('../lib/webp2mp4.cjs');
 
-// ✅ getbuffer tidak global, ambil dari helper (atau fallback)
-var { getBuffer: getbuffer } = require('../lib/helper.cjs')
-
 var handler = async (m, {
 	conn,
 	text,
@@ -19,8 +16,10 @@ var handler = async (m, {
 	if (!/webp|image/g.test(mime)) throw 'kirim gambar/sticker atau reply gambar/sticker dengan caption #setpp or #setppgroup'
 	var img = await q.download?.()
 	if (!img) throw 'kirim gambar/sticker atau reply gambar/sticker dengan caption #setpp or #setppgroup'
+	
 	var buffer = img
-	if (/webp/g.test(mime)) buffer = await getbuffer(await webp2png(img))
+	if (/webp/g.test(mime)) buffer = await webp2png(img)
+	
 	if (m.isGroup && /group/.test(command)) {
 		if (isBotAdmin) {
 			if (isAdmin) {
