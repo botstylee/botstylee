@@ -36,12 +36,18 @@ ${arr.slice(6).join('')}
 Menunggu @${room.game.currentTurn.split('@')[0]}
 Ketik *nyerah* untuk nyerah
 `.trim()
-		if (room.x !== room.o) await conn.sendButton(room.x, str, author, ['Nyerah', 'nyerah'], m, {
+
+		// ✅ Ganti sendButton → sendMessage teks biasa
+		if (room.x !== room.o) {
+			await conn.sendMessage(room.x, {
+				text: str,
+				mentions: conn.parseMention(str)
+			}, { quoted: m })
+		}
+		await conn.sendMessage(room.o, {
+			text: str,
 			mentions: conn.parseMention(str)
-		})
-		await conn.sendButton(room.o, str, author, ['Nyerah', 'nyerah'], m, {
-			mentions: conn.parseMention(str)
-		})
+		}, { quoted: m })
 	} else {
 		room = {
 			id: 'tictactoe-' + (+new Date),
@@ -51,8 +57,7 @@ Ketik *nyerah* untuk nyerah
 			state: 'WAITING'
 		}
 		if (text) room.name = text
-		m.reply('Menunggu partner' + (text ? ` mengetik command dibawah ini
-${usedPrefix}${command} ${text}` : ''))
+		m.reply('Menunggu partner' + (text ? `\n\nKetik command di bawah ini untuk join:\n${usedPrefix}${command} ${text}` : ''))
 		conn.game[room.id] = room
 	}
 }
@@ -61,4 +66,80 @@ handler.help = ['tictactoe', 'ttt'].map(v => v + ' [custom room name]')
 handler.tags = ['game']
 handler.command = /^(tictactoe|t{3})$/
 
+// ✅ TicTacToe class — sebelumnya tidak di-import, menyebabkan ReferenceError
+class TicTacToe {
+	constructor(playerX = 'x', playerO = 'o') {
+		this.playerX = playerX
+		this.playerO = playerO
+		this._currentTurn = false
+		this._x = 0
+		this._o = 0
+		this.turns = 0
+	}
+
+	get board() {
+		return this._board || (this._board = Array(9).fill(null))
+	}
+
+	get currentTurn() {
+		return this._currentTurn ? this.playerO : this.playerX
+	}
+
+	get enemyTurn() {
+		return this._currentTurn ? this.playerX : this.playerO
+	}
+
+	get isEnded() {
+		return this._ended || false
+	}
+
+	get isTie() {
+		return this.isEnded && !this.winner
+	}
+
+	get winner() {
+		return this._winner || null
+	}
+
+	render() {
+		return this.board.map((v, i) => v || (i + 1))
+	}
+
+	turn(pos, player) {
+		if (this.isEnded) return this
+		pos = parseInt(pos) - 1
+		if (isNaN(pos) || pos < 0 || pos > 8) return this
+		if (this.board[pos]) return this
+		if (player !== this.currentTurn) return this
+
+		this.board[pos] = this._currentTurn ? 'O' : 'X'
+		this._currentTurn = !this._currentTurn
+		this.turns++
+
+		if (this._currentTurn) this._x++
+		else this._o++
+
+		this._checkWinner()
+		return this
+	}
+
+	_checkWinner() {
+		var lines = [
+			[0, 1, 2], [3, 4, 5], [6, 7, 8],
+			[0, 3, 6], [1, 4, 7], [2, 5, 8],
+			[0, 4, 8], [2, 4, 6]
+		]
+		for (var line of lines) {
+			var [a, b, c] = line
+			if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+				this._ended = true
+				this._winner = this.board[a] === 'X' ? this.playerX : this.playerO
+				return
+			}
+		}
+		if (this.board.every(v => v)) this._ended = true
+	}
+}
+
 module.exports = handler
+module.exports.TicTacToe = TicTacToe
