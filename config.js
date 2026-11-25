@@ -1026,7 +1026,7 @@ global.APIs = { // API Prefix
 	// name: 'https://website'
 	nrtm: 'https://nurutomo.herokuapp.com/',
 	ghst: 'https://api-ghost.herokuapp.com/',
-	botstyle: 'https://botstyle-api.herokuapp.com',
+	botstyle: 'https://botstylee-ben-production.up.railway.app/',
 	beni: 'https://rest-beni.herokuapp.com/'
 }
 global.APIKeys = { // APIKey Here
