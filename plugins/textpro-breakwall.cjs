@@ -1,14 +1,22 @@
 var tp = require("../lib/textpro.cjs")
+var axios = require("axios")
+
 var handler = async (m, {
 	conn,
 	args
 }) => {
-	var txt = args.join` `
+	var txt = args.join(' ')
 	if (!txt) return conn.reply(m.chat, 'harap masukan teksnya!!!', m)
 	if (txt.length > 15) return conn.reply(m.chat, 'maksimal 15', m)
-	var a = await tp("https://textpro.me/break-wall-text-effect-871.html", txt)
-	console.log(a)
+
 	try {
+		await m.reply('tunggu sebentar...')
+
+		// ✅ Ambil URL hasil dari textpro
+		var a = await tp("https://textpro.me/break-wall-text-effect-871.html", txt)
+		console.log('[textpro] URL hasil:', a)
+
+		// ✅ Download gambar hasil
 		var buffer = await axios.request(a, {
 			method: "GET",
 			responseType: "arraybuffer",
@@ -16,19 +24,19 @@ var handler = async (m, {
 				"user-agent": "GoogleBot"
 			}
 		})
-		console.log(buffer.status)
-		m.reply("tunggu sebentar")
-		conn.sendFile(m.chat, buffer.data, "", "nih bruh", false)
+		console.log('[textpro] Status download:', buffer.status)
+
+		// ✅ Kirim gambar
+		await conn.sendFile(m.chat, buffer.data, 'textpro.jpg', 'nih bruh', m)
+
 	} catch (e) {
-		if (e.response) {
-			console.log(e.response.statusText)
-			throw "emror bruh"
-		}
+		console.error('[textpro-breakwall] Error:', e.message)
+		throw 'emror bruh (scraper error)'
 	}
 }
+
 handler.help = ['breakwall [text]']
 handler.tags = ['textpro']
 handler.command = /^breakwall$/i
-
 
 module.exports = handler
