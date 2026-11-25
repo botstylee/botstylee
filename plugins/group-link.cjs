@@ -1,6 +1,7 @@
 var {
 	areJidsSameUser
-} = require('@adiwajshing/baileys');
+} = require('@whiskeysockets/baileys');
+
 var handler = async (m, {
 	conn,
 	args
