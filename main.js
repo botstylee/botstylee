@@ -22,7 +22,7 @@ import {
 	pluginFolder,
 	pluginFilter
 } from './lib/plugins.js';
-import storeSystem from './lib/store.js'; // ✅ import store
+import storeSystem from './lib/store.js';
 import axios from 'axios';
 import fetch from 'node-fetch';
 import former from 'form-data';
@@ -60,15 +60,11 @@ global.conn = Object.defineProperty(Connection, 'conn', {
 	writable: true
 }).conn
 
-// ✅ Buat store manual karena connection.js tidak mengekspor `store`
+// ✅ Buat store manual dan simpan ke global
 global.store = storeSystem.makeInMemoryStore()
-// Bind store ke event socket supaya contacts/messages/groups terisi
-global.store.bind(global.conn.ev, {
-	groupMetadata: (jid) => global.conn.groupMetadata(jid)
-})
 
 loadPluginFiles(pluginFolder, pluginFilter, {
-		logger: global.conn?.logger || console,   // ✅ aman jika logger belum siap
+		logger: global.conn?.logger || console,
 		recursiveRead: true
 	}).then(_ => console.log(Object.keys(plugins)))
 	.catch(console.error)
@@ -92,7 +88,6 @@ async function expired() {
 			}
 			if (users.premium) {
 				if (Date.now() >= users.expired) {
-					// ✅ nomorown fallback — cegah ReferenceError
 					var ownerNumber = typeof nomorown !== 'undefined' ? nomorown : (global.nomorown || '')
 					global.conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${ownerNumber}`, null, {
 						mentions: ownerNumber ? [ownerNumber + '@s.whatsapp.net'] : []
@@ -101,7 +96,6 @@ async function expired() {
 					users.expired = 0
 					users.tokenpremium = 0
 					users.tokenfree = 0
-					// ✅ name tidak terdefinisi → ganti jid
 					resolve(console.log(`masa premium ${jid} sudah habis`))
 				}
 			}
