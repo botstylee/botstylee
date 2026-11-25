@@ -20,7 +20,7 @@ ${usedPrefix}math hard
 contoh:
 ${usedPrefix}math hard
 `.trim()
-	var buttons = Object.keys(modes).map(v => [v, `${usedPrefix}${command} ${v}`])
+	// ✅ buttons tidak dipakai lagi — tombol deprecated
 	var id = m.chat
 	if (id in conn.math) return conn.reply(m.chat, 'Masih ada soal belum terjawab di chat ini', conn.math[id][0])
 	var math = genMath(mode)
@@ -28,10 +28,12 @@ ${usedPrefix}math hard
 		await conn.reply(m.chat, `Berapa hasil dari *${math.str}*?\n\nTimeout: ${(math.time / 1000).toFixed(2)} detik\nBonus Jawaban Benar: ${math.bonus} XP`, m),
 		math, 4,
 		setTimeout(async () => {
-			if (conn.math[id]) await conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah ${math.result}`, author, null, [
-				['again', `${usedPrefix}${command} ${math.mode}`], ...buttons
-			], conn.math[id][0])
-
+			if (conn.math[id]) {
+				// ✅ Ganti sendButton → sendMessage teks biasa
+				await conn.sendMessage(m.chat, {
+					text: `⏰ *Waktu habis!*\n\nJawabannya adalah *${math.result}*\n\n_Ketik ${usedPrefix}${command} ${math.mode} untuk main lagi._`
+				}, { quoted: conn.math[id][0] })
+			}
 			delete conn.math[id]
 		}, math.time)
 	]
