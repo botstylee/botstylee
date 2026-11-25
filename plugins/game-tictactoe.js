@@ -1,4 +1,5 @@
-import TicTacToe from "../../lib/tictactoe.js"
+import TicTacToe from "../lib/tictactoe.js"
+
 var handler = async (m, {
 	conn,
 	usedPrefix,
