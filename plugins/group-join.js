@@ -18,7 +18,8 @@ var handler = async (m, {
 		var chats = db.data.chats[res]
 		if (!chats) chats = db.data.chats[res] = {}
 	} catch (e) {
-		log(e)
+		// ✅ log tidak terdefinisi → pakai console.error
+		console.error('[group-join]', e)
 		throw 'bot tidak dapat masuk menggunakan tautan dari kamu, mungkin kamu telah mengeluarkan bot sebelumnya'
 	}
 }
@@ -27,7 +28,8 @@ handler.tags = ['main']
 
 handler.command = ['join']
 
-export default handler
+// ✅ Ganti export default → module.exports (konsisten dengan plugin .js lain)
+module.exports = handler
 
 var isNumber = (x) => (x = parseInt(x), typeof x === 'number' && !isNaN(x))
 
