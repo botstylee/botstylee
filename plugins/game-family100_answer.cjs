@@ -3,26 +3,35 @@ var threshold = 0.72
 
 var handler = m => m
 handler.before = async function(m) {
+	// ✅ Guard: hanya proses kalau ada teks
+	if (typeof m.text !== 'string' || !m.text) return !0
+
 	this.game = this.game ? this.game : {}
 	var id = 'family100_' + m.chat
-	if (!(id in this.game))
-		return !0
+	if (!(id in this.game)) return !0
+
 	var room = this.game[id]
 	var text = m.text.toLowerCase().replace(/[^\w\s\-]+/, '')
 	var isSurrender = /^((me)?nyerah|surr?ender)$/i.test(m.text)
+
 	if (!isSurrender) {
-		var index = room.jawaban.indexOf(text)
+		// ✅ FIX: Cari index dengan membandingkan lowercase
+		var index = room.jawaban.findIndex(jawaban => jawaban.toLowerCase().trim() === text)
 		if (index < 0) {
-			if (Math.max(...room.jawaban.filter((_, index) => !room.terjawab[index]).map(jawaban => similarity(jawaban, text))) >= threshold)
-				m.reply('Dikit lagi!')
+			// Cek kemiripan juga dengan lowercase
+			var maxSimilarity = Math.max(...room.jawaban
+				.filter((_, i) => !room.terjawab[i])
+				.map(jawaban => similarity(jawaban.toLowerCase().trim(), text)))
+			if (maxSimilarity >= threshold) m.reply('Dikit lagi!')
 			return !0
 		}
-		if (room.terjawab[index])
-			return !0
+		if (room.terjawab[index]) return !0
+
 		var users = db.data.users[m.sender]
 		room.terjawab[index] = m.sender
 		users.exp += room.winScore
 	}
+
 	var isWin = room.terjawab.length === room.terjawab.filter(v => v).length
 	var caption = `
 *Soal:* ${room.soal}
@@ -37,15 +46,13 @@ ${isSurrender ? '' : `+${room.winScore} XP tiap jawaban benar`}
 ${isWin || isSurrender ? '' : '_Ketik *nyerah* untuk menyerah._'}
     `.trim()
 
-	// ✅ Ganti sendButton → sendMessage biasa
 	var msg = await this.sendMessage(m.chat, {
 		text: caption,
 		mentions: this.parseMention(caption)
 	}, { quoted: null })
 
 	room.msg = msg
-	if (isWin || isSurrender)
-		delete this.game[id]
+	if (isWin || isSurrender) delete this.game[id]
 	return !0
 }
 
