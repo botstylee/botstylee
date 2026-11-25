@@ -20,7 +20,7 @@
   "author": "Benniismael",
   "license": "ISC",
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.18",
+    "@whiskeysockets/baileys": "^6.7.22",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^3.0.0",
     "@silent-tech-offc/ttdl": "^1.0.0",
