@@ -1,22 +1,20 @@
-const handler = async (m, { conn, text = '', isROwner, isOwner }) => {
-	const welcomeText = typeof text === 'string' ? text.trim() : ''
-	if (!welcomeText) throw 'Teks welcome-nya belum diisi.'
-
-	if (isROwner) (global.conn || conn).welcome = welcomeText
-	else if (isOwner) conn.welcome = welcomeText
-	else {
-		const chats = global.db?.data?.chats
-		if (!chats) throw 'Database chat belum siap. Coba lagi sebentar.'
-		const chat = chats[m.chat] && typeof chats[m.chat] === 'object' ? chats[m.chat] : (chats[m.chat] = {})
-		chat.sWelcome = welcomeText
-	}
-
-	return m.reply('Welcome berhasil diatur. Placeholder: @user, @subject, dan @desc.')
+var handler = async (m, {
+	conn,
+	text,
+	isROwner,
+	isOwner
+}) => {
+	if (text) {
+		if (isROwner) global.conn.welcome = text
+		else if (isOwner) conn.welcome = text
+		else global.db.data.chats.sWelcome = text
+		m.reply('Welcome berhasil diatur\n@user (Mention)\n@subject (Judul Grup)')
+	} else throw 'Teksnya mana?'
 }
-
 handler.help = ['setwelcome <teks>']
 handler.tags = ['group']
 handler.command = /^setwelcome$/i
+
 handler.group = true
 handler.admin = true
 

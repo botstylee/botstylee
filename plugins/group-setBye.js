@@ -1,19 +1,16 @@
-const handler = async (m, { conn, text = '', isROwner, isOwner }) => {
-	const byeText = typeof text === 'string' ? text.trim() : ''
-	if (!byeText) throw 'Teks bye-nya belum diisi.'
-
-	if (isROwner) (global.conn || conn).bye = byeText
-	else if (isOwner) conn.bye = byeText
-	else {
-		const chats = global.db?.data?.chats
-		if (!chats) throw 'Database chat belum siap. Coba lagi sebentar.'
-		const chat = chats[m.chat] && typeof chats[m.chat] === 'object' ? chats[m.chat] : (chats[m.chat] = {})
-		chat.sBye = byeText
-	}
-
-	return m.reply('Bye berhasil diatur. Gunakan @user untuk mention anggota.')
+var handler = async (m, {
+	conn,
+	text,
+	isROwner,
+	isOwner
+}) => {
+	if (text) {
+		if (isROwner) global.conn.bye = text
+		else if (isOwner) conn.bye = text
+		else global.db.data.chats.sBye = text
+		m.reply('Bye berhasil diatur\n@user (Mention)')
+	} else throw 'Teksnya mana?'
 }
-
 handler.help = ['setbye <teks>']
 handler.tags = ['group']
 handler.command = /^setbye$/i
