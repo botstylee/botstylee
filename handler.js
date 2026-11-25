@@ -26,12 +26,14 @@ import db, {
 } from './lib/database.js'
 import Queque from './lib/queque.js'
 
-/** @type {typeof import('@whiskeysockets/baileys')} */
+import { createRequire } from 'module'
+const _require = createRequire(import.meta.url)
+const { proto } = _require('@whiskeysockets/baileys')
+
 var {
 	getContentType,
-	proto,
 	WAMessageStubType
-} = (await import('@whiskeysockets/baileys')).default
+} = (await import('@whiskeysockets/baileys')).default || (await import('@whiskeysockets/baileys'))
 
 var isNumber = x => typeof x === 'number' && !isNaN(x)
 var log = (...args) => {
@@ -778,7 +780,7 @@ export async function handler(chatUpdate) {
 		var usedPrefix
 		var _user = db.data?.users?.[m.sender]
 
-		var groupMetadata = (m.isGroup ? await Connection.store.fetchGroupMetadata(m.chat, this.groupMetadata) : {}) || {}
+		var groupMetadata = (m.isGroup ? await global.store.fetchGroupMetadata(m.chat, this.groupMetadata) : {}) || {}
 		var participants = (m.isGroup ? groupMetadata.participants : []) || []
 		var user = (m.isGroup ? participants.find(u => this.decodeJid(u.id) === m.sender) : {}) || {} // User Data
 		var bot = (m.isGroup ? participants.find(u => this.decodeJid(u.id) == this.user.jid) : {}) || {} // Your Data
@@ -1090,10 +1092,10 @@ export async function handler(chatUpdate) {
 		}
 
 		try {
-			if (!opts['noprint']) await printMessage(m, this)
-		} catch (e) {
-			console.log(m, m.quoted, e)
-		}
+    if (!opts['noprint']) await Promise.resolve(printMessage(m, this)).catch(console.error)
+} catch (e) {
+    console.log('Error di printMessage:', e)
+}
 		await this.readMessages([m.key])
 		if (opts['autoread'])
 			await this.readMessages([m.key])
@@ -1129,7 +1131,7 @@ export async function participantsUpdate({
 		case 'add':
 		case 'remove':
 			if (chat.welcome) {
-				var groupMetadata = await Connection.store.fetchGroupMetadata(id, this.groupMetadata)
+				var groupMetadata = await global.store.fetchGroupMetadata(id, this.groupMetadata)
 				for (var user of participants) {
 					var pp = './src/avatar_contact.png'
 					try {
