@@ -4,30 +4,30 @@ var handler = async (m, {
 }) => {
 	if (!text) throw 'Hai!!, saya robot. ada yang bisa saya bantu?. ketik #menu untuk melihat fitur🗿'
 	try {
-		a = (await axios.get(API('ghst', 'api/simsimi', {
-			pesan: text
-		}, 'key'))).data
-		console.log(a)
-		if (a.respSentence.includes("simsimi error")) {
-			return m.reply(a.respSentence)
+		// ✅ Pakai node-simipro (CommonJS)
+		// node-simipro sudah ditambahkan ke package.json
+		const simi = require('node-simipro')
+		
+		// simitalk(text, languageCode)
+		// 'id' untuk Bahasa Indonesia
+		const res = await simi.simitalk(text, 'id')
+		
+		// Response structure: { success: true, message: "...", isUnknownResponse: false }
+		console.log(res)
+		
+		if (!res.success || res.isUnknownResponse) {
+			return m.reply('SimSimi tidak tahu jawabannya :(')
 		}
-		m.reply(`*○S I M I* : ` + a.respSentence)
+		
+		m.reply(`*○S I M I* : ` + res.message)
 	} catch (e) {
-		if (e.response) {
-			console.log(e.response.data)
-			return m.reply(require('util').format({
-				status: e.response.status,
-				msg: e.response.data.info ? e.response.data.info : e.response.data.message
-			}))
-		} else {
-			console.log(e)
-			return m.reply(require('util').format({
-				status: 500,
-				msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
-			}), null, {
-				mentions: [nomorown + `@s.whatsapp.net`]
-			})
-		}
+		console.error('[simisimi]', e)
+		return m.reply(require('util').format({
+			status: 500,
+			msg: `ada yang error silahkan lapor ke Admin @${nomorown}`
+		}), null, {
+			mentions: [nomorown + `@s.whatsapp.net`]
+		})
 	}
 }
 
