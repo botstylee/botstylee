@@ -1022,8 +1022,8 @@ export async function handler(chatUpdate) {
 						var text = format(e)
 						for (var key of Object.values(global.APIKeys || {}))
 							text = text.replace(new RegExp(key, 'g'), '#HIDDEN#')
-						if (e.name)
-							for (var [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
+						        if (e.name)
+							for (var [jid] of (global.owner || []).filter(([number, _, isDeveloper]) => isDeveloper && number)) {
 								var data = (await this.onWhatsApp(jid).catch(() => [{}]))[0] || {}
 								if (data.exists)
 									m.reply(`*Plugin:* ${m.plugin}\n*Sender:* ${m.sender}\n*Chat:* ${m.chat}\n*Command:* ${usedPrefix}${command} ${args.join(' ')}\n\n\`\`\`${text}\`\`\``.trim(), data.jid)
@@ -1135,8 +1135,8 @@ export async function participantsUpdate({
 					try {
 						pp = await this.profilePictureUrl(user, 'image')
 					} catch (e) {} finally {
-						text = (action === 'add' ? (chat.sWelcome || this.welcome || Connection.conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
-							(chat.sBye || this.bye || Connection.conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
+						text = (action === 'add' ? (chat.sWelcome || this.welcome || Connection.conn.welcome || 'Welcome, @user!').replace(...) :
+    (chat.sBye || this.bye || Connection.conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
 						this.sendFile(id, pp, 'pp.jpg', text, null, false, {
 							mentions: [user]
 						})
