@@ -26,14 +26,19 @@ import db, {
 } from './lib/database.js'
 import Queque from './lib/queque.js'
 
-/** @type {import('@adiwajshing/baileys')} */
+/** @type {typeof import('@whiskeysockets/baileys')} */
 var {
 	getContentType,
 	proto,
 	WAMessageStubType
-} = (await import('@adiwajshing/baileys')).default
+} = (await import('@whiskeysockets/baileys')).default
 
 var isNumber = x => typeof x === 'number' && !isNaN(x)
+var log = (...args) => {
+	if (global.log) global.log(...args)
+	else console.log(...args)
+}
+var delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(resolve, ms))
 /**
  * Handle messages upsert
  * @this {import('./lib/connection').Socket}
@@ -752,13 +757,13 @@ export async function handler(chatUpdate) {
 		if (typeof m.text !== 'string')
 			m.text = ''
 
-		var isROwner = [this.decodeJid(this.user.id), ...global.owner.map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+		var isROwner = [this.decodeJid(this.user.id), ...(global.owner || []).map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 		var isOwner = isROwner || m.fromMe
 		var settinge = db.data.settings[this.user.jid]
 		if (!isOwner && settinge.self)
 			return
-		var isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-		var isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || db.data.users[m.sender].premium
+		var isMods = isOwner || (global.mods || []).map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+		var isPrems = isROwner || (global.prems || []).map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || db.data.users[m.sender]?.premium || false
 
 		if (opts['queque'] && m.text && !m.fromMe && !(isMods || isPrems)) {
 			var id = m.id
@@ -786,32 +791,32 @@ export async function handler(chatUpdate) {
 		var settinges = db.data.settings[this.user.jid]
 		if (settinges.restrict && enable.nofirtek && !m.fromMe && m.isGroup && isBotAdmin) {
 			if (!m.fromMe && m.text.match(/(৭৭৭|๒๒๒|؋.ᄻ.ྜྷ.ᇸ.ྙ|๖ۣۜy๖ۣۜF๖ۣۜr๖|๑๑๑|৭৭৭৭৭৭৭৭|๑๑๑๑๑๑๑๑|ผิดุท้่เึางืผิดุท้่เึางื|๒๒๒๒๒๒๒๒|ผิดุท้่เึางืผิดุท้่เึางื)/gi) && m.text.length >= 66255 || stp == "OVERSIZED") {
-				conn.reply(m.chat, " ngapain ngirim firtex bang😅☝", m)
+				this.reply(m.chat, " ngapain ngirim firtex bang😅☝", m)
 				await delay(2000)
 				//conn.reply(m.chat, "kamu harus di kick sih bang", false)
 				//await delay(2000)
-				conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+				this.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
 			}
 		}
 		if (settinges.restrict && enable.antiToxic && !m.fromMe && m.isGroup && !isAdmin && !isOwner && isBotAdmin) {
 			if (!m.fromMe && m.text.match(/(asadebangsat|Dakjal|anak setan|ngntd|ngentot|jancuk|kuntul|babi|kampang|kenthu|tempik|kimak|patek|kondom|bugil|seks|sex|sexy|tai|Tai|jancok|jembut|bokep|xnxx|xxx|xvideos|xvid|jilboob|seksi|Anjing|Babi|Kunyuk|Bajingan|Bangsat|Kampret|Kontol|Memek|Ngentot|Pentil|Perek|Pepek|Pecun|Bencong|Banci|Maho|Sinting|Lonte|Hencet|Taptei|Kampang|Keparat|Bejad|Gembel|Brengsek|Taek|Anjrit|Fuck|Tetek|Ngulum|Jembut|Totong|Kolop|Pukimak|bacot|Bacot|Juancok|asw|Bodat|Heang|Jancuk|Burit|Titit|Nenen|Bejat|Silit|Sempak|Fucking|Asshole|Bitch|Penis|Vagina|Klitoris|Kelentit|Borjong|Dancuk|anjg|Anjg|Bcd|bct|Bgsd|Bgst|bgsd|bgst|ajg|tolol|Tolol|Pantek|kondom|Teho|Bejat|Pantat|Bagudung|Babami|Kanciang|Bungul|Idiot|Kimak|Henceut|Kacuk|pukimak|goblok|bodo|Pussy|ngewe|Dick|Damn|Assu|tempek|celeng|shit|jingan|ngentot anjing ngewe|Dont use unlisted command|kontol|ngentod|colmek|alat vital|bangkinang|tits|tetek|coli|ngocok peli|ANJING!!!|kntl|ngtd|anying|amjin|sikontol|bang bros|ngocok|toket|A n j i n g|Tahi|anjass|biadap|bbii|biadab|Tomlol|dongo|dungu|anjk|bcot|BURUNG KECIL JAN SOK KERAS:V|nude|p3n1s|p3nis)/gi)) {
-				await conn.sendPresenceUpdate('composing', m.chat)
+				await this.sendPresenceUpdate('composing', m.chat)
 				var cBad = db.data.users[m.sender].warn += 1
 				var warning = db.data.users[m.sender].warn
 				if (warning >= 6) {
-					conn.reply(m.chat, `*Over badword!*\nyou will be removed after 3 second`, m).then(() => {
+					this.reply(m.chat, `*Over badword!*\nyou will be removed after 3 second`, m).then(() => {
 						setTimeout(() => {
-							conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+							this.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
 						}, 2000)
 						db.data.users[m.sender].warn = 0
 					})
 				} else {
-					conn.reply(m.chat, `*⺀ BADWORD DETECTOR ⺀*\n\n*Kamu mendapat peringatan : [ ${warning} / 6 ]*\n\n*Jangan berkata kasar atau menggunakan kalimat sampah sebanyak 6x atau kamu akan dikeluarkan dari grup secara otomatis.*\n\n▌│█║▌║▌║║▌║▌║█│▌▌│█║`, m)
+					this.reply(m.chat, `*⺀ BADWORD DETECTOR ⺀*\n\n*Kamu mendapat peringatan : [ ${warning} / 6 ]*\n\n*Jangan berkata kasar atau menggunakan kalimat sampah sebanyak 6x atau kamu akan dikeluarkan dari grup secara otomatis.*\n\n▌│█║▌║▌║║▌║▌║█│▌▌│█║`, m)
 				}
 			}
 		}
 		if (!m.fromMe && m.text.match(/(makasi|thanks|thank|terima kasih|suwon)/gi)) {
-			conn.reply(m.chat, "hooh😅👆", false)
+			this.reply(m.chat, "hooh😅👆", false)
 		}
 		var ___dirname = path.join(path.dirname(fileURLToPath(
 			import.meta.url)), './plugins')
@@ -832,7 +837,7 @@ export async function handler(chatUpdate) {
 				} catch (e) {
 					// if (typeof e === 'string') continue
 					console.error(e)
-					for (var [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
+					for (var [jid] of (global.owner || []).filter(([number, _, isDeveloper]) => isDeveloper && number)) {
 						var data = (await this.onWhatsApp(jid))[0] || {}
 						if (data.exists)
 							m.reply(`*Plugin:* ${name}\n*Sender:* ${m.sender}\n*Chat:* ${m.chat}\n*Command:* ${m.text}\n\n\`\`\`${format(e)}\`\`\``.trim(), data.jid)
@@ -1015,11 +1020,11 @@ export async function handler(chatUpdate) {
 					console.error(e)
 					if (e) {
 						var text = format(e)
-						for (var key of Object.values(global.APIKeys))
+						for (var key of Object.values(global.APIKeys || {}))
 							text = text.replace(new RegExp(key, 'g'), '#HIDDEN#')
 						if (e.name)
 							for (var [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
-								var data = (await this.onWhatsApp(jid))[0] || {}
+								var data = (await this.onWhatsApp(jid).catch(() => [{}]))[0] || {}
 								if (data.exists)
 									m.reply(`*Plugin:* ${m.plugin}\n*Sender:* ${m.sender}\n*Chat:* ${m.chat}\n*Command:* ${usedPrefix}${command} ${args.join(' ')}\n\n\`\`\`${text}\`\`\``.trim(), data.jid)
 							}
@@ -1196,7 +1201,7 @@ export async function deleteUpdate(message) {
 			var msg = this.loadMessage(key.remoteJid, key.id) || this.loadMessage(key.id)
 			if (!msg || !msg.message) return
 			var chat = db.data.chats[key.remoteJid]
-			if (!chat || chat.delete) return
+			if (!chat || !chat.delete) return
 
 			// if message type is conversation, convert it to extended text message because if not, it will throw an error
 			var mtype = getContentType(msg.message)
