@@ -1,10 +1,15 @@
-import db from '../../lib/database.js'
+import { createRequire } from 'module'
+import db from '../lib/database.js'
 
-var {
-	proto,
+// ✅ proto tidak tersedia sebagai named export ESM di @whiskeysockets/baileys
+const _require = createRequire(import.meta.url)
+const { proto } = _require('@whiskeysockets/baileys')
+
+// ✅ named export diimpor statis (bukan lewat .default yang bisa undefined)
+import {
 	generateWAMessage,
 	areJidsSameUser
-} = (await import('@whiskeysockets/baileys')).default
+} from '@whiskeysockets/baileys'
 
 export async function all(m, chatUpdate) {
 	if (m.isBaileys) return
