@@ -28,6 +28,7 @@ import former from 'form-data';
 import fs from 'fs';
 import cron from 'node-cron';
 import toMs from 'ms';
+
 global.former = former
 global.fetch = fetch
 global.fs = fs
@@ -35,7 +36,9 @@ global.axios = axios
 global.db = db
 global.delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 global.plugins = plugins
+
 var PORT = process.env.PORT || process.env.SERVER_PORT || 3000
+
 protoType()
 serialize()
 
@@ -47,7 +50,6 @@ Object.assign(global, {
 	}
 })
 
-
 // global.opts['db'] = process.env['db']
 /** @type {import('./lib/connection.js').Socket} */
 global.conn = Object.defineProperty(Connection, 'conn', {
@@ -56,16 +58,21 @@ global.conn = Object.defineProperty(Connection, 'conn', {
 	configurable: true,
 	writable: true
 }).conn
+
+// ✅ Store tetap dipakai — lib/store.js masih punya makeInMemoryStore()
 global.store = Connection.store
+
 loadPluginFiles(pluginFolder, pluginFilter, {
-		logger: conn.logger,
+		logger: global.conn?.logger || console,   // ✅ aman jika logger belum siap
 		recursiveRead: true
 	}).then(_ => console.log(Object.keys(plugins)))
 	.catch(console.error)
+
 // load plugins
 if (db.data == null) {
 	await loadDatabase()
 }
+
 async function expired() {
 	return new Promise(async (resolve, reject) => {
 		var user = Object.keys(db.data.users)
@@ -80,19 +87,23 @@ async function expired() {
 			}
 			if (users.premium) {
 				if (Date.now() >= users.expired) {
-					conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${nomorown}`, null, {
-						mentions: [nomorown + '@s.whatsapp.net']
+					// ✅ nomorown fallback — cegah ReferenceError
+					var ownerNumber = typeof nomorown !== 'undefined' ? nomorown : (global.nomorown || '')
+					global.conn.reply(jid, 'hai\nmasa premium kamu sekarang sudah habis.\njika ingin memperpanjang lagi silahkan chat owner.\nterima kasih telah menggunakan bot :)\n' + `owner: @${ownerNumber}`, null, {
+						mentions: ownerNumber ? [ownerNumber + '@s.whatsapp.net'] : []
 					})
 					users.premium = false
 					users.expired = 0
 					users.tokenpremium = 0
 					users.tokenfree = 0
-					resolve(console.log(`masa premium ${name} sudah habis`))
+					// ✅ name tidak terdefinisi → ganti jid
+					resolve(console.log(`masa premium ${jid} sudah habis`))
 				}
 			}
 		}
 	})
 }
+
 async function petproduction() {
 	return new Promise(async (resolve, reject) => {
 		var user = Object.keys(db.data.users)
@@ -136,6 +147,7 @@ async function petproduction() {
 		}
 	})
 }
+
 cron.schedule('0 0 */12 * * *', () => {
 	var useres = Object.keys(db.data.users)
 	for (var jid of useres) {
@@ -146,12 +158,14 @@ cron.schedule('0 0 */12 * * *', () => {
 	scheduled: true,
 	timezone: "Asia/Jakarta"
 });
+
 cron.schedule('0 */2 * * * *', async () => {
 	await expired()
 }, {
 	scheduled: true,
 	timezone: "Asia/Jakarta"
 });
+
 // Auto restart if ram usage has reached the limit, if you want to use enter the ram size in bytes
 var ramCheck = setInterval(() => {
 	var ramUsage = process.memoryUsage().rss
@@ -160,16 +174,19 @@ var ramCheck = setInterval(() => {
 		process.send('reset')
 	}
 }, 60 * 1000) // Checking every 1 minutes
+
 if (!opts['test']) {
 	setInterval(async () => {
 		await Promise.allSettled([
 			db.data ? db.write() : Promise.reject('db.data is null'),
 			(opts['autocleartmp'] || opts['cleartmp']) ? clearTmp() : Promise.resolve()
 		])
+		// ✅ Store tetap dipakai — lib/store.js masih ada
 		Connection.store.writeToFile(Connection.storeFile)
 	}, 60 * 1000)
 }
-if (opts['server'])(await import('./server.js')).default(conn, PORT)
+
+if (opts['server'])(await import('./server.js')).default(global.conn, PORT)
 
 // Quick Test
 async function _quickTest() {
@@ -207,14 +224,16 @@ async function _quickTest() {
 	// require('./lib/sticker').support = s
 	Object.freeze(global.support)
 
-	if (!s.ffmpeg)(conn?.logger || console).warn('Please install ffmpeg for sending videos (pkg install ffmpeg)')
-	if (s.ffmpeg && !s.ffmpegWebp)(conn?.logger || console).warn('Stickers may not animated without libwebp on ffmpeg (--enable-libwebp while compiling ffmpeg)')
-	if (!s.convert && !s.magick && !s.gm)(conn?.logger || console).warn('Stickers may not work without imagemagick if libwebp on ffmpeg doesnt isntalled (pkg install imagemagick)')
+	if (!s.ffmpeg)(global.conn?.logger || console).warn('Please install ffmpeg for sending videos (pkg install ffmpeg)')
+	if (s.ffmpeg && !s.ffmpegWebp)(global.conn?.logger || console).warn('Stickers may not animated without libwebp on ffmpeg (--enable-libwebp while compiling ffmpeg)')
+	if (!s.convert && !s.magick && !s.gm)(global.conn?.logger || console).warn('Stickers may not work without imagemagick if libwebp on ffmpeg doesnt isntalled (pkg install imagemagick)')
 }
+
 setInterval(async () => {
 	var a = await clearTmp()
 	console.log(a)
 }, 180000)
+
 _quickTest()
-	.then(() => (conn?.logger?.info || console.log)('Quick Test Done'))
+	.then(() => (global.conn?.logger?.info || console.log)('Quick Test Done'))
 	.catch(console.error)
