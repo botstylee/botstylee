@@ -19,4 +19,6 @@ var handler = async (m, {
 handler.help = ['afk']
 handler.command = ['afk']
 handler.tags = ['main']
-export default handler
+
+// ✅ .cjs = CommonJS, tidak boleh pakai `export default`
+module.exports = handler
