@@ -5,14 +5,16 @@ var handler = m => m
 handler.before = async function(m) {
 	var id = m.chat
 
-	// ✅ Guard lengkap — cegah error jika m.quoted undefined
-	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/Ketik.*teka/i.test(m.quoted.text || ''))
-		return !0
+	// ✅ Guard lengkap — cek m.quoted dengan aman
+	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys) return !0
+
+	// ✅ Ambil teks dari quoted dengan aman (bisa object / string)
+	var quotedText = typeof m.quoted.text === 'string' ? m.quoted.text : (m.quoted.text?.text || m.quoted.text?.conversation || '')
+	if (!/Ketik.*teka/i.test(quotedText)) return !0
 
 	this.tebakkata = this.tebakkata ? this.tebakkata : {}
 
 	if (!(id in this.tebakkata)) {
-		// ✅ Ganti sendButton → sendMessage, pakai this
 		await this.sendMessage(m.chat, {
 			text: `Soal itu telah berakhir.\n\n_Ketik #tebakkata untuk main lagi._`
 		}, { quoted: m })
@@ -20,7 +22,6 @@ handler.before = async function(m) {
 	}
 
 	if (m.quoted.id == this.tebakkata[id][0].id) {
-		// ✅ Tambah logika nyerah
 		var isSurrender = /^((me)?nyerah|surr?ender)$/i.test(m.text)
 		if (isSurrender) {
 			clearTimeout(this.tebakkata[id][3])
