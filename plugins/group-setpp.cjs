@@ -1,6 +1,10 @@
 var {
 	webp2png
-} = require('../../lib/webp2mp4.cjs');
+} = require('../lib/webp2mp4.cjs');
+
+// ✅ getbuffer tidak global, ambil dari helper (atau fallback)
+var { getBuffer: getbuffer } = require('../lib/helper.cjs')
+
 var handler = async (m, {
 	conn,
 	text,
