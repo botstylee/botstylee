@@ -1,6 +1,7 @@
 var {
 	generateWAMessageFromContent
-} = require('@adiwajshing/baileys');
+} = require('@whiskeysockets/baileys');
+
 var handler = async (m, {
 	conn,
 	text,
