@@ -3,8 +3,15 @@ var handler = async (m, {
 	participants,
 	groupMetadata
 }) => {
+	// ✅ profil fallback — cegah ReferenceError jika global.profil tidak ada
+	var profil = global.profil || 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
+	
+	// ✅ Ambil profile picture dengan aman
 	var _p = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || profil
-	var pp = /^https?:\/\//.test(_p) ? await getbuffer(_p) : _p
+	
+	// ✅ getbuffer bisa dari Helper atau fallback ke conn.getFile
+	var pp = /^https?:\/\//.test(_p) ? await getBuffer(_p) : _p
+	
 	var {
 		isBanned,
 		welcome,
@@ -12,9 +19,14 @@ var handler = async (m, {
 		grouprental,
 		expired
 	} = db.data.chats[m.chat]
+	
 	var groupAdmins = participants.filter(p => p.admin)
 	var listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
 	var owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || m.chat.split`-` [0] + '@s.whatsapp.net'
+	
+	// ✅ msToDate tidak async, jadi tidak perlu await
+	var expiredText = grouprental && expired ? '*Expired Group:*\nExpired: ' + msToDate(expired - new Date() * 1) + '\n' : ''
+	
 	var text = `*「 Group Information 」*\n
 *ID:* 
 ${groupMetadata.id}
@@ -28,12 +40,13 @@ ${participants.length} Members
 @${owner.split('@')[0]}
 *Group Admins:*
 ${listAdmin}
-${grouprental ? '*Expired Group:*\nExpired: ' + await msToDate(expired - new Date() * 1)+ '\n' : ''}
+${expiredText}
 *Group Settings:*
 ${isBanned ? '✅' : '❌'} Banned
 ${welcome ? '✅' : '❌'} Welcome
 ${antiLink ? '✅' : '❌'} AntiLink
 `.trim()
+	
 	conn.reply(m.chat, text, m, {
 		contextInfo: {
 			mentionedJid: [...groupAdmins.map(v => v.id), owner],
@@ -45,11 +58,21 @@ ${antiLink ? '✅' : '❌'} AntiLink
 				body: '𓃗𓅜',
 				thumbnail: pp,
 				sourceUrl: "",
-				showAdAttribution: true, // false
-				//renderLargerThumbnail: true // false
+				showAdAttribution: true,
 			}
 		}
 	})
+}
+
+// ✅ getBuffer helper — pakai axios yang sudah ada di global
+async function getBuffer(url) {
+	try {
+		var res = await global.axios.get(url, { responseType: 'arraybuffer' })
+		return Buffer.from(res.data)
+	} catch (e) {
+		console.error('[group-info] getBuffer:', e.message)
+		return global.profil || 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
+	}
 }
 
 handler.help = ['infogrup']
@@ -70,5 +93,4 @@ function msToDate(ms) {
 	minutesms = ms % (60 * 1000),
 	sec = Math.floor((minutesms) / (1000))
 	return days + " Hari " + hours + " Jam " + minutes + " Menit";
-	// +minutes+":"+sec;
 }
