@@ -35,6 +35,39 @@ var handler = async (m, {
 				chat.welcome = isEnable
 			}
 			break;
+		case 'autosticker':
+		case 'autostick':
+		case 'autostik':
+			if (m.isGroup) {
+				if (!(isAdmin || isOwner)) {
+					global.dfail('admin', m, conn)
+					throw false
+				}
+			}
+			if (chat.stiker && isEnable) {
+				throw "autostiker telah aktif di chat ini"
+			} else if (!chat.stiker && isEnable == false) {
+				throw "autostiker belum aktif di chat ini"
+			} else {
+				chat.stiker = isEnable
+			}
+			break
+		case 'simi':
+			case 'simsimi':
+			if (m.isGroup) {
+				if (!(isAdmin || isOwner)) {
+					global.dfail('admin', m, conn)
+					throw false
+				}
+			}
+			if (chat.simi && isEnable) {
+				throw "simsimi telah aktif di chat ini"
+			} else if (!chat.simi && isEnable == false) {
+				throw "simsimi belum aktif di chat ini"
+			} else {
+				chat.simi = isEnable
+			}
+			break
 		case 'public':
 			isAll = true
 			if (!isROwner) {
@@ -53,6 +86,8 @@ var handler = async (m, {
 			if (!/[01]/.test(command)) return m.reply(`
 List option:
 | welcome
+| autosticker
+| simi
 | public
 Contoh:
 ${usedPrefix}enable welcome
