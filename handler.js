@@ -1135,8 +1135,8 @@ export async function participantsUpdate({
 					try {
 						pp = await this.profilePictureUrl(user, 'image')
 					} catch (e) {} finally {
-						text = (action === 'add' ? (chat.sWelcome || this.welcome || Connection.conn.welcome || 'Welcome, @user!').replace(...) :
-    (chat.sBye || this.bye || Connection.conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
+						text = (action === 'add' ? (chat.sWelcome || this.welcome || Connection.conn?.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
+							(chat.sBye || this.bye || Connection.conn?.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
 						this.sendFile(id, pp, 'pp.jpg', text, null, false, {
 							mentions: [user]
 						})
@@ -1145,10 +1145,10 @@ export async function participantsUpdate({
 			}
 			break
 		case 'promote':
-			text = (chat.sPromote || this.spromote || Connection.conn.spromote || '@user ```is now Admin```')
+			text = (chat.sPromote || this.spromote || Connection.conn?.spromote || '@user ```is now Admin```')
 		case 'demote':
 			if (!text)
-				text = (chat.sDemote || this.sdemote || Connection.conn.sdemote || '@user ```is no longer Admin```')
+				text = (chat.sDemote || this.sdemote || Connection.conn?.sdemote || '@user ```is no longer Admin```')
 			text = text.replace('@user', '@' + participants[0].split('@')[0])
 			if (chat.detect)
 				this.sendMessage(id, {
@@ -1177,10 +1177,10 @@ export async function groupsUpdate(groupsUpdate) {
 		var chats = db.data.chats[id],
 			text = ''
 		if (!chats?.detect) continue
-		if (groupUpdate.desc) text = (chats.sDesc || this.sDesc || Connection.conn.sDesc || '```Description has been changed to```\n@desc').replace('@desc', groupUpdate.desc)
-		if (groupUpdate.subject) text = (chats.sSubject || this.sSubject || Connection.conn.sSubject || '```Subject has been changed to```\n@subject').replace('@subject', groupUpdate.subject)
-		if (groupUpdate.icon) text = (chats.sIcon || this.sIcon || Connection.conn.sIcon || '```Icon has been changed to```').replace('@icon', groupUpdate.icon)
-		if (groupUpdate.revoke) text = (chats.sRevoke || this.sRevoke || Connection.conn.sRevoke || '```Group link has been changed to```\n@revoke').replace('@revoke', groupUpdate.revoke)
+		if (groupUpdate.desc) text = (chats.sDesc || this.sDesc || Connection.conn?.sDesc || '```Description has been changed to```\n@desc').replace('@desc', groupUpdate.desc)
+		if (groupUpdate.subject) text = (chats.sSubject || this.sSubject || Connection.conn?.sSubject || '```Subject has been changed to```\n@subject').replace('@subject', groupUpdate.subject)
+		if (groupUpdate.icon) text = (chats.sIcon || this.sIcon || Connection.conn?.sIcon || '```Icon has been changed to```').replace('@icon', groupUpdate.icon)
+		if (groupUpdate.revoke) text = (chats.sRevoke || this.sRevoke || Connection.conn?.sRevoke || '```Group link has been changed to```\n@revoke').replace('@revoke', groupUpdate.revoke)
 		if (!text) continue
 		await this.sendMessage(id, {
 			text,
