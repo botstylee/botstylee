@@ -4,7 +4,7 @@ var ws = require('ws');
 
 var {
 	DisconnectReason
-} = require('@adiwajshing/baileys');
+} = require('@whiskeysockets/baileys');
 
 var handler = async (m, {
 	conn: _conn,
