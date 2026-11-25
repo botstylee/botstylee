@@ -1,148 +1,150 @@
 var handler = m => m
 
-// Konfigurasi
+// === KONFIGURASI ===
 const CONFIG = {
-    maxTextLength: 3000,           // Turunkan dari 5000 — teks >3000 sudah mencurigakan
-    maxMentions: 50,               // Mention >50 orang = spam/bug
-    maxNestedDepth: 10,            // Kedalaman nested message yang wajar
-    maxNullBytes: 5,               // Null byte >5 dalam teks = payload
-    autoKick: true,                // Kick pengirim jika bug terdeteksi (butuh bot admin)
-    autoBlock: true,               // Blokir pengirim
-    revokeForEveryone: true        // Hapus untuk semua (butuh bot admin)
+    maxTextLength: 2000,          // Teks > 2000 karakter langsung dicurigai
+    maxMentions: 20,              // Mention > 20 orang = spam
+    maxNestedDepth: 6,            // Kedalaman nested message
+    maxNullBytes: 2,              // Null byte dalam teks
+    burstWindowMs: 10000,         // 10 detik
+    burstThreshold: 3,            // 3 bug dalam 10 detik = eskalasi
+    autoKick: true,
+    autoBlock: true,
+    revokeForEveryone: true,
+    notifyOwner: true
 }
 
-// Deteksi payload berbahaya secara struktural
-function isMaliciousPayload(m) {
+// State rate-limit per pengirim
+const burstMap = new Map()
+
+// === DETEKSI STRUKTURAL ===
+function analyzePayload(m) {
     const msg = m.message
-    if (!msg) return { malicious: false }
+    if (!msg) return null
 
-    // 1. Cek teks terlalu panjang
-    if (m.text && m.text.length >= CONFIG.maxTextLength) {
-        return { malicious: true, reason: 'text_too_long', severity: 'high' }
-    }
+    // 1. Teks raksasa
+    if (m.text && m.text.length >= CONFIG.maxTextLength)
+        return { reason: 'text_overflow', severity: 'high' }
 
-    // 2. Cek null byte / karakter kontrol dalam teks
+    // 2. Null byte / karakter kontrol
     if (m.text) {
-        const nullBytes = (m.text.match(/\x00/g) || []).length
-        if (nullBytes >= CONFIG.maxNullBytes) {
-            return { malicious: true, reason: 'null_byte_injection', severity: 'critical' }
-        }
+        const ctrl = (m.text.match(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g) || []).length
+        if (ctrl >= CONFIG.maxNullBytes)
+            return { reason: 'control_char_injection', severity: 'critical' }
     }
 
-    // 3. Cek mention masif
-    const mentions = m.mentionedJid || []
-    if (mentions.length >= CONFIG.maxMentions) {
-        return { malicious: true, reason: 'mass_mention', severity: 'high' }
-    }
+    // 3. Mention masif
+    if ((m.mentionedJid?.length || 0) >= CONFIG.maxMentions)
+        return { reason: 'mass_mention', severity: 'high' }
 
-    // 4. Cek nested message (bug nesting)
-    let depth = 0
-    let current = msg
-    while (current && typeof current === 'object' && depth < 50) {
-        const keys = Object.keys(current)
+    // 4. Nested message dalam
+    let depth = 0, cur = msg
+    while (cur && typeof cur === 'object' && depth < 60) {
+        const keys = Object.keys(cur)
         if (keys.length === 1 && keys[0].endsWith('Message')) {
-            current = current[keys[0]]
+            cur = cur[keys[0]]
             depth++
         } else break
     }
-    if (depth >= CONFIG.maxNestedDepth) {
-        return { malicious: true, reason: 'deep_nesting', severity: 'critical' }
-    }
+    if (depth >= CONFIG.maxNestedDepth)
+        return { reason: 'deep_nesting', severity: 'critical' }
 
-    // 5. Cek metadata media rusak (directPath/url tidak valid)
-    const mediaTypes = ['imageMessage', 'videoMessage', 'audioMessage', 'documentMessage', 'stickerMessage']
-    for (const type of mediaTypes) {
-        if (msg[type]) {
-            const media = msg[type]
-            // File size 0 atau sangat kecil tapi ada media = mencurigakan
-            if (media.fileLength && Number(media.fileLength) < 100) {
-                return { malicious: true, reason: 'corrupt_media_metadata', severity: 'high' }
-            }
-            // URL dengan karakter aneh
-            if (media.url && /[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(media.url)) {
-                return { malicious: true, reason: 'malicious_media_url', severity: 'critical' }
-            }
+    // 5. Metadata media rusak
+    const mediaKeys = ['imageMessage','videoMessage','audioMessage','documentMessage','stickerMessage']
+    for (const k of mediaKeys) {
+        if (msg[k]) {
+            const md = msg[k]
+            if (md.fileLength && Number(md.fileLength) < 100)
+                return { reason: 'corrupt_media_metadata', severity: 'high' }
+            if (md.url && /[\x00-\x1F]/.test(md.url))
+                return { reason: 'malicious_media_url', severity: 'critical' }
         }
     }
 
-    // 6. Cek messageStubType 68 (revoke aneh) atau tipe stub mencurigakan
-    if (m.messageStubType === 68) {
-        return { malicious: true, reason: 'suspicious_stub_68', severity: 'medium' }
-    }
+    // 6. ProtocolMessage spoofing (CVE-2026-48063)
+    if (msg.protocolMessage?.placeholderResendMessage)
+        return { reason: 'protocol_spoofing', severity: 'critical' }
 
-    return { malicious: false }
+    // 7. Stub type mencurigakan
+    if (m.messageStubType === 68)
+        return { reason: 'suspicious_stub_68', severity: 'medium' }
+
+    return null
 }
 
-// Eksekusi tindakan terhadap payload berbahaya
-async function neutralize(conn, m, detection) {
-    const { reason, severity } = detection
+// === DETEKSI LONJAKAN (BURST) ===
+function checkBurst(sender) {
+    const now = Date.now()
+    const entry = burstMap.get(sender) || { count: 0, first: now }
+    if (now - entry.first > CONFIG.burstWindowMs) {
+        entry.count = 0
+        entry.first = now
+    }
+    entry.count++
+    burstMap.set(sender, entry)
+    return entry.count >= CONFIG.burstThreshold
+}
+
+// === NETRALISASI ===
+async function neutralize(conn, m, det, isBurst) {
     const isGroup = m.chat?.endsWith('@g.us')
     const sender = m.sender
+    const level = isBurst ? 'BURST' : det.severity.toUpperCase()
 
-    console.log(`[antivirus] 🚨 ${severity.toUpperCase()} | ${reason} | from: ${sender} | chat: ${m.chat}`)
+    console.log(`[antivirus] 🚨 ${level} | ${det.reason} | ${sender} | ${m.chat}`)
 
     // 1. Hapus pesan
     try {
         if (isGroup && CONFIG.revokeForEveryone) {
-            // Hapus untuk semua (butuh bot admin)
             await conn.sendMessage(m.chat, { delete: m.key })
         } else {
-            // Delete for me
-            await conn.chatModify({
-                clear: { messages: [{ id: m.key, fromMe: false }] }
-            }, m.chat)
+            await conn.chatModify({ clear: { messages: [{ id: m.key, fromMe: false }] } }, m.chat)
         }
-    } catch (e) {
-        console.error('[antivirus] Gagal hapus pesan:', e.message)
-    }
+    } catch (e) { console.error('[antivirus] delete fail:', e.message) }
 
-    // 2. Kick pengirim dari grup (jika bot admin)
+    // 2. Kick + Block
     if (isGroup && CONFIG.autoKick && sender) {
         try {
-            const metadata = await conn.groupMetadata(m.chat)
-            const bot = metadata.participants.find(p => p.id === conn.user.jid)
-            const isBotAdmin = bot?.admin === 'admin' || bot?.admin === 'superadmin'
-            if (isBotAdmin) {
+            const meta = await conn.groupMetadata(m.chat)
+            const bot = meta.participants.find(p => p.id === conn.user.jid)
+            const isAdmin = bot?.admin === 'admin' || bot?.admin === 'superadmin'
+            if (isAdmin) {
                 await conn.groupParticipantsUpdate(m.chat, [sender], 'remove')
-                console.log(`[antivirus] 👢 Kick: ${sender}`)
+                console.log(`[antivirus] 👢 kick: ${sender}`)
             }
-        } catch (e) {
-            console.error('[antivirus] Gagal kick:', e.message)
-        }
+        } catch (e) { console.error('[antivirus] kick fail:', e.message) }
     }
 
-    // 3. Blokir pengirim (jika bukan dari diri sendiri)
     if (CONFIG.autoBlock && !m.key.fromMe && sender) {
         try {
             await conn.updateBlockStatus(sender, 'block')
-            console.log(`[antivirus] 🚫 Block: ${sender}`)
-        } catch (e) {
-            console.error('[antivirus] Gagal block:', e.message)
-        }
+            console.log(`[antivirus] 🚫 block: ${sender}`)
+        } catch (e) { console.error('[antivirus] block fail:', e.message) }
     }
 
-    // 4. Notifikasi ke admin (opsional)
-    try {
+    // 3. Notifikasi owner
+    if (CONFIG.notifyOwner) {
         const owner = global.nomorown || global.owner?.[0]
         if (owner) {
-            await conn.sendMessage(owner + '@s.whatsapp.net', {
-                text: `🛡️ *ANTIVIRUS ALERT*\n\nChat: ${m.chat}\nPengirim: ${sender}\nAlasan: ${reason}\nSeverity: ${severity}\n\nTindakan: Hapus + Kick + Block`
-            })
+            try {
+                await conn.sendMessage(owner + '@s.whatsapp.net', {
+                    text: `🛡️ *ANTIVIRUS*\nChat: ${m.chat}\nDari: ${sender}\nAlasan: ${det.reason}\nLevel: ${level}\nTindakan: Hapus + Kick + Block`
+                })
+            } catch {}
         }
-    } catch {}
+    }
 }
 
+// === HANDLER UTAMA ===
 handler.all = async function (m) {
-    // Skip pesan dari bot sendiri atau tanpa message
+    // Lewati pesan dari bot sendiri atau tanpa message
     if (m.key?.fromMe || !m.message) return
 
-    // Deteksi
-    const detection = isMaliciousPayload(m)
+    const det = analyzePayload(m)
+    if (!det) return
 
-    if (detection.malicious) {
-        await neutralize(this, m, detection)
-        return // Hentikan pemrosesan lebih lanjut untuk pesan ini
-    }
+    const isBurst = checkBurst(m.sender)
+    await neutralize(this, m, det, isBurst)
 }
 
 module.exports = handler
