@@ -5,14 +5,16 @@ var handler = m => m
 handler.before = async function(m) {
 	var id = m.chat
 
-	// ✅ Guard lengkap — cegah error jika m.quoted undefined
-	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/Ketik.*hint/i.test(m.quoted.text || ''))
-		return !0
+	// ✅ Guard lengkap — cek m.quoted dengan aman
+	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys) return !0
+
+	// ✅ Ambil teks dari quoted dengan aman (bisa object / string)
+	var quotedText = typeof m.quoted.text === 'string' ? m.quoted.text : (m.quoted.text?.text || m.quoted.text?.conversation || '')
+	if (!/Ketik.*hint/i.test(quotedText)) return !0
 
 	this.tebakgambar = this.tebakgambar ? this.tebakgambar : {}
 
 	if (!(id in this.tebakgambar)) {
-		// ✅ Ganti sendButton → sendMessage, pakai this
 		await this.sendMessage(m.chat, {
 			text: `Soal itu telah berakhir.\n\n_Ketik #tebakgambar untuk main lagi._`
 		}, { quoted: m })
@@ -24,9 +26,10 @@ handler.before = async function(m) {
 
 		if (isSurrender) {
 			clearTimeout(this.tebakgambar[id][3])
+			var jawaban = this.tebakgambar[id]?.[1]?.jawaban || '...'
 			delete this.tebakgambar[id]
 			await this.sendMessage(m.chat, {
-				text: `😔 *Yah Menyerah :(*\n\nJawabannya adalah *${this.tebakgambar[id]?.[1]?.jawaban || '...'}*\n\n_Ketik #tebakgambar untuk main lagi._`
+				text: `😔 *Yah Menyerah :(*\n\nJawabannya adalah *${jawaban}*\n\n_Ketik #tebakgambar untuk main lagi._`
 			}, { quoted: m })
 			return !0
 		}
@@ -43,7 +46,6 @@ handler.before = async function(m) {
 		} else if (similarity(m.text.toLowerCase(), json.jawaban.toLowerCase().trim()) >= threshold) {
 			m.reply(`*Dikit Lagi!*`)
 		} else {
-			// ✅ Ganti sendButton → sendMessage
 			await this.sendMessage(m.chat, {
 				text: `❌ *Salah!*\n\n_Ketik #hint untuk hint, atau *nyerah* untuk menyerah._`
 			}, { quoted: m })
