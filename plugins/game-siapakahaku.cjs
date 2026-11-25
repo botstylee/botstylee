@@ -1,5 +1,6 @@
 var timeout = 120000
 var poin = 5000
+
 var handler = async (m, {
 	conn,
 	usedPrefix
@@ -20,11 +21,21 @@ Timeout *${(timeout / 1000).toFixed(2)} detik*
 Ketik ${usedPrefix}who untuk bantuan
 Bonus: ${poin} XP
 `.trim()
+
+	// ✅ Ganti sendButton → sendMessage teks biasa
+	var msg = await conn.sendMessage(m.chat, {
+		text: caption
+	}, { quoted: m })
+
 	conn.siapakahaku[id] = [
-		await conn.sendButton(m.chat, caption, author, ['hint', `${usedPrefix}who`], m),
+		msg,
 		json, poin,
-		setTimeout(() => {
-			if (conn.siapakahaku[id]) conn.sendButton(m.chat, `Waktu habis!\nJawabannya adalah *${json.jawaban}*`, author, ['siapahaku', '/siapakahaku'], conn.siapakahaku[id][0])
+		setTimeout(async () => {
+			if (conn.siapakahaku[id]) {
+				await conn.sendMessage(m.chat, {
+					text: `⏰ *Waktu habis!*\n\nJawabannya adalah *${json.jawaban}*\n\n_Ketik ${usedPrefix}siapakahaku untuk main lagi._`
+				}, { quoted: conn.siapakahaku[id][0] })
+			}
 			delete conn.siapakahaku[id]
 		}, timeout)
 	]
