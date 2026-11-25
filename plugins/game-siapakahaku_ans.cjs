@@ -5,14 +5,16 @@ var handler = m => m
 handler.before = async function(m) {
 	var id = m.chat
 
-	// ✅ Guard lengkap — cegah error jika m.quoted undefined
-	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !/Ketik.*who|hint/i.test(m.quoted.text || ''))
-		return !0
+	// ✅ Guard lengkap — cek m.quoted dengan aman
+	if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys) return !0
+
+	// ✅ Ambil teks dari quoted dengan aman (bisa object / string)
+	var quotedText = typeof m.quoted.text === 'string' ? m.quoted.text : (m.quoted.text?.text || m.quoted.text?.conversation || '')
+	if (!/Ketik.*who|hint/i.test(quotedText)) return !0
 
 	this.siapakahaku = this.siapakahaku ? this.siapakahaku : {}
 
 	if (!(id in this.siapakahaku)) {
-		// ✅ Ganti sendButton → sendMessage, pakai this (bukan conn)
 		await this.sendMessage(m.chat, {
 			text: `Soal itu telah berakhir.\n\n_Ketik #siapakahaku untuk main lagi._`
 		}, { quoted: m })
@@ -24,7 +26,6 @@ handler.before = async function(m) {
 
 		if (m.text.toLowerCase() == json.jawaban.toLowerCase().trim()) {
 			db.data.users[m.sender].exp += this.siapakahaku[id][2]
-			// ✅ Ganti sendButton → sendMessage
 			await this.sendMessage(m.chat, {
 				text: `✅ *Benar!*\n+${this.siapakahaku[id][2]} XP\n\n_Ketik #siapakahaku untuk main lagi._`
 			}, { quoted: m })
