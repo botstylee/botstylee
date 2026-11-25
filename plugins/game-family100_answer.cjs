@@ -1,5 +1,6 @@
 var similarity = require('similarity')
 var threshold = 0.72
+
 var handler = m => m
 handler.before = async function(m) {
 	this.game = this.game ? this.game : {}
@@ -33,12 +34,15 @@ ${Array.from(room.jawaban, (jawaban, index) => {
         return isSurrender || room.terjawab[index] ? `(${index + 1}) ${jawaban} ${room.terjawab[index] ? '@' + room.terjawab[index].split('@')[0] : ''}`.trim() : false
     }).filter(v => v).join('\n')}
 ${isSurrender ? '' : `+${room.winScore} XP tiap jawaban benar`}
+${isWin || isSurrender ? '' : '_Ketik *nyerah* untuk menyerah._'}
     `.trim()
-	var msg = await this.sendButton(m.chat, caption, author, null, [
-		[`${(isWin || isSurrender) ? 'Family 100' : 'Nyerah'}`, `${(isWin || isSurrender) ? '.family100' : 'nyerah'}`]
-	], null, {
+
+	// ✅ Ganti sendButton → sendMessage biasa
+	var msg = await this.sendMessage(m.chat, {
+		text: caption,
 		mentions: this.parseMention(caption)
-	})
+	}, { quoted: null })
+
 	room.msg = msg
 	if (isWin || isSurrender)
 		delete this.game[id]
