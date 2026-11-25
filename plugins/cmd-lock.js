@@ -1,4 +1,4 @@
-import db from '../../lib/database.js'
+import db from '../lib/database.js'
 
 var handler = async (m, {
 	command
