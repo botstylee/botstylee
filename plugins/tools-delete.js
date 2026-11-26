@@ -1,8 +1,11 @@
-var handler = function(m, {
+var handler = async (m, {
 	conn,
 	isBotAdmin
-}) {
-	if (!m.quoted) throw false
+}) => {
+	if (!m.quoted) {
+		return conn.reply(m.chat, 'Reply pesan yang mau dihapus dengan command *.del*', m)
+	}
+
 	var {
 		id,
 		chat,
@@ -10,27 +13,44 @@ var handler = function(m, {
 		fromMe,
 		isBaileys
 	} = m.quoted
-	/*if (!fromMe) throw false
-	if (!isBaileys) throw 'Pesan tersebut bukan dikirim oleh bot!'*/
+
+	// ✅ Jika di grup dan bot admin → bisa hapus pesan siapa saja
 	if (m.isGroup && isBotAdmin) {
-		conn.sendMessage(chat, {
-			delete: {
-				remoteJid: m.chat,
-				id,
-				participant: sender
-			}
-		})
-	} else {
-		if (!fromMe) throw false
-		if (!isBaileys) throw 'Pesan tersebut bukan dikirim oleh bot!'
-		conn.sendMessage(chat, {
+		try {
+			await conn.sendMessage(chat, {
+				delete: {
+					remoteJid: m.chat,
+					id,
+					participant: sender
+				}
+			})
+		} catch (e) {
+			console.error('[delete] Error (grup):', e)
+			await conn.reply(m.chat, 'Gagal menghapus pesan: ' + (e.message || e), m)
+		}
+		return
+	}
+
+	// ✅ Selain itu → hanya bisa hapus pesan bot sendiri
+	if (!fromMe) {
+		return conn.reply(m.chat, 'Pesan tersebut bukan dikirim oleh bot!', m)
+	}
+	if (!isBaileys) {
+		return conn.reply(m.chat, 'Pesan tersebut bukan dikirim oleh bot!', m)
+	}
+
+	try {
+		await conn.sendMessage(chat, {
 			delete: m.quoted.vM.key
 		})
+	} catch (e) {
+		console.error('[delete] Error (pribadi):', e)
+		await conn.reply(m.chat, 'Gagal menghapus pesan: ' + (e.message || e), m)
 	}
 }
-handler.help = ['del', 'delete']
-handler.tags = ['tools']
 
+handler.help = ['del (reply)', 'delete (reply)']
+handler.tags = ['tools']
 handler.command = /^del(ete)?$/i
 
-export default handler
+module.exports = handler
