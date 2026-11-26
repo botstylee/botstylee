@@ -8,7 +8,7 @@ var handler = async (m, {
 	var [p1, p2] = text.split(/[&|.]/i)
 	if (!(p1, p2)) throw "masukan namamu&nama pasanganmu"
 	try {
-		var a = await axios.request("https://rest-beni.herokuapp.com/api/kecocokanpasangan?nama=" + p1 + "&pasangan=" + p2, {
+		var a = await axios.request("https://botstylee-ben-production.up.railway.app/api/kecocokanpasangan?nama=" + p1 + "&pasangan=" + p2, {
 			method: "GET"
 		})
 		if (!a.data.status) throw a.data.message
