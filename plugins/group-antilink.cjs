@@ -1,41 +1,24 @@
-const handler = async (m, { conn, text, usedPrefix, command }) => {
-	const usage = `*Format salah! Contoh:*
-
-○ ${usedPrefix + command} on
-○ ${usedPrefix + command} off`
-	const option = typeof text === 'string' ? text.trim().toLowerCase() : ''
-
-	if (!option || !['on', 'enable', 'off', 'disable'].includes(option)) {
-		return conn.reply(m.chat, usage, m)
-	}
-
-	const chat = db.data?.chats?.[m.chat]
-	if (!chat) {
-		return conn.reply(m.chat, '*Data grup belum tersedia. Coba lagi sebentar.*', m)
-	}
-
-	const enable = option === 'on' || option === 'enable'
-	if (chat.antiLink === enable) {
-		return conn.reply(
-			m.chat,
-			enable ? '*Anti-Link telah aktif pada grup ini.*' : '*Anti-Link belum aktif pada grup ini.*',
-			m
-		)
-	}
-
-	chat.antiLink = enable
-	return conn.reply(
-		m.chat,
-		enable ? '*Anti-Link berhasil diaktifkan.*' : '*Anti-Link berhasil dimatikan.*',
-		m
-	)
+var {
+	areJidsSameUser
+} = require('@adiwajshing/baileys');
+var handler = async (m, {
+	conn,
+	args
+}) => {
+	var group = m.chat
+	if (/^[0-9]{5,16}-?[0-9]+@g\.us$/.test(args[0])) group = args[0]
+	if (!/^[0-9]{5,16}-?[0-9]+@g\.us$/.test(group)) throw 'Hanya bisa dibuka di grup'
+	var groupMetadata = await conn.groupMetadata(group)
+	if (!groupMetadata) throw 'groupMetadata is undefined :\\'
+	if (!('participants' in groupMetadata)) throw 'participants is not defined :('
+	var me = groupMetadata.participants.find(user => areJidsSameUser(user.id, conn.user.id))
+	if (!me) throw 'Aku tidak ada di grup itu :('
+	if (!me.admin) throw 'Aku bukan admin T_T'
+	m.reply('https://chat.whatsapp.com/' + await conn.groupInviteCode(group))
 }
-
-handler.help = ['antilink [on/off]']
-handler.tags = ['group', 'admin']
-handler.command = ['antilink']
+handler.help = ['linkgroup']
+handler.tags = ['group']
+handler.command = /^link(gro?up)?$/i
 handler.group = true
-handler.admin = true
 handler.botAdmin = true
-
 module.exports = handler
