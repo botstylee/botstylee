@@ -1,15 +1,24 @@
+// plugins/kerang-kapan.cjs
+// Fitur: Jawab "kapan" dengan waktu acak (fun)
+
 var handler = async (m, {
 	conn,
 	text
 }) => {
-	conn.reply(m.chat, `Kayaknya ${Math.floor(Math.random() * 100)} ${pickRandom(['detik', 'menit', 'jam', 'hari', 'minggu', 'bulan', 'tahun', 'abad'])} lagi ...
-`.trim(), m, m.mentionedJid ? {
-		mentions: m.mentionedJid
-	} : {})
+	// Guard: harus ada pertanyaan
+	if (!text) return m.reply('Kapan apa? Contoh: .kapan aku jadian?')
+
+	// Pilih waktu acak
+	var waktu = pickRandom(['detik', 'menit', 'jam', 'hari', 'minggu', 'bulan', 'tahun', 'abad'])
+	var angka = Math.floor(Math.random() * 100)
+
+	var jawab = `Kayaknya ${angka} ${waktu} lagi ...`
+
+	await conn.reply(m.chat, jawab, m)
 }
-handler.help = ['', 'kah'].map(v => 'kapan' + v + ' <text>?')
+
+handler.help = ['kapan <text>', 'kapankah <text>']
 handler.tags = ['kerang']
-handler.customPrefix = /(\?$)/
 handler.command = /^kapan(kah)?$/i
 
 module.exports = handler
