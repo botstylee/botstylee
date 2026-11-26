@@ -1,24 +1,43 @@
-var {
-	areJidsSameUser
-} = require('@adiwajshing/baileys');
 var handler = async (m, {
 	conn,
-	args
+	text,
+	usedPrefix,
+	command,
+	participants
 }) => {
-	var group = m.chat
-	if (/^[0-9]{5,16}-?[0-9]+@g\.us$/.test(args[0])) group = args[0]
-	if (!/^[0-9]{5,16}-?[0-9]+@g\.us$/.test(group)) throw 'Hanya bisa dibuka di grup'
-	var groupMetadata = await conn.groupMetadata(group)
-	if (!groupMetadata) throw 'groupMetadata is undefined :\\'
-	if (!('participants' in groupMetadata)) throw 'participants is not defined :('
-	var me = groupMetadata.participants.find(user => areJidsSameUser(user.id, conn.user.id))
-	if (!me) throw 'Aku tidak ada di grup itu :('
-	if (!me.admin) throw 'Aku bukan admin T_T'
-	m.reply('https://chat.whatsapp.com/' + await conn.groupInviteCode(group))
+	if (!text) {
+		await conn.sendPresenceUpdate('composing', m.chat)
+		conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
+	}
+	switch (text) {
+		case "on":
+		case "enable":
+			var cek = db.data.chats[m.chat].antiLink
+			if (cek) return conn.reply(m.chat, `*Anti-Link telah aktif pada grup ini.*`, m)
+			await conn.sendPresenceUpdate('composing', m.chat)
+			db.data.chats[m.chat].antiLink = true
+			conn.reply(m.chat, `*Anti-Link berhasil diaktifkan.*`, m)
+			break
+		case "off":
+		case "disable":
+			var ce = db.data.chats[m.chat].antiLink
+			if (!ce) return conn.reply(m.chat, `*Anti-Link belum aktif pada grup ini.*`, m)
+			await conn.sendPresenceUpdate('composing', m.chat)
+			db.data.chats[m.chat].antiLink = false
+			conn.reply(m.chat, `*Anti-Link berhasil dimatikan.*`, m)
+			break
+		default:
+			await conn.sendPresenceUpdate('composing', m.chat)
+			conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
+			break
+	}
 }
-handler.help = ['linkgroup']
-handler.tags = ['group']
-handler.command = /^link(gro?up)?$/i
+handler.help = ['antilink'].map(v => v + ' [on/off]')
+handler.tags = ['group', 'admin']
+handler.command = ['antilink']
+
 handler.group = true
+handler.admin = true
 handler.botAdmin = true
+
 module.exports = handler
