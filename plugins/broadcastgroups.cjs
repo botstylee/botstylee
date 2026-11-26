@@ -1,30 +1,70 @@
-var {
-	randomBytes
-} = require('crypto');
+var { randomBytes } = require('crypto')
 
 var handler = async (m, {
 	conn,
-	text
+	text,
+	usedPrefix,
+	command
 }) => {
-	var groups = Object.values(await conn.groupFetchAllParticipating()).filter(v=> v.participants.find(v=>v.id==conn.user.jid) && v.announce==false)
-	var cc = text ? m : m.quoted ? await m.getQuotedObj() : false || m
-	var teks = text ? text : cc.text
-	conn.reply(m.chat, `_Mengirim pesan broadcast ke ${groups.length} grup_`, m)
-	for (var id of groups) {
-		await delay(3000);
-		await conn.copyNForward(id.id, conn.cMod(m.chat, cc, /bc|broadcast/i.test(teks) ? teks : teks + '\n' + readMore), true).catch(_ => _)
+	try {
+		// ✅ Ambil semua grup yang bot ikuti
+		var allGroups = Object.values(await conn.groupFetchAllParticipating())
+
+		// ✅ Filter: bot ada di grup dan grup tidak di-announce
+		var groups = allGroups.filter(v =>
+			v?.participants?.find(p => p.id === conn.user?.jid) && v.announce === false
+		)
+
+		if (!groups.length) {
+			return conn.reply(m.chat, 'Tidak ada grup yang memenuhi syarat untuk broadcast.', m)
+		}
+
+		// ✅ Tentukan sumber pesan
+		var cc = text ? m : m.quoted ? await m.getQuotedObj() : m
+		var teks = text ? text : cc.text
+
+		if (!teks) {
+			return conn.reply(m.chat, `Masukkan teks atau reply pesan.\nContoh: *${usedPrefix}${command} halo semua*`, m)
+		}
+
+		await conn.reply(m.chat, `_Mengirim pesan broadcast ke ${groups.length} grup..._`, m)
+
+		// ✅ Siapkan teks broadcast
+		var broadcastText = /bc|broadcast/i.test(teks)
+			? teks
+			: teks + '\n' + readMore + '「 ' + (global.author || 'Bot') + ' Broadcast 」'
+
+		// ✅ Modifikasi pesan sekali saja
+		var cMod = conn.cMod(m.chat, cc, broadcastText)
+
+		// ✅ Kirim dengan delay & hitungan
+		var success = 0
+		var failed = 0
+		for (var group of groups) {
+			try {
+				await new Promise(r => setTimeout(r, 3000)) // ✅ delay 3 detik
+				await conn.copyNForward(group.id, cMod, true)
+				success++
+			} catch (e) {
+				console.error('[bcgc] Gagal kirim ke', group.id, ':', e.message)
+				failed++
+			}
+		}
+
+		await conn.reply(m.chat, `✅ *Broadcast selesai.*\n\n• Berhasil: ${success}\n• Gagal: ${failed}`, m)
+
+	} catch (e) {
+		console.error('[bcgc] Error:', e)
+		await conn.reply(m.chat, 'Terjadi kesalahan: ' + (e.message || e), m)
 	}
-	m.reply('Selesai Broadcast All Group :)')
 }
+
 handler.help = ['broadcastgroup', 'bcgc'].map(v => v + ' <teks>')
 handler.tags = ['owner']
 handler.command = /^(broadcast|bc)(group|grup|gc)$/i
-
 handler.owner = true
 
 module.exports = handler
 
 var more = String.fromCharCode(8206)
 var readMore = more.repeat(4001)
-
-var randomID = length => randomBytes(Math.ceil(length * .5)).toString('hex').slice(0, length)
