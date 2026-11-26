@@ -692,6 +692,8 @@ export async function handler(chatUpdate) {
 					chat.delete = true
 				if (!('antiLink' in chat))
 					chat.antiLink = false
+				if (!('antiSwGrup' in chat))
+					chat.antiSwGrup = false
 				if (!('viewonce' in chat))
 					chat.viewonce = false
 				if (!('antiToxic' in chat))
@@ -719,6 +721,7 @@ export async function handler(chatUpdate) {
 					sDemote: '',
 					delete: true,
 					antiLink: false,
+					antiSwGrup: false,
 					viewonce: false,
 					antiToxic: false,
 					reminder: false,
