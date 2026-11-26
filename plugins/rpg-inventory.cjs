@@ -1,12 +1,15 @@
-var daily = require('./rpg-daily.cjs');
-var monthly = require('./rpg-monthly.cjs');
-var adventure = require('./rpg-adventure.cjs');
+// plugins/rpg-inventory.cjs
+// Fitur: Tampilkan inventory user (tools, items, crates, pets, cooldowns)
+
+var daily = require('./rpg-daily.cjs')
+var monthly = require('./rpg-monthly.cjs')
+var adventure = require('./rpg-adventure.cjs')
 
 var inventory = {
 	others: {
 		health: true,
 		money: true,
-		exp: true,
+		exp: true
 	},
 	items: {
 		potion: true,
@@ -17,7 +20,7 @@ var inventory = {
 		emerald: true,
 		diamond: true,
 		gold: true,
-		iron: true,
+		iron: true
 	},
 	tools: {
 		armor: {
@@ -103,53 +106,103 @@ var inventory = {
 			'9': 'Netherite Fising Rod',
 			'10': 'Pull Everything Fising Rod',
 			'11': 'Hacker Fising Rod'
-		},
-
+		}
 	},
 	crates: {
 		common: true,
 		uncommon: true,
 		mythic: true,
 		legendary: true,
-		pet: true,
+		pet: true
 	},
 	pets: {
 		horse: 10,
 		cat: 10,
 		fox: 10,
-		dog: 10,
+		dog: 10
 	},
 	cooldowns: {
 		lastclaim: {
 			name: 'claim',
-			time: daily.cooldown
+			time: daily.cooldown || 86400000
 		},
 		lastmonthly: {
 			name: 'monthly',
-			time: monthly.cooldown
+			time: monthly.cooldown || 2592000000
 		},
 		lastadventure: {
 			name: 'adventure',
-			time: adventure.cooldown
+			time: adventure.cooldown || 300000
 		}
 	}
 }
+
 var handler = async (m, {
 	conn
 }) => {
+	// Guard: user harus terdaftar
 	var user = db.data.users[m.sender]
-	var tools = Object.keys(inventory.tools).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${typeof inventory.tools[v] === 'object' ? inventory.tools[v][user[v]?.toString()] : `Level(s) ${user[v]}`}`).filter(v => v).join('\n').trim()
-	var items = Object.keys(inventory.items).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n').trim()
-	var crates = Object.keys(inventory.crates).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n').trim()
-	var pets = Object.keys(inventory.pets).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v] >= inventory.pets[v] ? 'Max Levels' : `Level(s) ${user[v]}`}`).filter(v => v).join('\n').trim()
-	var cooldowns = Object.entries(inventory.cooldowns).map(([cd, {
-		name,
-		time
-	}]) => cd in user && `*⌛${name}*: ${new Date() - user[cd] >= time ? '✅' : '❌'}`).filter(v => v).join('\n').trim()
-	var caption = `
-Inventory *${conn.getName(m.sender)}*
+	if (!user) return m.reply('Kamu belum terdaftar di database.')
 
-${Object.keys(inventory.others).map(v => user[v] && `*${global.rpg.emoticon(v)}${v}:* ${user[v]}`).filter(v => v).join('\n')}${tools ? `
+	// Helper: emoticon
+	var emot = (v) => {
+		if (typeof global.rpg?.emoticon === 'function') return global.rpg.emoticon(v)
+		return ''
+	}
+
+	// Helper: nama user (handle Promise)
+	var name = conn.getName(m.sender)
+	if (name instanceof Promise) name = await name
+
+	// Tools
+	var tools = Object.keys(inventory.tools).map(v => {
+		if (!user[v]) return null
+		var nama = typeof inventory.tools[v] === 'object'
+			? inventory.tools[v][user[v]?.toString()] || user[v]
+			: `Level(s) ${user[v]}`
+		return `*${emot(v)}${v}:* ${nama}`
+	}).filter(Boolean).join('\n').trim()
+
+	// Items
+	var items = Object.keys(inventory.items).map(v => {
+		if (!user[v]) return null
+		return `*${emot(v)}${v}:* ${user[v]}`
+	}).filter(Boolean).join('\n').trim()
+
+	// Crates
+	var crates = Object.keys(inventory.crates).map(v => {
+		if (!user[v]) return null
+		return `*${emot(v)}${v}:* ${user[v]}`
+	}).filter(Boolean).join('\n').trim()
+
+	// Pets
+	var pets = Object.keys(inventory.pets).map(v => {
+		if (!user[v]) return null
+		return `*${emot(v)}${v}:* ${user[v] >= inventory.pets[v] ? 'Max Levels' : `Level(s) ${user[v]}`}`
+	}).filter(Boolean).join('\n').trim()
+
+	// Cooldowns
+	var cooldowns = Object.entries(inventory.cooldowns).map(([cd, { name, time }]) => {
+		if (!(cd in user)) return null
+		var ready = (new Date() - user[cd]) >= time
+		return `*⌛${name}*: ${ready ? '✅' : '❌'}`
+	}).filter(Boolean).join('\n').trim()
+
+	// Others (health, money, exp)
+	var others = Object.keys(inventory.others).map(v => {
+		if (!user[v]) return null
+		return `*${emot(v)}${v}:* ${user[v]}`
+	}).filter(Boolean).join('\n')
+
+	// Total items & crates (hindari NaN)
+	var totalItems = Object.keys(inventory.items).reduce((a, b) => a + (user[b] || 0), 0)
+	var totalCrates = Object.keys(inventory.crates).reduce((a, b) => a + (user[b] || 0), 0)
+
+	// Susun caption
+	var caption = `
+Inventory *${name}*
+
+${others}${tools ? `
 
 
 *📍 Tools*
@@ -158,12 +211,12 @@ ${tools}` : ''}${items ? `
 
 *📍 Items*
 ${items}
-*🎒 Total Items:* ${Object.keys(inventory.items).map(v => user[v]).reduce((a, b) => a + b, 0)} Items` : ''}${crates ? `
+*🎒 Total Items:* ${totalItems} Items` : ''}${crates ? `
 
 
 *📍 Crates*
 ${crates}
-*🎒 Total Crates:* ${Object.keys(inventory.crates).map(v => user[v]).reduce((a, b) => a + b, 0)} Crates` : ''}${pets ? `
+*🎒 Total Crates:* ${totalCrates} Crates` : ''}${pets ? `
 
 
 *📍 Pets*
@@ -172,9 +225,12 @@ ${pets}` : ''}${cooldowns ? `
 *⌚ Cooldowns*
 ${cooldowns}` : ''}
 `.trim()
-	m.reply(caption)
+
+	await m.reply(caption)
 }
+
 handler.help = ['inventory', 'inv']
 handler.tags = ['rpg']
 handler.command = /^(inv(entory)?|bal(ance)?|money|e?xp)$/i
+
 module.exports = handler
