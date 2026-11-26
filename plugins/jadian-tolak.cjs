@@ -1,54 +1,84 @@
 /*//////////////////////////////////
-
 Cretor : Hairul Lana
-https://github.com/hairullana 
-
+https://github.com/hairullana
 /*/ ///////////////////////////////*/
 
 var handler = async (m, {
 	conn,
 	text
 }) => {
-	if (isNaN(text)) {
-		var number = text.split`@` [1]
-	} else if (!isNaN(text)) {
-		var number = text
+	// === 1. Tentukan target JID ===
+	var number, user
+
+	if (!text && !m.quoted && !(m.mentionedJid && m.mentionedJid.length)) {
+		return m.reply('Masukan nomor, tag atau balas pesan target.')
 	}
 
-	if (!text && !m.quoted) return conn.reply(m.chat, `Masukan nomor, tag atau balas pesan target.`, m)
-
-	if (isNaN(number)) return conn.reply(m.chat, `Nomor yang anda masukan salah!`, m)
-	if (number.length > 15) return conn.reply(m.chat, `Format salah!`, m)
-	try {
-		if (text) {
-			var user = number + '@s.whatsapp.net'
-		} else if (m.quoted.sender) {
-			var user = m.quoted.sender
-		} else if (m.mentionedJid) {
-			var user = number + '@s.whatsapp.net'
-		}
-	} catch (e) {} finally {
-		var groupMetadata = (m.isGroup ? ((store.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
-		var participants = (m.isGroup ? groupMetadata.participants : []) || []
-		var users = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === user) : {}) || {}
-		if (!users) return conn.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
-		if (user === m.sender) return conn.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
-		if (user === conn.user.jid) return conn.reply(m.chat, `*Tidak bisa berpacaran dengan saya t_t`, m)
-
-		if (db.data.users[user].pasangan != m.sender) {
-			conn.reply(m.chat, `Maaf @${user.split('@')[0]} tidak sedang menembak anda`, m, {
-				mentions: [user]
-			})
+	if (text) {
+		var clean = String(text).replace(/\s/g, '').replace(/([@+-])/g, '')
+		if (isNaN(clean)) {
+			number = text.split('@')[1]
 		} else {
-			db.data.users[user].pasangan = ""
-			conn.reply(m.chat, `Anda baru saja menolak @${user.split('@')[0]} untuk menjadi pasangan anda!`, m, {
-				mentions: [user]
-			})
+			number = clean
+		}
+		if (!number) return m.reply('Nomor yang anda masukan salah!')
+		if (number.length > 15) return m.reply('Format salah!')
+		user = number + '@s.whatsapp.net'
+	} else if (m.quoted && m.quoted.sender) {
+		user = m.quoted.sender
+	} else if (m.mentionedJid && m.mentionedJid.length) {
+		user = m.mentionedJid[0]
+	}
+
+	if (!user) return m.reply('Target tidak ditemukan.')
+
+	// === 2. Cek target ada di grup (kalau di grup) ===
+	if (m.isGroup) {
+		var groupMetadata = await conn.groupMetadata(m.chat).catch(() => null)
+		var participants = groupMetadata?.participants || []
+		var target = participants.find(u => conn.decodeJid(u.id) === user)
+		if (!target) {
+			return m.reply('Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.')
 		}
 	}
+
+	// === 3. Guard dasar ===
+	if (user === m.sender) return m.reply('Tidak bisa berpacaran dengan diri sendiri!')
+	if (user === conn.user.jid) return m.reply('Tidak bisa berpacaran dengan saya t_t')
+
+	// === 4. Guard database ===
+	var senderData = db.data.users[m.sender]
+	if (!senderData) return m.reply('Kamu belum terdaftar di database.')
+
+	var targetData = db.data.users[user]
+	if (!targetData) return m.reply('Target tidak terdaftar di database.')
+
+	// Pastikan field pasangan ada
+	if (typeof targetData.pasangan !== 'string') targetData.pasangan = ''
+
+	// === 5. Logika tolak ===
+	if (targetData.pasangan !== m.sender) {
+		return conn.reply(
+			m.chat,
+			`Maaf @${user.split('@')[0]} tidak sedang menembak anda`,
+			m,
+			{ mentions: [user] }
+		)
+	}
+
+	// Tolak tembakan
+	targetData.pasangan = ''
+	return conn.reply(
+		m.chat,
+		`Anda baru saja menolak @${user.split('@')[0]} untuk menjadi pasangan anda!`,
+		m,
+		{ mentions: [user] }
+	)
 }
+
 handler.help = ['tolak *@tag*']
 handler.tags = ['jadian']
 handler.command = /^(tolak)$/i
 handler.group = true
+
 module.exports = handler
