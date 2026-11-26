@@ -2,40 +2,50 @@ var handler = async (m, {
 	conn,
 	text,
 	usedPrefix,
-	command,
-	participants
+	command
 }) => {
-	if (!text) {
+	const usage = `*Format salah! Contoh :*
+
+	*○ ${usedPrefix + command} on*
+	*○ ${usedPrefix + command} off*`
+
+	const option = typeof text === 'string' ? text.trim().toLowerCase() : ''
+
+	if (!option || !['on', 'enable', 'off', 'disable'].includes(option)) {
 		await conn.sendPresenceUpdate('composing', m.chat)
-		return conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
+		return conn.reply(m.chat, usage, m)
 	}
-	switch (text.toLowerCase()) {
-		case "on":
-		case "enable":
-			var cek = db.data.chats[m.chat].antiSwGrup
-			if (cek) return conn.reply(m.chat, `*Anti-SW Grup telah aktif pada grup ini.*`, m)
-			await conn.sendPresenceUpdate('composing', m.chat)
-			db.data.chats[m.chat].antiSwGrup = true
-			conn.reply(m.chat, `*Anti-SW Grup berhasil diaktifkan.*\n\nBot akan otomatis menghapus SW Grup yang dikirim anggota.`, m)
-			break
-		case "off":
-		case "disable":
-			var ce = db.data.chats[m.chat].antiSwGrup
-			if (!ce) return conn.reply(m.chat, `*Anti-SW Grup belum aktif pada grup ini.*`, m)
-			await conn.sendPresenceUpdate('composing', m.chat)
-			db.data.chats[m.chat].antiSwGrup = false
-			conn.reply(m.chat, `*Anti-SW Grup berhasil dimatikan.*`, m)
-			break
-		default:
-			await conn.sendPresenceUpdate('composing', m.chat)
-			conn.reply(m.chat, `*Format salah! Contoh :*\n\n	*○ ${usedPrefix + command} on*\n	*○ ${usedPrefix + command} off*`, m)
-			break
+
+	// ✅ Pastikan db.data.chats ada dan inisialisasi chat ini
+	if (!db.data.chats) db.data.chats = {}
+	if (!db.data.chats[m.chat]) db.data.chats[m.chat] = {}
+	const chat = db.data.chats[m.chat]
+
+	const enable = option === 'on' || option === 'enable'
+
+	if (chat.antiSwGrup === enable) {
+		return conn.reply(
+			m.chat,
+			enable ? '*Anti-SW Grup telah aktif pada grup ini.*' : '*Anti-SW Grup belum aktif pada grup ini.*',
+			m
+		)
 	}
+
+	await conn.sendPresenceUpdate('composing', m.chat)
+	chat.antiSwGrup = enable
+
+	conn.reply(
+		m.chat,
+		enable
+			? '*Anti-SW Grup berhasil diaktifkan.*\n\nBot akan otomatis menghapus SW Grup yang dikirim anggota.'
+			: '*Anti-SW Grup berhasil dimatikan.*',
+		m
+	)
 }
-handler.help = ['antiswgrup'].map(v => v + ' [on/off]')
+
+handler.help = ['antiswgrup [on/off]']
 handler.tags = ['group', 'admin']
 handler.command = /^antiswgrup$/i
-
 handler.group = true
 handler.admin = true
 handler.botAdmin = true
