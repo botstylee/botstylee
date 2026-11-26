@@ -1,23 +1,37 @@
+// plugins/vote-updevote.cjs
+// Fitur: Upvote / devote pada vote yang sedang berjalan
+
 var handler = async (m, {
 	conn,
 	usedPrefix,
 	command
 }) => {
 	var id = m.chat
-	conn.vote = conn.vote ? conn.vote : {}
-	if (!(id in conn.vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
-	var isVote = conn.vote[id][1].concat(conn.vote[id][2])
-	var wasVote = isVote.includes(m.sender)
-	if (wasVote) throw 'Kamu sudah vote!'
-	if (/up/i.test(command)) {
-		conn.vote[id][1].push(m.sender)
-	} else if (/de/i.test(command)) {
-		conn.vote[id][2].push(m.sender)
+
+	// Guard: vote harus ada di grup ini
+	if (!conn.vote || !(id in conn.vote)) {
+		throw `_*tidak ada voting digrup ini!*_\n\n*${usedPrefix}mulaivote* - untuk memulai vote`
 	}
-	m.reply(`Done!\n\n*${usedPrefix}cekvote* - untuk mengecek vote`)
-	var [reason, upvote, devote] = conn.vote[id]
-	var baba = [upvote, devote]
-	m.reply(`
+
+	// Ambil data vote
+	var vote = conn.vote[id]
+	var reason = vote[0]
+	var upvote = Array.isArray(vote[1]) ? vote[1] : (vote[1] = [])
+	var devote = Array.isArray(vote[2]) ? vote[2] : (vote[2] = [])
+
+	// Guard: sudah vote?
+	var isVote = upvote.concat(devote)
+	if (isVote.includes(m.sender)) throw 'Kamu sudah vote!'
+
+	// Proses vote
+	if (/up/i.test(command)) {
+		upvote.push(m.sender)
+	} else if (/de/i.test(command)) {
+		devote.push(m.sender)
+	}
+
+	// Susun pesan (cuma 1 reply)
+	var txt = `
 *「 VOTE 」*
 
 *Alasan:* ${reason}
@@ -30,11 +44,15 @@ _Total: ${devote.length}_
 
 *${usedPrefix}hapusvote* - untuk menghapus vote
 
-_${global.wm}_
-`.trim())
+_${global.wm || ''}_
+`.trim()
+
+	await m.reply(txt)
 }
+
 handler.help = ['upvote', 'devote']
 handler.tags = ['vote']
 handler.command = /^(up|de)vote$/i
 handler.group = true
+
 module.exports = handler
