@@ -1,5 +1,5 @@
 // plugins/primbon-all.cjs
-// Fitur: Semua primbon (kecuali artinama, artimimpi, kecocokanpasangan)
+// Fitur: Semua primbon (BOTSTYLE)
 
 var { Primbon } = require('../lib/primbon.cjs')
 var primbon = new Primbon()
