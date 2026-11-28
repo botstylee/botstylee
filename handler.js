@@ -709,6 +709,7 @@ export async function handler(chatUpdate) {
     if (!chat.groupexpired) {
         if (!isNumber(chat.expired))
             chat.expired = 0
+	}
     if (!('antiFlood' in chat))
         chat.antiFlood = false
     if (!('antiMedia' in chat))
