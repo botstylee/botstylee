@@ -1,4 +1,4 @@
-const sharp = require('sharp')
+const Jimp = require('jimp')
 const { sticker } = require('../lib/sticker.cjs')
 
 let handler = async (m, { conn }) => {
@@ -10,51 +10,26 @@ let handler = async (m, { conn }) => {
     let img = await q.download()
 
     try {
-        let meta = await sharp(img).metadata()
+        let jimpImg = await Jimp.read(img)
         let w = 512
-        let h = Math.round((meta.height / meta.width) * w)
+        let h = Math.round((jimpImg.bitmap.height / jimpImg.bitmap.width) * w)
+        jimpImg.resize(w, h)
 
-        // Gambar asli
-        let top = await sharp(img).resize(w, h).png().toBuffer()
+        let top = jimpImg.clone()
+        let bottom = jimpImg.clone().flip(false, true)
 
-        // Refleksi: flip vertikal
-        let bottom = await sharp(img).resize(w, h).flip().png().toBuffer()
-
-        // Overlay gradient fade di refleksi
-        let fadeSvg = `
-        <svg width="${w}" height="${h}">
-            <defs>
-                <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#000" stop-opacity="0.6"/>
-                    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
-                </linearGradient>
-            </defs>
-            <rect width="${w}" height="${h}" fill="url(#fade)"/>
-        </svg>`
-        let fade = await sharp(Buffer.from(fadeSvg)).png().toBuffer()
-
-        let bottomFaded = await sharp(bottom)
-            .composite([{ input: fade, blend: 'dest-in' }])
-            .png()
-            .toBuffer()
-
-        // Gabung atas + bawah
-        let final = await sharp({
-            create: {
-                width: w,
-                height: h * 2,
-                channels: 4,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
-            }
+        // Fade bottom (kurangi opacity secara bertahap)
+        bottom.scan(0, 0, w, h, function(x, y, idx) {
+            let alpha = Math.max(0, 1 - (y / h)) * 255
+            this.bitmap.data[idx + 3] = Math.min(this.bitmap.data[idx + 3], alpha)
         })
-            .composite([
-                { input: top, top: 0, left: 0 },
-                { input: bottomFaded, top: h, left: 0 }
-            ])
-            .png()
-            .toBuffer()
 
-        let stiker = await sticker(final, global.packname, global.author)
+        let final = new Jimp(w, h * 2, 0x00000000)
+        final.composite(top, 0, 0)
+        final.composite(bottom, 0, h)
+
+        let buffer = await final.getBufferAsync(Jimp.MIME_PNG)
+        let stiker = await sticker(buffer, global.packname, global.author)
         await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m, false, { asSticker: true })
     } catch (e) {
         console.error(e)
