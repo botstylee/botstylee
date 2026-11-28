@@ -1,35 +1,31 @@
-var request = require('request');
-var axios = require('axios');
-var cheerio = require('cheerio');
-var { sticker } = require('../lib/sticker.cjs');
+var axios = require('axios')
+var cheerio = require('cheerio')
+var { sticker } = require('../lib/sticker.cjs')
 
-var handler = async (m, {
-	conn,
-	text
-}) => {
-	var teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
-	if (!teks) return conn.reply(m.chat, 'harap masukan teksnya!', m)
+var handler = async (m, { conn, text }) => {
+    var teks = text ? text : m.quoted && m.quoted.text ? m.quoted.text : m.text
+    if (!teks) return conn.reply(m.chat, 'Harap masukkan teksnya!', m)
 
-	try {
-		await m.reply('tunggu sebentar...')
+    try {
+        await m.reply('Tunggu sebentar...')
 
-		// ✅ Ambil gambar hasil dari bloggif
-		var result = await attp(teks)
-		console.log('[attp] URL hasil:', result.result)
+        // 1. Ambil URL gambar dari bloggif
+        var imageUrl = await attp(teks)
+        console.log('[attp] URL hasil:', imageUrl)
 
-		// ✅ Buat sticker dari gambar tersebut
-		var stiker = await sticker(result.result, global.packname, global.author)
-		if (!stiker) throw new Error('Gagal membuat sticker')
+        // 2. Buat sticker dari gambar tersebut
+        var stiker = await sticker(imageUrl, global.packname, global.author)
+        if (!stiker) throw new Error('Gagal membuat sticker')
 
-		// ✅ Kirim sticker
-		await conn.sendFile(m.chat, stiker, 'attp.webp', '', m, false, {
-			asSticker: true
-		})
+        // 3. Kirim sticker
+        await conn.sendFile(m.chat, stiker, 'attp.webp', '', m, false, {
+            asSticker: true
+        })
 
-	} catch (e) {
-		console.error('[attp] Error:', e.message)
-		throw 'emror bruh (scraper error)'
-	}
+    } catch (e) {
+        console.error('[attp] Error:', e.message)
+        throw 'emror bruh (scraper error)'
+    }
 }
 
 handler.help = ['attp *teks*']
@@ -38,54 +34,39 @@ handler.command = /^attp$/i
 
 module.exports = handler
 
-// ✅ Fungsi attp
+// Fungsi attp (diperbaiki: pakai axios, bukan request)
 var attp = async (text) => {
-	return new Promise(async (resolve, reject) => {
-		try {
-			// Ambil ID form dari bloggif
-			var getid = await axios.get('https://id.bloggif.com/text')
-			var id = cheerio.load(getid.data)('form').attr('action')
+    // 1. Ambil ID form dari bloggif
+    var getid = await axios.get('https://id.bloggif.com/text')
+    var id = cheerio.load(getid.data)('form').attr('action')
 
-			var options = {
-				method: "POST",
-				url: `https://id.bloggif.com${id}`,
-				headers: {
-					"content-type": 'application/x-www-form-urlencoded',
-					"user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-				},
-				formData: {
-					target: 1,
-					text: text,
-					glitter_id: Math.floor(Math.random() * 2821),
-					font_id: 'lucida_sans_demibold_roman',
-					size: 50,
-					bg_color: 'FFFFFF',
-					transparent: 1,
-					border_color: '000000',
-					border_width: 2,
-					shade_color: '000000',
-					shade_width: 1,
-					angle: 0,
-					text_align: 'center'
-				},
-			};
+    // 2. Kirim data ke form
+    var formData = new URLSearchParams()
+    formData.append('target', '1')
+    formData.append('text', text)
+    formData.append('glitter_id', Math.floor(Math.random() * 2821))
+    formData.append('font_id', 'lucida_sans_demibold_roman')
+    formData.append('size', '50')
+    formData.append('bg_color', 'FFFFFF')
+    formData.append('transparent', '1')
+    formData.append('border_color', '000000')
+    formData.append('border_width', '2')
+    formData.append('shade_color', '000000')
+    formData.append('shade_width', '1')
+    formData.append('angle', '0')
+    formData.append('text_align', 'center')
 
-			request(options, async function(error, response, body) {
-				if (error) return reject(error)
-				try {
-					var $ = cheerio.load(body)
-					var url = $('.box.center > a').attr('href')
-					if (!url) return reject(new Error('URL hasil tidak ditemukan'))
-					resolve({
-						status: 200,
-						result: 'https://id.bloggif.com' + url
-					})
-				} catch (e) {
-					reject(e)
-				}
-			})
-		} catch (e) {
-			reject(e)
-		}
-	})
+    var response = await axios.post(`https://id.bloggif.com${id}`, formData, {
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+        }
+    })
+
+    // 3. Parse HTML hasil untuk ambil link gambar
+    var $ = cheerio.load(response.data)
+    var url = $('.box.center > a').attr('href')
+    if (!url) throw new Error('URL hasil tidak ditemukan')
+
+    return 'https://id.bloggif.com' + url
 }
