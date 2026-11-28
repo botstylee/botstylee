@@ -1,15 +1,15 @@
+var axios = require('axios')
+
 var handler = m => m
 
-handler.all = async function(m) {
+handler.all = async function (m) {
     if (m.isBaileys) return
     if (!m.message) return
-    if (m.fromMe) return // jangan balas pesan sendiri
+    if (m.fromMe) return
 
-    // ✅ Tentukan apakah ini chat pribadi atau grup
     var isGroup = m.chat?.endsWith('@g.us')
-    var isPrivate = !isGroup
 
-    // ✅ Cek apakah pesan ini command (diawali prefix)
+    // Cek command
     var prefix = global.prefix || /^[#./!]/
     var isCommand = false
     if (m.text) {
@@ -24,37 +24,42 @@ handler.all = async function(m) {
             isCommand = m.text.startsWith(prefix)
         }
     }
-    if (isCommand) return // biarkan command handler yang proses
+    if (isCommand) return
 
-    // ✅ Hanya balas pesan teks yang valid
     if (!m.text || m.text.trim().length === 0) return
-    if (m.text.length > 1000) return // batasi panjang teks
+    if (m.text.length > 1000) return
 
-    // ✅ Logika utama:
-    // - Chat pribadi: SELALU aktif (tanpa #enable)
-    // - Grup: hanya aktif jika chat.simi === true (dari #enable simi)
     if (isGroup) {
         var chat = db.data.chats[m.chat] || {}
-        if (!chat.simi) return // grup harus #enable simi dulu
+        if (!chat.simi) return
     }
 
-    var serror = "AI error :("
-
     try {
-        var res = await global.axios.get('https://api.omegatech.app/api/ai/Dola', {
-            params: {
-                action: 'chat',
-                q: m.text,
-                chatId: m.chat // memory per chat
-            },
+        if (!global.aiChatId) global.aiChatId = {}
+
+        var params = {
+            action: 'chat',
+            text: m.text
+        }
+
+        // Hanya kirim chatId jika sudah ada sesi (bukan pertama kali)
+        if (global.aiChatId[m.chat]) {
+            params.chatId = global.aiChatId[m.chat]
+        }
+
+        var res = await axios.get('https://api.omegatech.app/api/ai/Dola', {
+            params: params,
             timeout: 30000
         })
 
-        var respon = res.data?.result
-            || res.data?.message
-            || res.data?.response
-            || res.data?.data?.result
-            || res.data?.data?.message
+        // Simpan chatId dari response untuk pesan berikutnya
+        var newChatId = res.data?.data?.chatId
+        if (newChatId) {
+            global.aiChatId[m.chat] = newChatId
+        }
+
+        // Balasan AI ada di data.answer
+        var respon = res.data?.data?.answer
 
         if (!respon || typeof respon !== 'string') {
             console.error('[AI] Response tidak valid:', JSON.stringify(res.data).slice(0, 200))
