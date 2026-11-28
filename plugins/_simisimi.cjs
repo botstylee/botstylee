@@ -1,84 +1,175 @@
-var axios = require('axios')
-
 var handler = m => m
 
-handler.all = async function (m) {
-    // 1. Abaikan pesan dari bot sendiri atau pesan kosong
-    if (m.isBaileys || m.fromMe || !m.message) return
+handler.before = async function (m, {
+    conn,
+    groupMetadata,
+    isBotAdmin,
+    isAdmin
+}) {
+    // Abaikan jika bukan grup, atau pesan dari bot sendiri
+    if (!m.isGroup) return !0
+    if (m.fromMe) return !0
+    if (m.isBaileys) return !0
 
-    // 2. Deteksi apakah ini command (prefix)
-    var prefix = global.prefix || /^[#./!]/
-    var isCommand = false
-    if (m.text) {
-        if (prefix instanceof RegExp) {
-            isCommand = prefix.test(m.text)
-        } else if (Array.isArray(prefix)) {
-            isCommand = prefix.some(p => {
-                var re = p instanceof RegExp ? p : new RegExp(p.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&'))
-                return re.test(m.text)
-            })
-        } else if (typeof prefix === 'string') {
-            isCommand = m.text.startsWith(prefix)
+    // Cek apakah fitur aktif di grup ini
+    if (!db.data.chats[m.chat]?.antiSwGrup) return !0
+
+    // ============================================================
+    // DETEKSI SW GRUP (diperluas)
+    // ============================================================
+    var isSwGrup = false
+    var detectReason = ''
+
+    // 1. Cek langsung dari message
+    if (m.message?.groupStatusMessageV2) {
+        isSwGrup = true
+        detectReason = 'groupStatusMessageV2'
+    }
+    if (m.message?.groupStatusMessage) {
+        isSwGrup = true
+        detectReason = 'groupStatusMessage'
+    }
+
+    // 2. Cek dari mtype
+    if (m.mtype === 'groupStatusMessageV2') {
+        isSwGrup = true
+        detectReason = 'mtype:groupStatusMessageV2'
+    }
+    if (m.mtype === 'groupStatusMessage') {
+        isSwGrup = true
+        detectReason = 'mtype:groupStatusMessage'
+    }
+
+    // 3. Cek dari senderKeyDistributionMessage (SW Grup sering dibungkus ini)
+    if (m.message?.senderKeyDistributionMessage?.groupId) {
+        isSwGrup = true
+        detectReason = 'senderKeyDistributionMessage'
+    }
+
+    // 4. Cek dari mtype yang mengandung "groupStatus"
+    if (m.mtype && /groupStatus/i.test(m.mtype)) {
+        isSwGrup = true
+        detectReason = 'mtype:regex-groupStatus'
+    }
+
+    if (!isSwGrup) return !0
+
+    // ============================================================
+    // LOG DEBUG (untuk memastikan key valid)
+    // ============================================================
+    console.log('[antiswgrup] Terdeteksi:', detectReason)
+    console.log('[antiswgrup] mtype:', m.mtype)
+    console.log('[antiswgrup] key:', JSON.stringify(m.key, null, 2))
+    console.log('[antiswgrup] sender:', m.sender)
+    console.log('[antiswgrup] isBotAdmin:', isBotAdmin)
+    console.log('[antiswgrup] isAdmin (pengirim):', isAdmin)
+
+    var sender = m.sender || m.participant
+    var senderName = m.pushName || m.name || 'Kak'
+    var groupName = groupMetadata?.subject || 'grup ini'
+
+    // ============================================================
+    // STRATEGI 1: Hapus dengan key yang dinormalisasi
+    // ============================================================
+    var deleted = false
+    try {
+        var keyToDelete = {
+            remoteJid: m.chat,
+            fromMe: false,
+            id: m.key.id,
+            participant: sender
+        }
+        await conn.sendMessage(m.chat, { delete: keyToDelete })
+        deleted = true
+        console.log('[antiswgrup] ✅ Strategi 1 berhasil (delete dengan participant)')
+    } catch (e) {
+        console.error('[antiswgrup] ❌ Strategi 1 gagal:', e.message)
+    }
+
+    // ============================================================
+    // STRATEGI 2: Hapus dengan m.key langsung (jika strategi 1 gagal)
+    // ============================================================
+    if (!deleted) {
+        try {
+            await conn.sendMessage(m.chat, { delete: m.key })
+            deleted = true
+            console.log('[antiswgrup] ✅ Strategi 2 berhasil (delete m.key)')
+        } catch (e) {
+            console.error('[antiswgrup] ❌ Strategi 2 gagal:', e.message)
         }
     }
 
-    // 3. JIKA INI COMMAND, JANGAN DIBALAS OLEH SIMI
-    // Biarkan handler utama (handler.js) yang memproses command .enable simi
-    if (isCommand) return
-
-    // 4. Validasi teks
-    if (!m.text || m.text.trim().length === 0 || m.text.length > 1000) return
-
-    // 5. Cek apakah fitur simi aktif
-    var isGroup = m.chat?.endsWith('@g.us')
-    if (isGroup) {
-        // Di grup, harus diaktifkan dulu via .enable simi
-        var chat = db.data.chats[m.chat] || {}
-        if (!chat.simi) return
+    // ============================================================
+    // STRATEGI 3: Coba relayMessage protocolMessage REVOKE
+    // ============================================================
+    if (!deleted) {
+        try {
+            await conn.relayMessage(m.chat, {
+                protocolMessage: {
+                    key: {
+                        remoteJid: m.chat,
+                        fromMe: false,
+                        id: m.key.id,
+                        participant: sender
+                    },
+                    type: 0 // REVOKE
+                }
+            }, {})
+            deleted = true
+            console.log('[antiswgrup] ✅ Strategi 3 berhasil (relayMessage REVOKE)')
+        } catch (e) {
+            console.error('[antiswgrup] ❌ Strategi 3 gagal:', e.message)
+        }
     }
-    // Di private chat, langsung aktif (tidak perlu enable)
+
+    // ============================================================
+    // STRATEGI 4: KICK PENGIRIM (fallback jika hapus gagal)
+    // ============================================================
+    var kicked = false
+    if (!deleted && isBotAdmin && !isAdmin && sender) {
+        try {
+            await conn.groupParticipantsUpdate(m.chat, [sender], 'remove')
+            kicked = true
+            console.log('[antiswgrup] ✅ Pengirim berhasil di-kick')
+        } catch (e) {
+            console.error('[antiswgrup] ❌ Gagal kick:', e.message)
+        }
+    }
+
+    // ============================================================
+    // KIRIM PERINGATAN KE GRUP
+    // ============================================================
+    var statusMsg = deleted
+        ? '✅ SW Grup berhasil dihapus otomatis.'
+        : kicked
+            ? '⚠️ SW Grup tidak bisa dihapus, tapi pengirim telah dikeluarkan dari grup.'
+            : '❌ SW Grup terdeteksi, tapi gagal dihapus dan pengirim tidak bisa di-kick (pastikan bot admin & pengirim bukan admin).'
+
+    var warning = `
+⚠️ *STORY GRUP TERDETEKSI* ⚠️
+
+Hai *${senderName}* 👋
+Kamu mengirim Story Grup (SW Grup) di *${groupName}*.
+
+${statusMsg}
+
+📌 *Kenapa SW Grup dilarang?*
+- Mengganggu kenyamanan anggota
+- Memenuhi chat grup
+- Bisa disalahgunakan untuk spam
+
+🚫 *Mohon jangan mengirim SW Grup lagi.*
+✅ Kalau mau story, gunakan *Status WhatsApp pribadi* saja.
+
+Terima kasih atas pengertiannya 🙏
+`.trim()
 
     try {
-        // 6. Siapkan parameter untuk API
-        if (!global.aiChatId) global.aiChatId = {}
-        
-        var params = {
-            action: 'chat',
-            text: m.text
-        }
-
-        // Hanya kirim chatId jika sudah ada sesi sebelumnya
-        if (global.aiChatId[m.chat]) {
-            params.chatId = global.aiChatId[m.chat]
-        }
-
-        // 7. Request ke API
-        var res = await axios.get('https://api.omegatech.app/api/ai/Dola', {
-            params: params,
-            timeout: 30000
-        })
-
-        // 8. Simpan chatId dari respons untuk pesan berikutnya
-        var newChatId = res.data?.data?.chatId
-        if (newChatId) {
-            global.aiChatId[m.chat] = newChatId
-        }
-
-        // 9. AMBIL BALASAN DARI FIELD YANG BENAR (data.answer)
-        var respon = res.data?.data?.answer
-
-        // 10. Jika tidak ada balasan, jangan kirim apa-apa (hindari "undefined")
-        if (!respon || typeof respon !== 'string') {
-            console.error('[AI] Respons tidak valid:', JSON.stringify(res.data).slice(0, 200))
-            return
-        }
-
-        // 11. Kirim balasan
-        await m.reply(respon)
-
+        await conn.reply(m.chat, warning, m)
     } catch (e) {
-        console.error('[AI] Error:', e?.response?.data || e.message)
+        console.error('[antiswgrup] Gagal kirim peringatan:', e.message)
     }
+
     return !0
 }
 
