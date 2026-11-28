@@ -1,8 +1,14 @@
 // plugins/primbon-all.cjs
 // Fitur: Semua primbon (BOTSTYLE)
 
-var { Primbon } = require('../lib/primbon.cjs')
-var primbon = new Primbon()
+var primbonModule = require('../lib/primbon.cjs')
+// ✅ Coba berbagai cara export
+var PrimbonClass = primbonModule.Primbon || primbonModule.default || primbonModule
+var primbon = typeof PrimbonClass === 'function' ? new PrimbonClass() : PrimbonClass
+
+if (!primbon || typeof primbon.nomer_hoki !== 'function') {
+    throw new Error('Module primbon tidak valid. Cek lib/primbon.cjs')
+}
 
 var handler = async (m, {
 	conn,
@@ -276,7 +282,6 @@ var handler = async (m, {
 	}
 }
 
-// Daftar command + help
 handler.help = [
 	'nomerhoki <nomor>',
 	'ramalanjodoh <nama,tgl,bln,thn|nama,tgl,bln,thn>',
