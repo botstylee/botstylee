@@ -20,8 +20,8 @@ const DEFAULT_MENU = {
 }
 
 const TAGS = {
-	main: 'Main', game: 'Games', rpg: 'RPG Games', xp: 'Exp & Limit',
-	sticker: 'Sticker', kerang: 'Kerang Ajaib', primbon: 'Primbon Jawa',
+	main: 'Main', sticker: 'Sticker', primbon: 'Primbon Jawa', game: 'Games',
+	rpg: 'RPG Games', xp: 'Exp & Limit', kerang: 'Kerang Ajaib', 
 	admin: 'Admin', group: 'Group', premium: 'Premium', textpro: 'Textpro',
 	ephoto: 'Ephoto', photooxy: 'Photooxy', photofunia: 'Photofunia',
 	internet: 'Internet', anonymous: 'Anonymous Chat', downloader: 'Downloader',
