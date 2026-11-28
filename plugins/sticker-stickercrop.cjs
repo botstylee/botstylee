@@ -1,4 +1,4 @@
-const sharp = require('sharp')
+const Jimp = require('jimp')
 const { sticker } = require('../lib/sticker.cjs')
 
 let handler = async (m, { conn }) => {
@@ -10,50 +10,40 @@ let handler = async (m, { conn }) => {
     let img = await q.download()
 
     try {
-        // 1. Hapus background putih (threshold)
-        let cropped = await sharp(img)
-            .flatten({ background: '#FFFFFF' })
-            .resize(512, 512, { fit: 'inside', withoutEnlargement: true })
-            .png()
-            .toBuffer()
+        let jimpImg = await Jimp.read(img)
+        jimpImg.resize(512, Jimp.AUTO)
 
-        // 2. Deteksi area non-putih (simple threshold)
-        let { data, info } = await sharp(cropped)
-            .raw()
-            .toBuffer({ resolveWithObject: true })
+        // Deteksi area non-putih (simple threshold)
+        let minX = jimpImg.bitmap.width, minY = jimpImg.bitmap.height
+        let maxX = 0, maxY = 0
 
-        let minX = info.width, minY = info.height, maxX = 0, maxY = 0
-        for (let y = 0; y < info.height; y++) {
-            for (let x = 0; x < info.width; x++) {
-                let idx = (y * info.width + x) * info.channels
-                let r = data[idx], g = data[idx + 1], b = data[idx + 2]
-                // anggap "putih" jika > 240
-                if (!(r > 240 && g > 240 && b > 240)) {
-                    if (x < minX) minX = x
-                    if (y < minY) minY = y
-                    if (x > maxX) maxX = x
-                    if (y > maxY) maxY = y
-                }
+        jimpImg.scan(0, 0, jimpImg.bitmap.width, jimpImg.bitmap.height, function(x, y, idx) {
+            let r = this.bitmap.data[idx + 0]
+            let g = this.bitmap.data[idx + 1]
+            let b = this.bitmap.data[idx + 2]
+            if (!(r > 240 && g > 240 && b > 240)) {
+                if (x < minX) minX = x
+                if (y < minY) minY = y
+                if (x > maxX) maxX = x
+                if (y > maxY) maxY = y
             }
-        }
+        })
 
         let w = Math.max(1, maxX - minX)
         let h = Math.max(1, maxY - minY)
-
-        // 3. Crop ke area objek + padding
         let pad = 20
-        let cropX = Math.max(0, minX - pad)
-        let cropY = Math.max(0, minY - pad)
-        let cropW = Math.min(info.width - cropX, w + pad * 2)
-        let cropH = Math.min(info.height - cropY, h + pad * 2)
 
-        let final = await sharp(cropped)
-            .extract({ left: cropX, top: cropY, width: cropW, height: cropH })
-            .resize(512, 512, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-            .png()
-            .toBuffer()
+        jimpImg.crop(
+            Math.max(0, minX - pad),
+            Math.max(0, minY - pad),
+            Math.min(jimpImg.bitmap.width - Math.max(0, minX - pad), w + pad * 2),
+            Math.min(jimpImg.bitmap.height - Math.max(0, minY - pad), h + pad * 2)
+        )
 
-        let stiker = await sticker(final, global.packname, global.author)
+        jimpImg.contain(512, 512, Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE)
+
+        let buffer = await jimpImg.getBufferAsync(Jimp.MIME_PNG)
+        let stiker = await sticker(buffer, global.packname, global.author)
         await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m, false, { asSticker: true })
     } catch (e) {
         console.error(e)
