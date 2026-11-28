@@ -666,69 +666,103 @@ export async function handler(chatUpdate) {
 					sewa: false,
 					pasangan: ''
 				}
+			const _sig = 'Benniismael@botstylee'
+			
 			var chat = db.data.chats[m.chat]
 			if (typeof chat !== 'object')
 				db.data.chats[m.chat] = {}
 			if (chat) {
 				if (!('isBanned' in chat))
-					chat.isBanned = false
-				if (!('stiker' in chat))
-					chat.stiker = false
-				if (!('simi' in chat))
-					chat.simi = false
-				if (!('welcome' in chat))
-					chat.welcome = false
-				if (!('detect' in chat))
-					chat.detect = false
-				if (!('sWelcome' in chat))
-					chat.sWelcome = ''
-				if (!('sBye' in chat))
-					chat.sBye = ''
-				if (!('sPromote' in chat))
-					chat.sPromote = ''
-				if (!('sDemote' in chat))
-					chat.sDemote = ''
-				if (!('delete' in chat))
-					chat.delete = true
-				if (!('antiLink' in chat))
-					chat.antiLink = false
-				if (!('antiSwGrup' in chat))
-					chat.antiSwGrup = false
-				if (!('viewonce' in chat))
-					chat.viewonce = false
-				if (!('antiToxic' in chat))
-					chat.antiToxic = false
-				if (!('reminder' in chat))
-					chat.reminder = false
-				if (!('nofirtex' in chat))
-					chat.nofirtext = false
-				if (!('groupexpired' in chat))
-					chat.groupexpired = false
-				if (!chat.groupexpired) {
-					if (!isNumber(chat.expired))
-						chat.expired = 0
-				}
-			} else
-				db.data.chats[m.chat] = {
-					isBanned: false,
-					stiker: false,
-					simi: false,
-					welcome: false,
-					detect: false,
-					sWelcome: '',
-					sBye: '',
-					sPromote: '',
-					sDemote: '',
-					delete: true,
-					antiLink: false,
-					antiSwGrup: false,
-					viewonce: false,
-					antiToxic: false,
-					reminder: false,
-					nofirtex: false,
-					groupexpired: false,
-					expired: 0,
-				}
+        chat.isBanned = false
+    if (!('stiker' in chat))
+        chat.stiker = false
+    if (!('simi' in chat))
+        chat.simi = false
+    if (!('welcome' in chat))
+        chat.welcome = false
+    if (!('detect' in chat))
+        chat.detect = false
+    if (!('sWelcome' in chat))
+        chat.sWelcome = ''
+    if (!('sBye' in chat))
+        chat.sBye = ''
+    if (!('sPromote' in chat))
+        chat.sPromote = ''
+    if (!('sDemote' in chat))
+        chat.sDemote = ''
+    if (!('delete' in chat))
+        chat.delete = true
+    if (!('antiLink' in chat))
+        chat.antiLink = false
+    if (!('antiSwGrup' in chat))
+        chat.antiSwGrup = false
+    if (!('viewonce' in chat))
+        chat.viewonce = false
+    if (!('antiToxic' in chat))
+        chat.antiToxic = false
+    if (!('reminder' in chat))
+        chat.reminder = false
+    if (!('nofirtex' in chat))
+        chat.nofirtext = false
+    if (!('groupexpired' in chat))
+        chat.groupexpired = false
+    if (!chat.groupexpired) {
+        if (!isNumber(chat.expired))
+            chat.expired = 0
+    if (!('antiFlood' in chat))
+        chat.antiFlood = false
+    if (!('antiMedia' in chat))
+        chat.antiMedia = false
+    if (!('antiTagSW' in chat))
+        chat.antiTagSW = false
+    if (!('antiKudeta' in chat))
+        chat.antiKudeta = false
+    if (!('antiHidetag' in chat))
+        chat.antiHidetag = false
+    if (!('antiFakeAdmin' in chat))
+        chat.antiFakeAdmin = false
+    if (!('antiPhishing' in chat))
+        chat.antiPhishing = false
+    if (!('antiVirusLink' in chat))
+        chat.antiVirusLink = false
+    if (!('antiSpamCall' in chat))
+        chat.antiSpamCall = false
+    if (!('antiForceClose' in chat))
+        chat.antiForceClose = false
+    if (!('antiMetaAI' in chat))
+        chat.antiMetaAI = false
+} else
+    db.data.chats[m.chat] = {
+        isBanned: false,
+        stiker: false,
+        simi: false,
+        welcome: false,
+        detect: false,
+        sWelcome: '',
+        sBye: '',
+        sPromote: '',
+        sDemote: '',
+        delete: true,
+        antiLink: false,
+        antiSwGrup: false,
+        viewonce: false,
+        antiToxic: false,
+        reminder: false,
+        nofirtex: false,
+        groupexpired: false,
+        expired: 0,
+        antiFlood: false,
+        antiMedia: false,
+        antiTagSW: false,
+        antiKudeta: false,
+        antiHidetag: false,
+        antiFakeAdmin: false,
+        antiPhishing: false,
+        antiVirusLink: false,
+        antiSpamCall: false,
+        antiForceClose: false,
+        antiMetaAI: false,
+    }
 			var settings = db.data.settings[this.user.jid]
 			if (typeof settings !== 'object') db.data.settings[this.user.jid] = {}
 			if (settings) {
