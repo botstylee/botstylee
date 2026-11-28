@@ -1,4 +1,4 @@
-const sharp = require('sharp')
+const Jimp = require('jimp')
 const { sticker } = require('../lib/sticker.cjs')
 
 let handler = async (m, { conn, args }) => {
@@ -14,13 +14,11 @@ let handler = async (m, { conn, args }) => {
     let img = await q.download()
 
     try {
-        let png = await sharp(img)
-            .resize(pixelSize, pixelSize, { fit: 'cover' })
-            .resize(512, 512, { kernel: 'nearest' })
-            .png()
-            .toBuffer()
-
-        let stiker = await sticker(png, global.packname, global.author)
+        let jimpImg = await Jimp.read(img)
+        jimpImg.resize(pixelSize, pixelSize, Jimp.RESIZE_NEAREST_NEIGHBOR)
+        jimpImg.resize(512, 512, Jimp.RESIZE_NEAREST_NEIGHBOR)
+        let buffer = await jimpImg.getBufferAsync(Jimp.MIME_PNG)
+        let stiker = await sticker(buffer, global.packname, global.author)
         await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m, false, { asSticker: true })
     } catch (e) {
         console.error(e)
