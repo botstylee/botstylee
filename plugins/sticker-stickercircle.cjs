@@ -1,4 +1,4 @@
-const sharp = require('sharp')
+const Jimp = require('jimp')
 const { sticker } = require('../lib/sticker.cjs')
 
 let handler = async (m, { conn }) => {
@@ -10,24 +10,43 @@ let handler = async (m, { conn }) => {
     let img = await q.download()
 
     try {
-        let size = 512
-        let border = 20
+        let jimpImg = await Jimp.read(img)
+        jimpImg.resize(512, 512, Jimp.RESIZE_BILINEAR)
 
-        let circleSvg = `
-        <svg width="${size}" height="${size}">
-            <defs>
-                <clipPath id="circle">
-                    <circle cx="${size/2}" cy="${size/2}" r="${size/2 - border}"/>
-                </clipPath>
-            </defs>
-            <circle cx="${size/2}" cy="${size/2}" r="${size/2 - border/2}" fill="none" stroke="#FFD700" stroke-width="${border}"/>
-            <image href="data:image/png;base64,${(await sharp(img).resize(size, size, { fit: 'cover' }).png().toBuffer()).toString('base64')}" 
-                   width="${size}" height="${size}" clip-path="url(#circle)"/>
-        </svg>`
+        let circle = await Jimp.read(512, 512)
+        circle.scan(0, 0, 512, 512, function(x, y, idx) {
+            let dx = x - 256
+            let dy = y - 256
+            let dist = Math.sqrt(dx * dx + dy * dy)
+            if (dist > 240) {
+                this.bitmap.data[idx + 3] = 0
+            }
+        })
 
-        let png = await sharp(Buffer.from(circleSvg)).png().toBuffer()
+        jimpImg.mask(circle, 0, 0)
 
-        let stiker = await sticker(png, global.packname, global.author)
+        // Border emas
+        let border = await Jimp.read(512, 512)
+        border.scan(0, 0, 512, 512, function(x, y, idx) {
+            let dx = x - 256
+            let dy = y - 256
+            let dist = Math.sqrt(dx * dx + dy * dy)
+            if (dist > 236 && dist < 256) {
+                this.bitmap.data[idx + 0] = 255
+                this.bitmap.data[idx + 1] = 215
+                this.bitmap.data[idx + 2] = 0
+                this.bitmap.data[idx + 3] = 255
+            } else {
+                this.bitmap.data[idx + 3] = 0
+            }
+        })
+
+        let final = new Jimp(512, 512, 0x00000000)
+        final.composite(border, 0, 0)
+        final.composite(jimpImg, 0, 0)
+
+        let buffer = await final.getBufferAsync(Jimp.MIME_PNG)
+        let stiker = await sticker(buffer, global.packname, global.author)
         await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m, false, { asSticker: true })
     } catch (e) {
         console.error(e)
