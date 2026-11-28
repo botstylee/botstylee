@@ -1,4 +1,5 @@
 var handler = m => m
+
 handler.before = async function(m, {
 	conn,
 	groupMetadata
@@ -9,23 +10,50 @@ handler.before = async function(m, {
 	// Cek apakah fitur aktif di grup ini
 	if (!db.data.chats[m.chat]?.antiSwGrup) return !0
 
-	// Deteksi SW Grup
+	// ✅ Deteksi SW Grup yang lebih lengkap
 	var isSwGrup = false
+
+	// 1. Cek langsung dari message
 	if (
 		m.message?.groupStatusMessageV2 ||
-		m.message?.groupStatusMessage ||
+		m.message?.groupStatusMessage
+	) {
+		isSwGrup = true
+	}
+
+	// 2. Cek dari mtype
+	if (
 		m.mtype === 'groupStatusMessageV2' ||
 		m.mtype === 'groupStatusMessage'
 	) {
 		isSwGrup = true
 	}
+
+	// 3. Cek dari senderKeyDistributionMessage (SW Grup sering dibungkus ini)
+	if (m.message?.senderKeyDistributionMessage?.groupId) {
+		isSwGrup = true
+	}
+
+	// 4. Cek dari protocolMessage dengan type 5 (SW Grup)
+	if (
+		m.message?.protocolMessage?.type === 5 &&
+		m.message?.protocolMessage?.key?.remoteJid === m.chat
+	) {
+		isSwGrup = true
+	}
+
+	// 5. Cek dari mtype yang mengandung "groupStatus"
+	if (m.mtype && /groupStatus/i.test(m.mtype)) {
+		isSwGrup = true
+	}
+
 	if (!isSwGrup) return !0
 
 	var sender = m.sender || m.participant
 	var senderName = m.pushName || m.name || 'Kak'
 	var groupName = groupMetadata?.subject || 'grup ini'
 
-	// Hapus SW Grup
+	// ✅ Hapus SW Grup (dengan fallback)
 	try {
 		await conn.sendMessage(m.chat, {
 			delete: {
@@ -36,10 +64,22 @@ handler.before = async function(m, {
 			}
 		})
 	} catch (e) {
-		console.error('Gagal hapus SW Grup:', e)
+		console.error('[antiswgrup] Gagal hapus dengan participant:', e.message)
+		// Fallback: coba tanpa participant
+		try {
+			await conn.sendMessage(m.chat, {
+				delete: {
+					remoteJid: m.chat,
+					fromMe: false,
+					id: m.key.id
+				}
+			})
+		} catch (e2) {
+			console.error('[antiswgrup] Gagal hapus fallback:', e2.message)
+		}
 	}
 
-	// Kirim peringatan
+	// ✅ Kirim peringatan ke grup
 	var warning = `
 ⚠️ *STORY GRUP TERDETEKSI* ⚠️
 
@@ -55,7 +95,11 @@ SW Grup sering mengganggu kenyamanan anggota dan memenuhi chat grup. Fitur ini j
 Terima kasih atas pengertiannya 🙏
 `.trim()
 
-	await conn.reply(m.chat, warning, m)
+	try {
+		await conn.reply(m.chat, warning, m)
+	} catch (e) {
+		console.error('[antiswgrup] Gagal kirim peringatan:', e.message)
+	}
 
 	return !0
 }
